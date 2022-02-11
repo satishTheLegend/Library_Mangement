@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Library_Mangement.Themes.Default">
+
+    <!--Color Keys-->
+    <Color x:Key="Green">#55A51C</Color>
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Gray">#7f7f7f</Color>
+    <Color x:Key="Black">#000000</Color>
+    <Color x:Key="SkyBlue">#87CEEB</Color>
+    <Color x:Key="LightGray">#D3D3D3</Color>
+    <Color x:Key="AppRed">#ff0000</Color>  
+
+    <!-- Label Styles-->
+    <Style TargetType="Label" x:Key="LoginPageLabel">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource White}"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="ForgetPasswordPageLabel">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource Black}"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="boldMediumTitle_lblStyle">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource Black}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="boldSmallTitle_lblStyle">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource Black}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="greenSimpleTitle_lblStyle">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource Green}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="BoldTitle_lblStyle">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Start"/>
+    </Style>
+
+    <!--Entry Styles-->
+    <Style TargetType="Entry" x:Key="LoginPageEntry">
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource Black}"/>
+    </Style>
+    
+    <Style TargetType="Entry" x:Key="ForgetPasswordEntry">
+        <Setter Property="PlaceholderColor" Value="{StaticResource LightGray}" />
+        <Setter Property="TextColor" Value="{StaticResource Black}"/>
+    </Style>
+    
+    <!--Frame Styles-->
+    <Style TargetType="Frame" x:Key="LoginPageEntryFrame">
+        <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+        <Setter Property="BorderColor" Value="{StaticResource SkyBlue}"/>
+    </Style>
+    
+    <Style TargetType="Frame" x:Key="ForgetPasswordEntryFrame">
+        <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+        <Setter Property="BorderColor" Value="{StaticResource Black}"/>
+    </Style>
+    
+    <!--Button Styles-->
+    <Style TargetType="Button" x:Key="CircleButton">
+        <Setter Property="WidthRequest" Value="50" />
+        <Setter Property="HeightRequest" Value="50" />
+        <Setter Property="CornerRadius" Value="25" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="Margin" Value="10,0,0,0" />
+    </Style>
+    <Style TargetType="Button" x:Key="SketchOptionButton">       
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="BackgroundColor" Value="{x:DynamicResource Green}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="Margin" Value="4,0,0,0" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+    <Style TargetType="Button" x:Key="DefaultButton">
+        <Setter Property="BackgroundColor" Value="{StaticResource Green}" />
+        <Setter Property="TextColor" Value="{StaticResource White}"/>
+        <Setter Property="TextTransform" Value="None"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+    </Style>
+
+    <Style TargetType="Button" x:Key="SyncButtonStyle">
+        <Setter Property="BackgroundColor" Value="{StaticResource Green}" />
+        <Setter Property="TextColor" Value="{StaticResource White}"/>
+        <Setter Property="TextTransform" Value="None"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="WidthRequest" Value="160"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="FontSize" Value="Medium"/>
+        <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+    </Style>
+
+    <Style TargetType="Button" x:Key="LongWidth_BtnStyle">
+        <Setter Property="BackgroundColor" Value="{StaticResource Green}" />
+        <Setter Property="TextColor" Value="{StaticResource White}"/>
+        <Setter Property="TextTransform" Value="None"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="WidthRequest" Value="400"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="FontSize" Value="Small"/>
+        <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+        <Setter Property="VerticalOptions" Value="StartAndExpand"/>
+    </Style>
+
+</ResourceDictionary>
