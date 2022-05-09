@@ -24,6 +24,7 @@ namespace Library_Mangement
         public App()
         {
             InitializeComponent();
+            DevExpress.XamarinForms.Editors.Initializer.Init();
             ThemeManager.ChangeTheme(AppConfig.AppTheme_Theme);
             LocalDatabase.Init();
             if (CurrentLoggedInUser == null)

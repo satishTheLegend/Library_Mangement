@@ -57,6 +57,9 @@
     <PackageReference Include="Com.Airbnb.Xamarin.Forms.Lottie">
       <Version>3.0.4</Version>
     </PackageReference>
+    <PackageReference Include="DevExpress.XamarinForms.Editors">
+      <Version>21.2.7</Version>
+    </PackageReference>
     <PackageReference Include="Plugin.Fingerprint">
       <Version>2.1.5</Version>
     </PackageReference>
@@ -125,6 +128,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\Login_Background_Wall.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\Library_Background_Img.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
