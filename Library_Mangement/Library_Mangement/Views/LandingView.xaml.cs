@@ -5,29 +5,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Library_Mangement.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LoginView : ContentPage
+    public partial class LandingView : ContentPage
     {
         #region Properties
-        
+        public readonly LandingViewModel _vm;
         #endregion
 
         #region Constructor
-        public LoginView(bool LogOutUser = false)
+        public LandingView(bool LogOutUser = false)
         {
             InitializeComponent();
-            
+            _vm = new LandingViewModel();
+            BindingContext = _vm;
         }
         #endregion
 
         #region override methods 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
             Task.Run(async () =>
@@ -37,6 +37,7 @@ namespace Library_Mangement.Views
                 await ViewAnimations.FadeAnimY(LoginButton);
                 await ViewAnimations.FadeAnimY(SignupButton);
             });
+            await _vm.DownloadMasterData();
         }
         protected void Back(object s, EventArgs e)
         {

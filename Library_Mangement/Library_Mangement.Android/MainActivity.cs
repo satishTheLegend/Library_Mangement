@@ -2,6 +2,7 @@
 using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
+using Plugin.CurrentActivity;
 
 namespace Library_Mangement.Droid
 {
@@ -14,7 +15,7 @@ namespace Library_Mangement.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
-
+            CrossCurrentActivity.Current.Init(this, savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             Lottie.Forms.Droid.AnimationViewRenderer.Init();

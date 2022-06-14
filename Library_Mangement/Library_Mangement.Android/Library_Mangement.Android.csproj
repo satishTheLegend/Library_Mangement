@@ -58,16 +58,23 @@
       <Version>3.0.4</Version>
     </PackageReference>
     <PackageReference Include="DevExpress.XamarinForms.Editors">
-      <Version>21.2.7</Version>
+      <Version>21.2.8</Version>
+    </PackageReference>
+    <PackageReference Include="Google.Apis.Drive.v3">
+      <Version>1.57.0.2684</Version>
+    </PackageReference>
+    <PackageReference Include="Plugin.CurrentActivity">
+      <Version>2.1.0.4</Version>
     </PackageReference>
     <PackageReference Include="Plugin.Fingerprint">
       <Version>2.1.5</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.1" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
+    <Compile Include="PlatformServices\DeviceInfo.cs" />
     <Compile Include="RenderersAndroid\BorderlessEntryRenderer.cs" />
     <Compile Include="RenderersAndroid\PancakeDrawable.cs" />
     <Compile Include="RenderersAndroid\PancakeViewRenderer.cs" />
@@ -106,6 +113,10 @@
     <Folder Include="Resources\raw\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\EDFSCore\LibraryCore.csproj">
+      <Project>{c08162de-77d0-4bfe-8299-72bf147adc7c}</Project>
+      <Name>LibraryCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Library_Mangement\Library_Mangement.csproj">
       <Project>{68403C4A-C1B3-49EF-8BFE-9E38CFA6FDEC}</Project>
       <Name>Library_Mangement</Name>

@@ -2,6 +2,7 @@
 using Library_Mangement.Database.Models;
 using Library_Mangement.Helper;
 using Library_Mangement.Resx;
+using Library_Mangement.Services;
 using Library_Mangement.Themes;
 using Library_Mangement.Views;
 using System;
@@ -16,6 +17,7 @@ namespace Library_Mangement
         private readonly string _strModuleName = "AppXml.cs";
         public static LogDatabase LogDatabase;
         public static AppDatabase Database;
+        public static RestService RestServiceConnection;
         public static tblUser CurrentLoggedInUser { get; set; }
         public static bool IsAppInitialize = false;
         #endregion
@@ -24,6 +26,7 @@ namespace Library_Mangement
         public App()
         {
             InitializeComponent();
+            RestServiceConnection = new RestService();
             DevExpress.XamarinForms.Editors.Initializer.Init();
             ThemeManager.ChangeTheme(AppConfig.AppTheme_Theme);
             LocalDatabase.Init();
@@ -51,7 +54,7 @@ namespace Library_Mangement
 
                     if (sessionExpire)
                     {
-                        MainPage = new NavigationPage(new LoginView(true));
+                        MainPage = new NavigationPage(new LandingView(true));
                         await App.Current.MainPage.DisplayAlert(AppResources.Session_TimeOut_Alert_Title, AppResources.Session_TimeOut_Msg, AppResources.Ok);
                     }
                     else
@@ -61,7 +64,7 @@ namespace Library_Mangement
                 }
                 else
                 {
-                    MainPage = new NavigationPage(new LoginView());
+                    MainPage = new NavigationPage(new LandingView());
                 }
             }
             catch (Exception ex)

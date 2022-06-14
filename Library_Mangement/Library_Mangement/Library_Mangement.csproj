@@ -12,12 +12,12 @@
 
   <ItemGroup>
     <PackageReference Include="Com.Airbnb.Xamarin.Forms.Lottie" Version="3.0.4" />
-    <PackageReference Include="DevExpress.XamarinForms.Editors" Version="21.2.7" />
+    <PackageReference Include="DevExpress.XamarinForms.Editors" Version="21.2.8" />
     <PackageReference Include="Plugin.Fingerprint" Version="2.1.5" />
     <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.1" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,10 +27,12 @@
     <Folder Include="Effects\" />
     <Folder Include="JsonUtility\" />
     <Folder Include="ServiceMessages\" />
-    <Folder Include="Services\PlatformServices\" />
     <Folder Include="Triggers\" />
     <Folder Include="Utilities\" />
-    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EDFSCore\LibraryCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +40,9 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>AppResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LandingView.xaml.cs">
+      <DependentUpon>LandingView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -49,7 +54,7 @@
     <EmbeddedResource Update="Themes\Default.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\LoginView.xaml">
+    <EmbeddedResource Update="Views\LandingView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\UserLogin.xaml">

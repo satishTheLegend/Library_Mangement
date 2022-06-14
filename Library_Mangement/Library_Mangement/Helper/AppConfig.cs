@@ -6,12 +6,14 @@ namespace Library_Mangement.Helper
 {
     public class AppConfig
     {
-        public const string ApplicationName_DEV = "AppResources DEV";
-        public const string ApplicationName_Stage = "AppResources STAGE";
-        public const string ApplicationName_Prod = "AppResources";
-        public const string ModuleName = "AppResources";
 
+        //App Packages 
+        public const string AppPackage_Development = "com.companyname.library_mangement.dev";
+        public const string AppPackage_Staging = "com.companyname.library_mangement.stage";
+        public const string AppPackage_Production = "com.companyname.library_mangement";
 
+        //App Name
+        public const string AppName = "library_mangement";
         //Database Format
         public static class DatabaseNameFormat
         {
