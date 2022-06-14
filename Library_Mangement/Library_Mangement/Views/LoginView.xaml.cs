@@ -1,4 +1,5 @@
 ﻿using Library_Mangement.Animations;
+using Library_Mangement.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,14 @@ namespace Library_Mangement.Views
     public partial class LoginView : ContentPage
     {
         #region Properties
-
+        
         #endregion
 
         #region Constructor
         public LoginView(bool LogOutUser = false)
         {
             InitializeComponent();
+            
         }
         #endregion
 

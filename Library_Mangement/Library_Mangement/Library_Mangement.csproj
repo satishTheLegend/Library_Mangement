@@ -15,6 +15,7 @@
     <PackageReference Include="DevExpress.XamarinForms.Editors" Version="21.2.7" />
     <PackageReference Include="Plugin.Fingerprint" Version="2.1.5" />
     <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.1" />
   </ItemGroup>
@@ -25,12 +26,10 @@
     <Folder Include="Converters\" />
     <Folder Include="Effects\" />
     <Folder Include="JsonUtility\" />
-    <Folder Include="MVVM\" />
     <Folder Include="ServiceMessages\" />
     <Folder Include="Services\PlatformServices\" />
     <Folder Include="Triggers\" />
     <Folder Include="Utilities\" />
-    <Folder Include="Validation\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
 

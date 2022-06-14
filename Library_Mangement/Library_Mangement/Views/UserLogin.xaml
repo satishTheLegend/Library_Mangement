@@ -6,7 +6,7 @@
              NavigationPage.HasNavigationBar="False" BackgroundColor="Red">
 
     <ContentPage.Content>
-        <Grid RowDefinitions="5*,1.5*,1.5*,2*,1*,4*" BackgroundColor="Blue">
+        <!--<Grid RowDefinitions="5*,1.5*,1.5*,2*,1*,4*" BackgroundColor="Blue">
             <StackLayout Grid.Row="0" BackgroundColor="Gray" Opacity="0.8" VerticalOptions="CenterAndExpand">
                 <Image  Source="logo.png" HeightRequest="100" WidthRequest="100"/>
             </StackLayout>
@@ -34,6 +34,74 @@
                     <dxe:SimpleButton  Text="Login" TextColor="White" FontAttributes="Bold" FontSize="Small"/>
                 </StackLayout>
             </Grid>
-        </Grid>
+        </Grid>-->
+        <AbsoluteLayout>
+            <Image
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            Aspect="AspectFill"
+            Opacity="0.9"
+            Source="Login_Background_Wall.jpg" />
+
+            <Image
+            x:Name="Logo"
+            Opacity="0.7"
+            TranslationY="-50"
+            Source="logo"
+            WidthRequest="160"
+            HeightRequest="160"
+            AbsoluteLayout.LayoutBounds="0,0,1,.5"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="White"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="CenterAndExpand" />
+            <StackLayout
+            Margin="10,30,10,30"
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            Spacing="20"
+            VerticalOptions="CenterAndExpand">
+                <Grid Grid.Row="1" ColumnDefinitions="0.1*,8*,0.1*">
+                    <dxe:TextEdit Grid.Column="1" BoxHeight="40" Text="{Binding UserName}" CornerRadius="20" PlaceholderText="User Name" BackgroundColor="White" Opacity="0.8" BorderColor="Transparent"/>
+                </Grid>
+                <Grid Grid.Row="2" ColumnDefinitions="0.1*,8*,0.1*">
+                    <dxe:PasswordEdit Grid.Column="1" Text="{Binding Password}" PasswordIconVisibility="Auto" IsStartIconVisible="True" IsErrorIconVisible="True" IsEndIconVisible="True" BoxHeight="40" Keyboard="Chat" IconColor="Red" CornerRadius="20" PlaceholderText="Password" BackgroundColor="White" Opacity="0.8" BorderColor="Transparent"/>
+                </Grid>
+                <Grid Grid.Row="3" ColumnDefinitions="0.2*,8*,0.1*" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent">
+                    <StackLayout  Grid.Column="1" Orientation="Horizontal">
+                        <dxe:CheckEdit HeightRequest="40" HorizontalOptions="Start" VerticalOptions="Center" CheckBoxColor="White"/>
+                        <Label Text="Remember Me" HorizontalOptions="Start" VerticalOptions="Center" TextColor="White" />
+                        <Label Text="Forgot Password ?" HorizontalOptions="EndAndExpand" VerticalOptions="Center" TextColor="White"/>
+                    </StackLayout>
+                </Grid>
+                <Grid Grid.Row="4" ColumnDefinitions="3*,8*,3*" VerticalOptions="CenterAndExpand">
+                    <StackLayout  Grid.Column="1">
+                        <dxe:SimpleButton Text="Login" Command="{Binding LoginButtonCommand}" TextColor="White" FontAttributes="Bold" FontSize="Small"/>
+                    </StackLayout>
+                </Grid>
+            </StackLayout>
+            <StackLayout
+            Margin="10,30,10,30"
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            Spacing="20"
+            VerticalOptions="EndAndExpand">
+                <Label
+                FontSize="10"
+                TextColor="White"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="EndAndExpand">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="By signing up, you agree with our " />
+                            <Span
+                            Text="Terms and Conditions"
+                            TextColor="#FC5A5A"
+                            TextDecorations="Underline" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </StackLayout>
+        </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

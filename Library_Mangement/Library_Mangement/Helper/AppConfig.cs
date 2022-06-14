@@ -28,5 +28,12 @@ namespace Library_Mangement.Helper
         public const int SessionCheck_Minutes = 1380; //1380 - 23 hours
         public const int SessionTimeOut_Minutes = 1440;//1440 - 24 hours
 
+
+        public class ValidateMessageType
+        {
+            public const string Error = "#0#";
+            public const string Warning = "#1#";
+        }
+
     }
 }
