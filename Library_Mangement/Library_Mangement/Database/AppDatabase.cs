@@ -10,6 +10,7 @@ namespace Library_Mangement.Database
         #region Properties
         readonly LogRepository _logRepository;
         readonly UserRepository _userRepository;
+        readonly BooksRepository _booksRepository;
         public LogRepository Logs
         {
             get { return _logRepository; }
@@ -19,6 +20,13 @@ namespace Library_Mangement.Database
         {
             get { return _userRepository; }
         }
+
+        public BooksRepository Book
+        {
+            get { return _booksRepository; }
+        }
+
+
         #endregion
 
         #region Constructor
@@ -28,6 +36,7 @@ namespace Library_Mangement.Database
             {
                 _logRepository = new LogRepository(dbPath);
                 _userRepository = new UserRepository(dbPath);
+                _booksRepository = new BooksRepository(dbPath);
             }
             catch (Exception ex)
             {

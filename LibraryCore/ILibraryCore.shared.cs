@@ -125,7 +125,7 @@ namespace LibraryCore
         void LogAction(string FrmName, string CtrlName, string EventName, string Value, List<string> UserLogInfo);
 
         string GetLogFileName();
-
+        Task<bool> UnzipFileAsync(byte[] zipFileBytes, string zipFileName, string unzipFolderPath);
         string[] GetTodaysLogFileNames();
 
         void WriteLogActionsToFile();

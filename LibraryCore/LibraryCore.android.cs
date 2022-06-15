@@ -1,5 +1,6 @@
 ﻿using Android.Graphics;
 using Android.Webkit;
+using ICSharpCode.SharpZipLib.Zip;
 using Java.IO;
 using Java.Util.Concurrent;
 using Newtonsoft.Json;
@@ -1464,7 +1465,51 @@ namespace LibraryCore
             return await Task.FromResult(response);
         }
 
+        public async Task<bool> UnzipFileAsync(byte[] zipFileBytes, string zipFileName, string unzipFolderPath)
+        {
+            try
+            {
+                var tempPath = System.IO.Path.GetTempPath();
+                var tempzipFileNewPath = System.IO.Path.Combine(tempPath, $"{zipFileName}.zip");
+                await SaveFile(zipFileBytes, tempzipFileNewPath);
+                //var entry = new ZipEntry(System.IO.Path.GetFileNameWithoutExtension(zipFilePath));
+                var entry = new ZipEntry(zipFileName);
+                var fileStreamIn = new FileStream(tempzipFileNewPath, FileMode.Open, FileAccess.Read);
+                var zipInStream = new ZipInputStream(fileStreamIn);
+                entry = zipInStream.GetNextEntry();
+                while (entry != null && entry.CanDecompress)
+                {
+                    var outputFile = unzipFolderPath + @"/" + entry.Name;
+                    var outputDirectory = System.IO.Path.GetDirectoryName(outputFile);
+                    if (!Directory.Exists(outputDirectory))
+                    {
+                        Directory.CreateDirectory(outputDirectory);
+                    }
 
+                    if (entry.IsFile)
+                    {
+                        var fileStreamOut = new FileStream(outputFile, FileMode.Create, FileAccess.Write);
+                        int size;
+                        byte[] buffer = new byte[4096];
+                        do
+                        {
+                            size = await zipInStream.ReadAsync(buffer, 0, buffer.Length);
+                            await fileStreamOut.WriteAsync(buffer, 0, size);
+                        } while (size > 0);
+                        fileStreamOut.Close();
+                    }
+
+                    entry = zipInStream.GetNextEntry();
+                }
+                zipInStream.Close();
+                fileStreamIn.Close();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
 
         public class CountingRequestBody : RequestBody
         {

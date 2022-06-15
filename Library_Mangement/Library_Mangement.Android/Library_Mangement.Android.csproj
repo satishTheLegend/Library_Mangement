@@ -69,6 +69,9 @@
     <PackageReference Include="Plugin.Fingerprint">
       <Version>2.1.5</Version>
     </PackageReference>
+    <PackageReference Include="SharpZipLib">
+      <Version>1.3.3</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
   </ItemGroup>
@@ -88,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Loader_Splash.json" />
+    <AndroidAsset Include="Assets\library_Loader.json" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -113,10 +117,6 @@
     <Folder Include="Resources\raw\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\EDFSCore\LibraryCore.csproj">
-      <Project>{c08162de-77d0-4bfe-8299-72bf147adc7c}</Project>
-      <Name>LibraryCore</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Library_Mangement\Library_Mangement.csproj">
       <Project>{68403C4A-C1B3-49EF-8BFE-9E38CFA6FDEC}</Project>
       <Name>Library_Mangement</Name>

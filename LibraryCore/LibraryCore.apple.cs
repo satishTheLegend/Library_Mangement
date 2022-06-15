@@ -1611,6 +1611,11 @@ namespace LibraryCore
             return await Task.FromResult(response);
         }
 
+        public Task<bool> UnzipFileAsync(byte[] zipFileBytes, string zipFileName, string unzipFolderPath)
+        {
+            throw new NotImplementedException();
+        }
+
 
         #endregion
 

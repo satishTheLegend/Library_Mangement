@@ -30,14 +30,14 @@ namespace Library_Mangement.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            Task.Run(async () =>
+            await Task.Run(async () =>
             {
                 await ViewAnimations.FadeAnimY(Logo);
                 await ViewAnimations.FadeAnimY(FaceButton);
                 await ViewAnimations.FadeAnimY(LoginButton);
                 await ViewAnimations.FadeAnimY(SignupButton);
+                await _vm.DownloadMasterData();
             });
-            await _vm.DownloadMasterData();
         }
         protected void Back(object s, EventArgs e)
         {

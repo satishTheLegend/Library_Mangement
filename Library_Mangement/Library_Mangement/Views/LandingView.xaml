@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:controls="clr-namespace:Library_Mangement.Controls"
              x:Class="Library_Mangement.Views.LandingView"
              BackgroundColor="Black"
              NavigationPage.HasNavigationBar="False">
@@ -9,12 +9,11 @@
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             Aspect="AspectFill"
-            Opacity="0.9"
+            Opacity="{Binding LandingPageOpacity}"
             Source="Login_Background_Wall.jpg" />
-        
         <Image
             x:Name="Logo"
-            Opacity="0.7"
+            Opacity="{Binding LandingPageOpacity}"
             TranslationY="-50"
             Source="logo"
             WidthRequest="160"
@@ -24,8 +23,18 @@
             BackgroundColor="White"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="CenterAndExpand" />
-        <StackLayout
-            Margin="10,30,10,30"
+
+        <StackLayout IsVisible="{Binding LoaderVisible}"
+            Margin="0,0,0,0"
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            HorizontalOptions="CenterAndExpand"
+            VerticalOptions="CenterAndExpand">
+            <controls:Loader LoaderText="{Binding LoaderText}"></controls:Loader>
+        </StackLayout>
+
+        <StackLayout IsVisible="{Binding LandingPageEnable}"
+            Margin="10,30,10,30" Opacity="{Binding LandingPageOpacity}"
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             Spacing="20"
