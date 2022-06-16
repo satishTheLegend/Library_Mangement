@@ -1,17 +1,14 @@
-﻿using Library_Mangement.Model;
-using SQLite;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.Forms;
 
-namespace Library_Mangement.Database.Models
+namespace Library_Mangement.Model
 {
-    public class tblBook : BaseModel
+    public class BooksPropertyModel
     {
-        [PrimaryKey]
-        [AutoIncrement]
-        public long Id { get; set; }
-        public string Book_Id { get; set; } = Guid.NewGuid().ToString("N").Substring(0, 10);
+        public string Book_Id { get; set; }
+        public ImageSource Book_ImageSource { get; set; }
         public string Author { get; set; }
         public string Country { get; set; }
         public string ImageLink { get; set; }

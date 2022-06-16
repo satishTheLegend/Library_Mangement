@@ -27187,19 +27187,22 @@ namespace Library_Mangement.Droid
 			public const int notify_panel_notification_icon_bg = 2131230910;
 			
 			// aapt resource value: 0x7F0800BF
-			public const int preference_list_divider_material = 2131230911;
+			public const int PlaceHolder = 2131230911;
 			
 			// aapt resource value: 0x7F0800C0
-			public const int test_custom_background = 2131230912;
+			public const int preference_list_divider_material = 2131230912;
 			
 			// aapt resource value: 0x7F0800C1
-			public const int tooltip_frame_dark = 2131230913;
+			public const int test_custom_background = 2131230913;
 			
 			// aapt resource value: 0x7F0800C2
-			public const int tooltip_frame_light = 2131230914;
+			public const int tooltip_frame_dark = 2131230914;
 			
 			// aapt resource value: 0x7F0800C3
-			public const int watermark = 2131230915;
+			public const int tooltip_frame_light = 2131230915;
+			
+			// aapt resource value: 0x7F0800C4
+			public const int watermark = 2131230916;
 			
 			static Drawable()
 			{

@@ -14,7 +14,6 @@ namespace Library_Mangement
     public partial class App : Application
     {
         #region Properties
-        private readonly string _strModuleName = "AppXml.cs";
         public static LogDatabase LogDatabase;
         public static AppDatabase Database;
         public static RestService RestServiceConnection;

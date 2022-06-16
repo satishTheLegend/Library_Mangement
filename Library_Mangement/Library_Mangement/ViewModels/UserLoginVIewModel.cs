@@ -1,4 +1,5 @@
 ﻿using Library_Mangement.Validation;
+using Library_Mangement.Views;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -39,7 +40,7 @@ namespace Library_Mangement.ViewModels
         }
         #endregion
 
-        #region CommandsS
+        #region Commands
         public ICommand LoginButtonCommand => new Command(async () => await Login());
 
         private async Task Login()
@@ -49,6 +50,7 @@ namespace Library_Mangement.ViewModels
                 if(UserName == "Arpita" && Password == "123")
                 {
                     await App.Current.MainPage.DisplayAlert("", "You Logged In Successfully", "Ok");
+                    await App.Current.MainPage.Navigation.PushAsync(new HomeView());
                 }
                 else
                 {

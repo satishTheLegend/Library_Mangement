@@ -2,9 +2,9 @@
 <StackLayout xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
-             x:Class="Library_Mangement.Controls.Loader">
+             x:Class="Library_Mangement.Controls.Loader" x:Name="LoaderStack">
     <Grid RowDefinitions="10*">
-        <Frame CornerRadius="100" Padding="150,0,100,0" BackgroundColor="Gray" Opacity="0.8" Grid.Row="0">
+        <Frame x:Name="LoaderFrame" CornerRadius="100" BackgroundColor="Gray" Opacity="0.5" Padding="150,0,100,0" Grid.Row="0">
             
         </Frame>
         <lottie:AnimationView IsVisible="True" Grid.Row="0" 
@@ -13,8 +13,7 @@
                               Animation="library_Loader.json"
                               AutoPlay="True" Loop="True"/>
         <Label x:Name="AnimatedLoaderText" Grid.Row="0" FontSize="Large" 
-           Margin="0,0,0,25" BackgroundColor="Transparent" HorizontalTextAlignment="Center" VerticalOptions="EndAndExpand"
-               TextColor="White"/>
+           Margin="0,0,0,25" BackgroundColor="Transparent" HorizontalTextAlignment="Center" TextColor="White" VerticalOptions="EndAndExpand"/>
         
     </Grid>
 </StackLayout>

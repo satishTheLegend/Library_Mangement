@@ -84,24 +84,20 @@ namespace Library_Mangement.ViewModels
         {
             try
             {
-                LoaderText = "Master Data Download Begin.";
-                await Task.Delay(1700);
+                await LoaderMessage("Master Data Download Begin.", 1700);
                 LoaderVisible = true;
                 LandingPageEnable = false;
                 LandingPageOpacity = 0.5;
                 var directoryPath = Common.GetBasePath("MasterData");
                 bool isImagesSaved = await ExtractImagesFromZip(directoryPath);
-                LoaderText = "Images Saved Successfully.";
-                await Task.Delay(1500);
+                await LoaderMessage("Images Saved Successfully.", 1500);
                 if (!isImagesSaved)
                     isImagesSaved = true;
-                LoaderText = "Downloading Json Data.";
-                await Task.Delay(1500);
+                await LoaderMessage("Downloading Json Data.", 1500);
                 var jsonDataBytes = await App.RestServiceConnection.DownloadJsonData("https://drive.google.com/u/0/uc?id=1LE2UDRgqiLC1Pbhvx5jIvNLUvPcivqdV&export=download");
                 if (jsonDataBytes != null)
                 {
-                    LoaderText = "Json Data Downloaded Successfully.";
-                    await Task.Delay(1500);
+                    await LoaderMessage("Json Data Downloaded Successfully.", 1500);
                     if (!Directory.Exists(directoryPath))
                     {
                         Directory.CreateDirectory(directoryPath);
@@ -110,18 +106,15 @@ namespace Library_Mangement.ViewModels
                     await Common.SaveFileFromByteArray(jsonDataBytes, booksJsonData);
                     if (File.Exists(booksJsonData))
                     {
-                        LoaderText = "Json File Stored On Your Local Device.";
-                        await Task.Delay(900);
+                        await LoaderMessage("Json File Stored On Your Local Device.", 900);
                         using (StreamReader r = new StreamReader(booksJsonData))
                         {
                             string json = r.ReadToEnd();
                             List<BooksJsonData> booksJson = JsonConvert.DeserializeObject<List<BooksJsonData>>(json);
-                            LoaderText = "Reading Data From Json.";
-                            await Task.Delay(800);
+                            await LoaderMessage("Reading Data From Json.", 800);
                             if (booksJson?.Count > 0)
                             {
-                                LoaderText = "Json Parsed Successfully.";
-                                await Task.Delay(800);
+                                await LoaderMessage("Json Parsed Successfully.", 800);
                                 int i = 0;
                                 foreach (var bookItem in booksJson)
                                 {
@@ -141,12 +134,10 @@ namespace Library_Mangement.ViewModels
                                         Year = bookItem.year,
                                     };
                                     await App.Database.Book.InsertAsync(bookRecord);
-                                    LoaderText = $"Added Book Records {i} Out Of {booksJson?.Count}.";
-                                    await Task.Delay(500);
+                                    await LoaderMessage($"Added Book Records {i} Out Of {booksJson?.Count}.", 150);
                                     i++;
                                 }
-                                LoaderText = $"Books Added Successfully.";
-                                await Task.Delay(1000);
+                                await LoaderMessage($"Books Added Successfully.", 100);
                             }
                         }
 
@@ -160,27 +151,25 @@ namespace Library_Mangement.ViewModels
             }
             finally
             {
-                LoaderText = $"Setting Up All Files.";
-                await Task.Delay(1400);
-                string finishingText = "Finishing Up";
-                for (int i = 0; i < 15; i++)
+                await LoaderMessage($"Setting Up All Files.", 1400);
+                string finishingText = "Please Wait Finishing Up";
+                for (int i = 0; i < 12; i++)
                 {
                     switch (i)
                     {
-                        case 5:
+                        case 8:
                             finishingText = "Finializing";
                             break;
 
                         case 10:
-                            finishingText = "Completed";
+                            finishingText = "Process Completed";
                             break;
                     }
 
                     for (int j = 1; j <= 4; j++)
                     {
                         string progress = string.Concat(Enumerable.Repeat(".", j));
-                        LoaderText = $"{finishingText}{progress}";
-                        await Task.Delay(500);
+                        await LoaderMessage($"{finishingText}{progress}", 400);
                     }
 
                 }
@@ -189,6 +178,12 @@ namespace Library_Mangement.ViewModels
                 LandingPageOpacity = 1.0;
                 await Task.FromResult(Task.CompletedTask);
             }
+        }
+
+        private async Task LoaderMessage(string loaderText, int timeDeley)
+        {
+            LoaderText = $"{loaderText}";
+            await Task.Delay(timeDeley);
         }
 
         private async Task<bool> ExtractImagesFromZip(string directoryPath)

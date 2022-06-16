@@ -1,4 +1,5 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
+using Library_Mangement.Controls;
 using Library_Mangement.Services.PlatformServices;
 using System;
 using System.Collections.Generic;
@@ -117,38 +118,6 @@ namespace Library_Mangement.Helper
                     Directory.CreateDirectory(unzipFolderPath);
                 }
                 System.IO.Compression.ZipFile.ExtractToDirectory(tempzipFileNewPath, unzipFolderPath);
-                //var entry = new ZipEntry(System.IO.Path.GetFileNameWithoutExtension(zipFilePath));
-                //var entry = new ZipEntry(zipFileName);
-                //var fileStreamIn = new FileStream(tempzipFileNewPath, FileMode.Open, FileAccess.Read);
-                //var zipInStream = new ZipInputStream(fileStreamIn);
-                //entry = zipInStream.GetNextEntry();
-                //while (entry != null && entry.CanDecompress)
-                //{
-                //    var outputFile = unzipFolderPath + @"/" + entry.Name;
-                //    var outputDirectory = System.IO.Path.GetDirectoryName(outputFile);
-                //    if (!Directory.Exists(outputDirectory))
-                //    {
-                //        Directory.CreateDirectory(outputDirectory);
-                //    }
-
-                //    if (entry.IsFile)
-                //    {
-                //        using (var fileStreamOut = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
-                //        {
-                //            int size;
-                //            byte[] buffer = new byte[4096];
-                //            do
-                //            {
-                //                size = await zipInStream.ReadAsync(buffer, 0, buffer.Length);
-                //                await fileStreamOut.WriteAsync(buffer, 0, size);
-                //            } while (size > 0);
-                //        }
-                //    }
-
-                //    entry = zipInStream.GetNextEntry();
-                //}
-                //zipInStream.Close();
-                //fileStreamIn.Close();
             }
             catch(Exception ex)
             {
@@ -156,6 +125,7 @@ namespace Library_Mangement.Helper
             }
             return true;
         }
+        
         #endregion
 
         #region Private Methods
