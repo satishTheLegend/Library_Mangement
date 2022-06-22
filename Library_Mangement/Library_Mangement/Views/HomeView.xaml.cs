@@ -30,24 +30,31 @@ namespace Library_Mangement.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            if(_vm.Books == null)
+            try
             {
-                await _vm.LoadBooksInfo();
-            }
-            _vm.LoaderVisible = true;
-            if (Application.Current.MainPage.Navigation.NavigationStack != null && Application.Current.MainPage.Navigation.NavigationStack.Count > 1)
-            {
-                var existingPages = Application.Current.MainPage.Navigation.NavigationStack.ToList();
-                foreach (var pageItem in existingPages)
+                if (_vm.Books == null)
                 {
-                    bool flag = (pageItem is HomeView);
-                    if (!flag)
+                    await _vm.LoadBooksInfo();
+                }
+                _vm.LoaderVisible = true;
+                if (Application.Current.MainPage.Navigation.NavigationStack != null && Application.Current.MainPage.Navigation.NavigationStack.Count > 1)
+                {
+                    var existingPages = Application.Current.MainPage.Navigation.NavigationStack.ToList();
+                    foreach (var pageItem in existingPages)
                     {
-                        Application.Current.MainPage.Navigation.RemovePage(pageItem);
+                        bool flag = (pageItem is HomeView);
+                        if (!flag)
+                        {
+                            Application.Current.MainPage.Navigation.RemovePage(pageItem);
+                        }
                     }
                 }
+                _vm.LoaderVisible = false;
             }
-            _vm.LoaderVisible = false;
+            catch (Exception ex)
+            {
+
+            }
         }
         #endregion
 

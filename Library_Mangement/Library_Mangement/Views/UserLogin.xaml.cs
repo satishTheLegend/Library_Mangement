@@ -26,5 +26,19 @@ namespace Library_Mangement.Views
         }
         #endregion
 
+        #region Override Methods
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+#if DEBUG
+            userName.Text = "Arpita";
+            password.Text = "123";
+#endif
+        }
+        #endregion
+
+        #region Debug Condition
+        #endregion
+
     }
 }

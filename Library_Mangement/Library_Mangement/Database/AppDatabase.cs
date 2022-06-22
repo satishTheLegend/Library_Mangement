@@ -11,6 +11,7 @@ namespace Library_Mangement.Database
         readonly LogRepository _logRepository;
         readonly UserRepository _userRepository;
         readonly BooksRepository _booksRepository;
+        readonly VerisonMasterRepository _verisonMasterRepository;
         public LogRepository Logs
         {
             get { return _logRepository; }
@@ -25,6 +26,10 @@ namespace Library_Mangement.Database
         {
             get { return _booksRepository; }
         }
+        public VerisonMasterRepository MasterDataVerison
+        {
+            get { return _verisonMasterRepository; }
+        }
 
 
         #endregion
@@ -37,6 +42,7 @@ namespace Library_Mangement.Database
                 _logRepository = new LogRepository(dbPath);
                 _userRepository = new UserRepository(dbPath);
                 _booksRepository = new BooksRepository(dbPath);
+                _verisonMasterRepository = new VerisonMasterRepository(dbPath);
             }
             catch (Exception ex)
             {

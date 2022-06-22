@@ -1,5 +1,6 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
 using Library_Mangement.Controls;
+using Library_Mangement.Model.ApiResponse;
 using Library_Mangement.Services.PlatformServices;
 using System;
 using System.Collections.Generic;
@@ -77,6 +78,16 @@ namespace Library_Mangement.Helper
             }
             return byteData;
         }
+        public static string GetFileNameFromURL(string url)
+        {
+            string filename = string.Empty;
+            Uri uri = new Uri(url);
+            if (uri.IsFile)
+            {
+                filename = System.IO.Path.GetFileName(uri.LocalPath);
+            }
+            return filename;
+        }
         public static async Task<bool> SaveFileFromByteArray(byte[] fileBytes, string fullFilePath)
         {
             bool fileSaved = false;
@@ -125,7 +136,40 @@ namespace Library_Mangement.Helper
             }
             return true;
         }
-        
+
+        public static async Task<string> SaveImageThumbnails(string thumbnailsPath, string thumbnailUrl, bool getFilePath = false)
+        {
+            string path = string.Empty;
+            if (!string.IsNullOrEmpty(thumbnailUrl))
+            {
+                Uri uri = new Uri(thumbnailUrl);
+                string filename = Path.GetFileName(uri.AbsolutePath);
+                string newFilePath = Path.Combine(thumbnailsPath, filename);
+                if(!getFilePath)
+                {
+                    if(!File.Exists(newFilePath))
+                    {
+                        var imagedata = await App.RestServiceConnection.DownloadJsonData(thumbnailUrl);
+                        if (imagedata == null) return path;
+                        bool isSaved = await SaveFileFromByteArray(imagedata, newFilePath);
+                        if (isSaved)
+                        {
+                            path = newFilePath;
+                        }
+                    }
+                    else
+                    {
+                        path = newFilePath;
+                    }
+                }
+                else
+                {
+                    path = newFilePath;
+                }
+            }
+            return path;
+        }
+
         #endregion
 
         #region Private Methods

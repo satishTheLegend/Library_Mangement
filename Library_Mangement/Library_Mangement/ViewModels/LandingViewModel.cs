@@ -89,60 +89,120 @@ namespace Library_Mangement.ViewModels
                 LandingPageEnable = false;
                 LandingPageOpacity = 0.5;
                 var directoryPath = Common.GetBasePath("MasterData");
-                bool isImagesSaved = await ExtractImagesFromZip(directoryPath);
-                await LoaderMessage("Images Saved Successfully.", 1500);
-                if (!isImagesSaved)
-                    isImagesSaved = true;
                 await LoaderMessage("Downloading Json Data.", 1500);
-                var jsonDataBytes = await App.RestServiceConnection.DownloadJsonData("https://drive.google.com/u/0/uc?id=1LE2UDRgqiLC1Pbhvx5jIvNLUvPcivqdV&export=download");
-                if (jsonDataBytes != null)
+                bool isMasterDataNotAvailable = true;
+                List<MasterVerisonModel> verisonDataList = null;
+                var MasterDataVerisonBytes = await App.RestServiceConnection.DownloadJsonData("https://drive.google.com/u/0/uc?id=1vr34-Yx2giOYQCdMUABvB2gN4L4kt_84&export=download");
+                if (MasterDataVerisonBytes != null)
                 {
-                    await LoaderMessage("Json Data Downloaded Successfully.", 1500);
                     if (!Directory.Exists(directoryPath))
                     {
                         Directory.CreateDirectory(directoryPath);
                     }
-                    string booksJsonData = Path.Combine(directoryPath, "Books.Json");
-                    await Common.SaveFileFromByteArray(jsonDataBytes, booksJsonData);
-                    if (File.Exists(booksJsonData))
+                    string masterDataVerisonJsonPath = Path.Combine(directoryPath, "MasterDataVerison.Json");
+                    await Common.SaveFileFromByteArray(MasterDataVerisonBytes, masterDataVerisonJsonPath);
+                    using (StreamReader r = new StreamReader(masterDataVerisonJsonPath))
                     {
-                        await LoaderMessage("Json File Stored On Your Local Device.", 900);
-                        using (StreamReader r = new StreamReader(booksJsonData))
+                        string masterJson = r.ReadToEnd();
+                        await LoaderMessage("Checking For Master Data Verison Change.", 800);
+                        verisonDataList = JsonConvert.DeserializeObject<List<MasterVerisonModel>>(masterJson);
+                        List<bool> masterDataResult = new List<bool>();
+                        foreach (var item in verisonDataList)
                         {
-                            string json = r.ReadToEnd();
-                            List<BooksJsonData> booksJson = JsonConvert.DeserializeObject<List<BooksJsonData>>(json);
-                            await LoaderMessage("Reading Data From Json.", 800);
-                            if (booksJson?.Count > 0)
+                            var data = await App.Database.MasterDataVerison.FindItemByKey(item.KeyName);
+                            if(data != null)
                             {
-                                await LoaderMessage("Json Parsed Successfully.", 800);
-                                int i = 0;
-                                foreach (var bookItem in booksJson)
-                                {
-                                    bool isFileExist = false;
-                                    if (File.Exists($"{directoryPath}/{bookItem.imageLink}"))
-                                        isFileExist = true;
-                                    tblBook bookRecord = new tblBook()
-                                    {
-                                        Author = bookItem.author,
-                                        Country = bookItem.country,
-                                        ImageLink = $"{directoryPath}/{bookItem.imageLink}",
-                                        IsCoverAvailable = isFileExist,
-                                        Language = bookItem.language,
-                                        Link = bookItem.link,
-                                        Pages = bookItem.pages,
-                                        Title = bookItem.title,
-                                        Year = bookItem.year,
-                                    };
-                                    await App.Database.Book.InsertAsync(bookRecord);
-                                    await LoaderMessage($"Added Book Records {i} Out Of {booksJson?.Count}.", 150);
-                                    i++;
-                                }
-                                await LoaderMessage($"Books Added Successfully.", 100);
+                                bool result = data.Value != item.Value ? true : false;
+                                masterDataResult.Add(result);
                             }
+                            else
+                            {
+                                masterDataResult.Add(false);
+                            }
+                        }
+                        bool isMasterDataAvailable = masterDataResult.Any(x => x == false);
+                        if(!isMasterDataAvailable)
+                        {
+                            await LoaderMessage("No New Updates For Master Data.", 400);
+                        }
+                    }
+                }
+                if(isMasterDataNotAvailable)
+                {
+                    var jsonDataBytes = await App.RestServiceConnection.DownloadJsonData("https://drive.google.com/u/0/uc?id=1LE2UDRgqiLC1Pbhvx5jIvNLUvPcivqdV&export=download");
+                    if (jsonDataBytes != null)
+                    {
+                        await LoaderMessage("Json Data Downloaded Successfully.", 500);
+                        if (!Directory.Exists(directoryPath))
+                        {
+                            Directory.CreateDirectory(directoryPath);
+                        }
+                        string booksJsonData = Path.Combine(directoryPath, "Books.Json");
+                        string thumbnailsPath = Path.Combine(directoryPath, "Thumbnail");
+                        if(!Directory.Exists(thumbnailsPath))
+                        {
+                            Directory.CreateDirectory(thumbnailsPath);
+                        }
+                        await Common.SaveFileFromByteArray(jsonDataBytes, booksJsonData);
+                        if (File.Exists(booksJsonData))
+                        {
+                            await LoaderMessage("Json File Stored On Your Local Device.", 900);
+                            using (StreamReader r = new StreamReader(booksJsonData))
+                            {
+                                string json = r.ReadToEnd();
+                                List<BooksJsonData> booksJson = JsonConvert.DeserializeObject<List<BooksJsonData>>(json);
+                                await LoaderMessage("Reading Data From Json.", 800);
+                                if (booksJson?.Count > 0)
+                                {
+                                    await LoaderMessage("Json Parsed Successfully.", 800);
+                                    await LoaderMessage("Started To Download Book Thumbnails.", 800);
+                                    int thumb = 0;
+                                    foreach (var bookImageItem in booksJson)
+                                    {
+                                        await Task.Run(async () => await Common.SaveImageThumbnails(thumbnailsPath, bookImageItem.thumbnailUrl));
+                                        //await Common.SaveImageThumbnails(thumbnailsPath, bookImageItem.thumbnailUrl);
+                                        await LoaderMessage($"Downloading Image {thumb} Out Of {booksJson.Count}.", 0);
+                                        thumb++;
+                                    }
+                                    await LoaderMessage("Book Thumbnails Download Completed.", 800);
+                                    int i = 0;
+                                    foreach (var bookItem in booksJson)
+                                    {
+                                        tblBook bookRecord = new tblBook()
+                                        {
+                                            Title = bookItem.title,
+                                            ISBN = bookItem.isbn,
+                                            PageCount = bookItem.pageCount,
+                                            FilePath = await Common.SaveImageThumbnails(thumbnailsPath, bookItem.thumbnailUrl, true),
+                                            PublishedDate = bookItem.publishedDate != null ? bookItem.publishedDate.Date : DateTime.Now,
+                                            ThumbnailUrl = bookItem.thumbnailUrl,
+                                            ShortDescription = bookItem.shortDescription,
+                                            LongDescription = bookItem.longDescription,
+                                            Status = bookItem.status,
+                                            Authors = bookItem.authors != null && bookItem.authors?.Count > 0 ? string.Join(",", bookItem.authors) : "",
+                                            Categories = bookItem.categories != null && bookItem.categories?.Count > 0 ? string.Join(",", bookItem.categories) : "",
+                                        };
+                                        bookRecord.IsCoverAvailable = !string.IsNullOrEmpty(bookRecord.FilePath) ? true : false;
+                                        await App.Database.Book.InsertAsync(bookRecord);
+                                        await LoaderMessage($"Added Book Records {i} Out Of {booksJson?.Count}.", 0);
+                                        i++;
+                                    }
+                                    await LoaderMessage($"Books Added Successfully.", 100);
+                                }
+                            }
+
                         }
 
                     }
-
+                    foreach (var item in verisonDataList)
+                    {
+                        tblVerisonMaster verisonMaster = new tblVerisonMaster()
+                        {
+                            Key = item.KeyName,
+                            Value = item.Value,
+                        };
+                        await App.Database.MasterDataVerison.InsertAsync(verisonMaster);
+                    }
                 }
             }
             catch (Exception ex)

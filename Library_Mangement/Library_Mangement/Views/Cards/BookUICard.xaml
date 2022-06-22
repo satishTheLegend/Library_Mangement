@@ -31,27 +31,37 @@
                                                 </StackLayout>
                                                 <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                                                     <Label Text="Publish Year :" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
-                                                    <Label Text="{Binding Year}" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
+                                                    <Label Text="{Binding PublishedDate}" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
                                                 </StackLayout>
                                                 <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                                                     <Label Text="Language :" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
-                                                    <Label Text="{Binding Language}" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
+                                                    <Label Text="{Binding Categories}" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
                                                 </StackLayout>
                                                 <StackLayout Grid.Row="3" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                                                     <Label Text="Book Pages :" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
-                                                    <Label Text="{Binding Pages}" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
+                                                    <Label Text="{Binding PageCount}" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
                                                 </StackLayout>
                                                 <StackLayout Grid.Row="4"  Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                                                     <Label Text="Country :" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
-                                                    <Label Text="{Binding Country}" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
+                                                    <Label Text="{Binding LongDescription}" WidthRequest="50" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
+                                                    <StackLayout.GestureRecognizers>
+                                                        <TapGestureRecognizer  
+                                                            Command="{Binding ParentBindingContext.LongDescriptionCommand, Source={x:Reference Name=BooksList}}" 
+                                                            BindingContext="{Binding Source={x:Reference  Name=BooksData}}" CommandParameter="{x:Reference LongDescription}" />
+                                                    </StackLayout.GestureRecognizers>
                                                 </StackLayout>
                                                 <StackLayout Grid.Row="5" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                                                     <Label Text="Link :" WidthRequest="50" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
-                                                    <Label Text="{Binding Link}" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
+                                                    <Label Text="{Binding ShortDescription}" WidthRequest="50" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
+                                                    <StackLayout.GestureRecognizers>
+                                                        <TapGestureRecognizer  
+                                                            Command="{Binding ParentBindingContext.ShortDescriptionCommand, Source={x:Reference Name=BooksList}}" 
+                                                            BindingContext="{Binding Source={x:Reference  Name=BooksData}}" CommandParameter="{x:Reference ShortDescription}" />
+                                                    </StackLayout.GestureRecognizers>
                                                 </StackLayout>
                                                 <StackLayout Grid.Row="6" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                                                     <Label Text="Book Id :" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
-                                                    <Label Text="{Binding Book_Id}" TextTransform="Uppercase" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
+                                                    <Label Text="{Binding ISBN}" TextTransform="Uppercase" TextColor="Black" FontSize="Header" FontAttributes="Bold" />
                                                 </StackLayout>
                                             </Grid>
                                         </StackLayout>

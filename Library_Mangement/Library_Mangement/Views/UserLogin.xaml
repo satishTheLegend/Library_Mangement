@@ -62,10 +62,10 @@
             Spacing="20"
             VerticalOptions="CenterAndExpand">
                 <Grid Grid.Row="1" ColumnDefinitions="0.1*,8*,0.1*">
-                    <dxe:TextEdit Grid.Column="1" BoxHeight="40" Text="{Binding UserName}" CornerRadius="20" PlaceholderText="User Name" BackgroundColor="White" Opacity="0.8" BorderColor="Transparent"/>
+                    <dxe:TextEdit Grid.Column="1" x:Name="userName" BoxHeight="40" Text="{Binding UserName}" CornerRadius="20" PlaceholderText="User Name" BackgroundColor="White" Opacity="0.8" BorderColor="Transparent"/>
                 </Grid>
                 <Grid Grid.Row="2" ColumnDefinitions="0.1*,8*,0.1*">
-                    <dxe:PasswordEdit Grid.Column="1" Text="{Binding Password}" PasswordIconVisibility="Auto" IsStartIconVisible="True" IsErrorIconVisible="True" IsEndIconVisible="True" BoxHeight="40" Keyboard="Chat" IconColor="Red" CornerRadius="20" PlaceholderText="Password" BackgroundColor="White" Opacity="0.8" BorderColor="Transparent"/>
+                    <dxe:PasswordEdit Grid.Column="1" x:Name="password" Text="{Binding Password}" PasswordIconVisibility="Auto" IsStartIconVisible="True" IsErrorIconVisible="True" IsEndIconVisible="True" BoxHeight="40" Keyboard="Chat" IconColor="Red" CornerRadius="20" PlaceholderText="Password" BackgroundColor="White" Opacity="0.8" BorderColor="Transparent"/>
                 </Grid>
                 <Grid Grid.Row="3" ColumnDefinitions="0.2*,8*,0.1*" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent">
                     <StackLayout  Grid.Column="1" Orientation="Horizontal">

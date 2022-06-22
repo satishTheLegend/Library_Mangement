@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace Library_Mangement.Database.Repositories
 {
-    public class BooksRepository : IRepositories<tblBook>
+    public class VerisonMasterRepository : IRepositories<tblVerisonMaster>
     {
         #region Properties
         private readonly SQLiteAsyncConnection _conn;
         #endregion
 
         #region Constructor
-        public BooksRepository(string dbPath)
+        public VerisonMasterRepository(string dbPath)
         {
             try
             {
                 _conn = new SQLiteAsyncConnection(dbPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex, true);
-                _conn.CreateTableAsync<tblBook>().Wait();
+                _conn.CreateTableAsync<tblVerisonMaster>().Wait();
             }
             catch (Exception ex)
             {
@@ -29,36 +29,39 @@ namespace Library_Mangement.Database.Repositories
         #endregion
 
         #region Public Methods
-        
+        public Task<tblVerisonMaster> FindItemByKey(string key)
+        {
+            return _conn.Table<tblVerisonMaster>().FirstOrDefaultAsync(x => x.Key == key);
+        }
         #endregion
 
         #region Implemented Methods
         public async Task<bool> DeleteAllRecords()
         {
-            var res = await _conn.ExecuteAsync("Delete from tblBook");
+            var res = await _conn.ExecuteAsync("Delete from tblVerisonMaster");
             return res > 0;
 
         }
 
-        public Task<int> DeleteAsync(tblBook entity)
+        public Task<int> DeleteAsync(tblVerisonMaster entity)
         {
             return _conn.DeleteAsync(entity);
         }
 
-        public Task<tblBook> FindByIdAsync(int Id)
+        public Task<tblVerisonMaster> FindByIdAsync(int Id)
         {
-            return _conn.Table<tblBook>().FirstOrDefaultAsync(x => x.Id == Id);
+            return _conn.Table<tblVerisonMaster>().FirstOrDefaultAsync(x => x.ID == Id);
         }
 
-        public Task<List<tblBook>> GetDataAsync()
+        public Task<List<tblVerisonMaster>> GetDataAsync()
         {
-            return _conn.Table<tblBook>().ToListAsync();
+            return _conn.Table<tblVerisonMaster>().ToListAsync();
         }
 
-        public async Task<int> InsertAsync(tblBook entity)
+        public async Task<int> InsertAsync(tblVerisonMaster entity)
         {
             int result = -1;
-            tblBook book = await _conn.Table<tblBook>().FirstOrDefaultAsync(x=> x.Title == entity.Title && x.ThumbnailUrl == entity.ThumbnailUrl && x.FilePath == entity.FilePath && x.ISBN == entity.ISBN && x.Title == entity.Title && x.Authors == entity.Authors);
+            tblVerisonMaster book = await _conn.Table<tblVerisonMaster>().FirstOrDefaultAsync(x=> x.Key == entity.Key);
             if(book == null)
             {
                 result = await _conn.InsertAsync(entity);
@@ -70,7 +73,7 @@ namespace Library_Mangement.Database.Repositories
             return result;
         }
 
-        public Task<int> UpdateAsync(tblBook entity)
+        public Task<int> UpdateAsync(tblVerisonMaster entity)
         {
             return _conn.UpdateAsync(entity);
         }
