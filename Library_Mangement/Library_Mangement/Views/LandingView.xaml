@@ -30,7 +30,7 @@
             AbsoluteLayout.LayoutFlags="All"
             HorizontalOptions="CenterAndExpand"
             VerticalOptions="CenterAndExpand">
-            <controls:Loader LoaderText="{Binding LoaderText}"></controls:Loader>
+            <controls:Loader LoaderText="{Binding LoaderText}" AnimationAssetFileName="library_Loader.json" ></controls:Loader>
         </StackLayout>
 
         <StackLayout IsVisible="{Binding LandingPageEnable}"

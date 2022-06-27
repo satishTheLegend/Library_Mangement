@@ -17,5 +17,6 @@ namespace Library_Mangement.Model
         public string Author { get; set; }
         public string Categories { get; set; }
         public bool IsCoverAvailable { get; set; }
+        public bool ViewMoreButtons { get; set; } = false;
     }
 }

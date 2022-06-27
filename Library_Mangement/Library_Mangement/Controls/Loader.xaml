@@ -4,7 +4,7 @@
              xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
              x:Class="Library_Mangement.Controls.Loader" x:Name="LoaderStack">
     <Grid RowDefinitions="10*">
-        <Frame x:Name="LoaderFrame" CornerRadius="100" BackgroundColor="Gray" Opacity="0.5" Padding="150,0,100,0" Grid.Row="0">
+        <Frame x:Name="LoaderFrame" CornerRadius="100" BackgroundColor="Transparent" Opacity="0.5" Padding="150,0,100,0" Grid.Row="0">
             
         </Frame>
         <lottie:AnimationView IsVisible="True" Grid.Row="0" 

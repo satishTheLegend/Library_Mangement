@@ -62,5 +62,9 @@ namespace Library_Mangement.Views
 
         #endregion
 
+        private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _vm.SearchClicked();
+        }
     }
 }

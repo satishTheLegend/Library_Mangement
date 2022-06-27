@@ -13,6 +13,30 @@ namespace Library_Mangement.Controls
     public partial class Loader : StackLayout
     {
         #region Properties
+        public static BindableProperty ParentBindingContextProperty =
+        BindableProperty.Create(nameof(ParentBindingContext), typeof(object),
+        typeof(Loader), null);
+
+        public object ParentBindingContext
+        {
+            get { return GetValue(ParentBindingContextProperty); }
+            set { SetValue(ParentBindingContextProperty, value); }
+        }
+
+        public string AnimationAssetFileName
+        {
+            get => (string)GetValue(AnimationAssetFileNameProperty);
+            set => SetValue(AnimationAssetFileNameProperty, value);
+        }
+
+        public static BindableProperty AnimationAssetFileNameProperty = BindableProperty.Create(
+                                propertyName: "AnimationAssetFileName",
+                                returnType: typeof(string),
+                                declaringType: typeof(Loader),
+                                defaultValue: "library_Loader.json",
+                                defaultBindingMode: BindingMode.TwoWay,
+                                propertyChanged: AnimationAssetFileNamePropertyChanged);
+
         public string LoaderText
         {
             get => (string)GetValue(LoaderTextProperty);
@@ -109,6 +133,24 @@ namespace Library_Mangement.Controls
             catch (Exception ex)
             {
 
+            }
+        }
+
+        private static void AnimationAssetFileNamePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (Loader)bindable;
+            control.animationView.Animation = (string)newValue;
+            switch ((string)newValue)
+            {
+                case "library_Loader.json":
+                    break;
+                case "Downloading_Files.json":
+                    control.animationView.HeightRequest = (double)200;
+                    control.animationView.WidthRequest = (double)200;
+                    control.animationView.Margin = new Thickness(0,0,0,50);
+                    break;
+                default:
+                    break;
             }
         }
 

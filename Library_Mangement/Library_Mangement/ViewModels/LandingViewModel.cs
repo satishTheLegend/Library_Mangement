@@ -2,6 +2,7 @@
 using Library_Mangement.Helper;
 using Library_Mangement.Model.ApiResponse;
 using Library_Mangement.Validation;
+using Library_Mangement.Views;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -90,7 +91,7 @@ namespace Library_Mangement.ViewModels
                 LandingPageOpacity = 0.5;
                 var directoryPath = Common.GetBasePath("MasterData");
                 await LoaderMessage("Downloading Json Data.", 1500);
-                bool isMasterDataNotAvailable = true;
+                bool isMasterDataNotAvailable = false;
                 List<MasterVerisonModel> verisonDataList = null;
                 var MasterDataVerisonBytes = await App.RestServiceConnection.DownloadJsonData("https://drive.google.com/u/0/uc?id=1vr34-Yx2giOYQCdMUABvB2gN4L4kt_84&export=download");
                 if (MasterDataVerisonBytes != null)
@@ -112,7 +113,7 @@ namespace Library_Mangement.ViewModels
                             var data = await App.Database.MasterDataVerison.FindItemByKey(item.KeyName);
                             if(data != null)
                             {
-                                bool result = data.Value != item.Value ? true : false;
+                                bool result = data.Value != item.Value ? false : true;
                                 masterDataResult.Add(result);
                             }
                             else
@@ -124,6 +125,10 @@ namespace Library_Mangement.ViewModels
                         if(!isMasterDataAvailable)
                         {
                             await LoaderMessage("No New Updates For Master Data.", 400);
+                        }
+                        else
+                        {
+                            isMasterDataNotAvailable = true;
                         }
                     }
                 }
@@ -160,7 +165,6 @@ namespace Library_Mangement.ViewModels
                                     foreach (var bookImageItem in booksJson)
                                     {
                                         await Task.Run(async () => await Common.SaveImageThumbnails(thumbnailsPath, bookImageItem.thumbnailUrl));
-                                        //await Common.SaveImageThumbnails(thumbnailsPath, bookImageItem.thumbnailUrl);
                                         await LoaderMessage($"Downloading Image {thumb} Out Of {booksJson.Count}.", 0);
                                         thumb++;
                                     }
@@ -243,23 +247,10 @@ namespace Library_Mangement.ViewModels
         private async Task LoaderMessage(string loaderText, int timeDeley)
         {
             LoaderText = $"{loaderText}";
-            await Task.Delay(timeDeley);
-        }
-
-        private async Task<bool> ExtractImagesFromZip(string directoryPath)
-        {
-            bool result = false;
-            try
+            if(timeDeley > 0 && AppConfig.isAwaitTimeNeeds)
             {
-                string fileName = "images";
-                var getImagesZipStream = Common.GetByteFromResource(_assembly, fileName, ".zip");
-                result = await Common.UnzipFileAsync(getImagesZipStream, fileName, directoryPath);
+                await Task.Delay(timeDeley);
             }
-            catch (Exception ex)
-            {
-                return result;
-            }
-            return result;
         }
 
         #endregion
