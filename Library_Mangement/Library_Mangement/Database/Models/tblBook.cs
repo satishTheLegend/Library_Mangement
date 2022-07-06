@@ -31,14 +31,16 @@ namespace Library_Mangement.Database.Models
         public string Title { get; set; }
         public string ISBN { get; set; }
         public int PageCount { get; set; }
-        public DateTime PublishedDate { get; set; }
-        public string ThumbnailUrl { get; set; }
-        public string ShortDescription { get; set; }
-        public string LongDescription { get; set; }
+        public string PublishedDate { get; set; }
+        public string PngLink { get; set; }
+        public string PngName { get; set; }
+        public string PdfLink { get; set; }
+        public string PdfName { get; set; }
         public string Status { get; set; }
         public string Authors { get; set; }
         public string Categories { get; set; }
-        public string FilePath { get; set; }
+        public string PngFilePath { get; set; }
+        public string PdfFilePath { get; set; }
         public bool IsCoverAvailable { get; set; }
     }
 

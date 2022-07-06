@@ -50,6 +50,10 @@ namespace Library_Mangement.Helper
             {
 
             }
+            if(!string.IsNullOrEmpty(Imagepath) && !Directory.Exists(Imagepath))
+            {
+                Directory.CreateDirectory(Imagepath);
+            }
             return Imagepath;
         }
         public static byte[] GetByteFromResource(Assembly assemblyData, string fileName, string fileType)
@@ -78,6 +82,45 @@ namespace Library_Mangement.Helper
             }
             return byteData;
         }
+
+        public static bool UnzipFileAsync(string zipFilePath, string unzipFolderPath)
+        {
+            try
+            {
+                if(Directory.Exists(unzipFolderPath))
+                {
+                    Directory.Delete(unzipFolderPath, true);
+                }
+                Directory.CreateDirectory(unzipFolderPath);
+                System.IO.Compression.ZipFile.ExtractToDirectory(zipFilePath, unzipFolderPath);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static async Task<string> DownloadFileAndGETFilePath(string url, string directoryName, string fileName)
+        {
+            string filePath = string.Empty;
+            if(!string.IsNullOrEmpty(url))
+            {
+                byte[] fileBytes = await App.RestServiceConnection.DownloadJsonData(url);
+                if(fileBytes != null)
+                {
+                    filePath = Path.Combine(GetBasePath(directoryName), fileName);
+                    if(File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+                    bool isFileSaved = await SaveFileFromByteArray(fileBytes, filePath);
+                    filePath = !isFileSaved ? "" : filePath;
+                }
+            }
+            return await Task.FromResult(filePath);
+        }
+
         public static string GetFileNameFromURL(string url)
         {
             string filename = string.Empty;
@@ -168,6 +211,11 @@ namespace Library_Mangement.Helper
                 }
             }
             return path;
+        }
+
+        public static string GetPNGFilePath(string directoryName, string pdfFileName)
+        {
+            return Path.Combine(GetBasePath(directoryName), pdfFileName);
         }
 
         #endregion

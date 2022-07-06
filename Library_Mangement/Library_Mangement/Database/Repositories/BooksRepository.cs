@@ -29,7 +29,7 @@ namespace Library_Mangement.Database.Repositories
         #endregion
 
         #region Public Methods
-        
+
         #endregion
 
         #region Implemented Methods
@@ -58,8 +58,8 @@ namespace Library_Mangement.Database.Repositories
         public async Task<int> InsertAsync(tblBook entity)
         {
             int result = -1;
-            tblBook book = await _conn.Table<tblBook>().FirstOrDefaultAsync(x=> x.Title == entity.Title && x.ThumbnailUrl == entity.ThumbnailUrl && x.FilePath == entity.FilePath && x.ISBN == entity.ISBN && x.Title == entity.Title && x.Authors == entity.Authors);
-            if(book == null)
+            tblBook book = await _conn.Table<tblBook>().FirstOrDefaultAsync(x => x.Title == entity.Title && x.PngLink == entity.PngLink && x.PngFilePath == entity.PngFilePath && x.ISBN == entity.ISBN && x.Title == entity.Title && x.Authors == entity.Authors);
+            if (book == null)
             {
                 result = await _conn.InsertAsync(entity);
             }

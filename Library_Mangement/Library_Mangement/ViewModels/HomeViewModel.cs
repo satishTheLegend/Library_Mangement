@@ -6,9 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
@@ -257,19 +259,70 @@ namespace Library_Mangement.ViewModels
             {
                 int bookCount = 0;
                 if (Books != null) Books.Clear();
+                var directoryPath = Common.GetBasePath("BookThumbnails");
+                string[] thumbnailsPath = null;
+                List<BooksThumbnailsModel> booksThumbnailsList = new List<BooksThumbnailsModel>();
+                if (Directory.Exists(directoryPath))
+                {
+                    //DirectoryInfo dir = new DirectoryInfo(directoryPath);
+                    thumbnailsPath = Directory.GetFiles(directoryPath, "*.*", SearchOption.AllDirectories);
+                }
+                foreach (var item in thumbnailsPath)
+                {
+                    BooksThumbnailsModel booksThumbnails = new BooksThumbnailsModel();
+                    booksThumbnails.FilePath = item;
+                    string prevfileName = Path.GetFileName(item);
+                    var pattern = new Regex("[:!@#$%^&*()}{|\":?><\\-._[\\]\\-;'/.,~]");
+                    prevfileName = pattern.Replace(prevfileName, " ");
+                    if (prevfileName.ToLowerInvariant().Contains("png"))
+                    {
+                        prevfileName = prevfileName.ToLowerInvariant().Replace("png", string.Empty);
+                    }
+                    if (prevfileName.ToLowerInvariant().Contains("jpg"))
+                    {
+                        prevfileName = prevfileName.ToLowerInvariant().Replace("jpg", string.Empty);
+                    }
+                    if (prevfileName.ToLowerInvariant().Contains("pdf"))
+                    {
+                        prevfileName = prevfileName.ToLowerInvariant().Replace("pdf", string.Empty);
+                    }
+                    booksThumbnails.FileName = prevfileName;
+                    booksThumbnailsList.Add(booksThumbnails);
+                }
                 foreach (var bookItem in allBooks)
                 {
+                    var pattern = new Regex("[:!@#$%^&*()}{|\":?><\\-._[\\]\\-;'/.,~]");
+                    string newfileName = pattern.Replace(bookItem.PdfName, " ");
+                    if (newfileName.ToLowerInvariant().Contains("png"))
+                    {
+                        newfileName = newfileName.ToLowerInvariant().Replace("png", string.Empty);
+                    }
+                    if (newfileName.ToLowerInvariant().Contains("jpg"))
+                    {
+                        newfileName = newfileName.ToLowerInvariant().Replace("jpg", string.Empty);
+                    }
+                    if (newfileName.ToLowerInvariant().Contains("pdf"))
+                    {
+                        newfileName = newfileName.ToLowerInvariant().Replace("pdf", string.Empty);
+                    }
+
+                    
+                    var filePath = string.Empty;
+                    if(booksThumbnailsList?.Count > 0)
+                    {
+                        filePath = booksThumbnailsList.FirstOrDefault(x => Regex.Replace(x.FileName, @"\s+", "").ToLowerInvariant().Contains(Regex.Replace(newfileName, @"\s+", ""))).FilePath;
+                    }
                     BooksPropertyModel book = new BooksPropertyModel()
                     {
                         Author = bookItem.Authors,
                         ISBN = bookItem.ISBN,
-                        ShortDescription = bookItem.ShortDescription,
-                        Book_ImageSource = bookItem.IsCoverAvailable ? bookItem.FilePath : "PlaceHolder.png",
-                        LongDescription = bookItem.LongDescription,
+                        ShortDescription = bookItem.Authors,
+                        Book_ImageSource = bookItem.IsCoverAvailable ? filePath : "PlaceHolder.png",
+                        LongDescription = bookItem.PdfName,
                         Categories = bookItem.Categories,
                         PageCount = bookItem.PageCount,
                         Title = bookItem.Title,
-                        PublishedDate = bookItem.PublishedDate.ToString("MM/dd/yyyy"),
+                        PublishedDate = bookItem.PublishedDate,
                     };
                     await LoaderMessage($"Added Books To View {bookCount} out of {allBooks.Count}", 50);
                     bookCount++;

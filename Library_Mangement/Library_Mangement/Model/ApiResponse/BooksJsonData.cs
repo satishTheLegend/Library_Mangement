@@ -26,17 +26,19 @@ namespace Library_Mangement.Model.ApiResponse
 
     public class BooksJsonData
     {
-        public string title { get; set; }
-        public string isbn { get; set; }
-        public int pageCount { get; set; }
-        public PublishedDate publishedDate { get; set; }
-        public string thumbnailUrl { get; set; }
-        public string shortDescription { get; set; }
-        public string longDescription { get; set; }
-        public string status { get; set; }
-        public List<string> authors { get; set; }
-        public List<string> categories { get; set; }
-
+        public string FileName { get; set; }
+        public string Title { get; set; }
+        public string ImageName { get; set; }
+        public int PageCount { get; set; }
+        public string PdfFileName { get; set; }
+        public int FileLength { get; set; }
+        public string AuthorName { get; set; }
+        public string ISBN { get; set; }
+        public string PublishDate { get; set; }
+        public string Catagories { get; set; }
+        public string PDFFileLink { get; set; }
+        public string PNGFileLink { get; set; }
+        public string Status { get; set; }
         public string FilePath { get; set; }
     }
 }
