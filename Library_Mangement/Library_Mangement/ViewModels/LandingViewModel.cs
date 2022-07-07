@@ -1,5 +1,6 @@
 ﻿using Library_Mangement.Database.Models;
 using Library_Mangement.Helper;
+using Library_Mangement.Model;
 using Library_Mangement.Model.ApiResponse;
 using Library_Mangement.Validation;
 using Library_Mangement.Views;
@@ -10,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Library_Mangement.ViewModels
@@ -153,6 +155,71 @@ namespace Library_Mangement.ViewModels
             }
         }
 
+        private async Task FinalUpdateValues()
+        {
+            var allBooks = await App.Database.Book.GetDataAsync();
+            if (allBooks?.Count <= 0)
+                return;
+            string[] thumbnailsPath = null;
+            var directoryPath = Common.GetBasePath("BookThumbnails");
+            List<BooksThumbnailsModel> booksThumbnailsList = new List<BooksThumbnailsModel>();
+            if (Directory.Exists(directoryPath))
+            {
+                //DirectoryInfo dir = new DirectoryInfo(directoryPath);
+                thumbnailsPath = Directory.GetFiles(directoryPath, "*.*", SearchOption.AllDirectories);
+            }
+            foreach (var item in thumbnailsPath)
+            {
+                BooksThumbnailsModel booksThumbnails = new BooksThumbnailsModel();
+                booksThumbnails.FilePath = item;
+                string prevfileName = Path.GetFileName(item);
+                var pattern = new Regex("[:!@#$%^&*()}{|\":?><\\-._[\\]\\-;'/.,~]");
+                prevfileName = pattern.Replace(prevfileName, " ");
+                if (prevfileName.ToLowerInvariant().Contains("png"))
+                {
+                    prevfileName = prevfileName.ToLowerInvariant().Replace("png", string.Empty);
+                }
+                if (prevfileName.ToLowerInvariant().Contains("jpg"))
+                {
+                    prevfileName = prevfileName.ToLowerInvariant().Replace("jpg", string.Empty);
+                }
+                if (prevfileName.ToLowerInvariant().Contains("pdf"))
+                {
+                    prevfileName = prevfileName.ToLowerInvariant().Replace("pdf", string.Empty);
+                }
+                booksThumbnails.FileName = prevfileName;
+                booksThumbnailsList.Add(booksThumbnails);
+            }
+            int count = 0;
+            foreach (var bookItem in allBooks)
+            {
+                var pattern = new Regex("[:!@#$%^&*()}{|\":?><\\-._[\\]\\-;'/.,~]");
+                string newfileName = pattern.Replace(bookItem.PdfName, " ");
+                if (newfileName.ToLowerInvariant().Contains("png"))
+                {
+                    newfileName = newfileName.ToLowerInvariant().Replace("png", string.Empty);
+                }
+                if (newfileName.ToLowerInvariant().Contains("jpg"))
+                {
+                    newfileName = newfileName.ToLowerInvariant().Replace("jpg", string.Empty);
+                }
+                if (newfileName.ToLowerInvariant().Contains("pdf"))
+                {
+                    newfileName = newfileName.ToLowerInvariant().Replace("pdf", string.Empty);
+                }
+
+                var filePath = string.Empty;
+                if (booksThumbnailsList?.Count > 0)
+                {
+                    filePath = booksThumbnailsList.FirstOrDefault(x => Regex.Replace(x.FileName, @"\s+", "").ToLowerInvariant().Contains(Regex.Replace(newfileName, @"\s+", ""))).FilePath;
+                }
+                await LoaderMessage($"{count} book added to database", 10);
+                bookItem.PngFilePath = filePath;
+                await App.Database.Book.UpdateAsync(bookItem);
+                count++;
+            }
+        }
+
         private async Task SaveVersionRecordsToDB(MasterVerisonModel versionItem)
         {
             try
@@ -201,6 +268,7 @@ namespace Library_Mangement.ViewModels
                     string thumbnailsFilePath = Common.GetBasePath("BookThumbnails");
                     isAllFilesSaved = Common.UnzipFileAsync(masterZIPFilePath, thumbnailsFilePath);
                     await LoaderMessage($"Images Saved", 500);
+                    await FinalUpdateValues();
                 }
             }
             catch (Exception ex)

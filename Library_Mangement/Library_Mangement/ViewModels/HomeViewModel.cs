@@ -2,6 +2,7 @@
 using Library_Mangement.Helper;
 using Library_Mangement.Model;
 using Library_Mangement.Validation;
+using Library_Mangement.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -51,7 +52,19 @@ namespace Library_Mangement.ViewModels
             set
             {
                 _loaderVisible = value;
+                HideCards = !value;
                 OnPropertyChanged(nameof(LoaderVisible));
+            }
+        }
+
+        private bool _hideCards = false;
+        public bool HideCards
+        {
+            get => _hideCards;
+            set
+            {
+                _hideCards = value;
+                OnPropertyChanged(nameof(HideCards));
             }
         }
 
@@ -95,112 +108,21 @@ namespace Library_Mangement.ViewModels
         #endregion
 
         #region Commands
-        public ICommand OpenBookCommand => new Command(stack => OpenBookClicked(stack as StackLayout));
-        //public ICommand SearchCommand => new Command(() => SearchClicked());
-        public ICommand ViewMoreCommand => new Command(stack => ViewMoreClicked(stack as StackLayout));
-        public ICommand AddToCartCommand => new Command(stack => AddToCartClicked(stack as StackLayout));
-        public ICommand SmallDescCommand => new Command(stack => SmallDescClicked(stack as StackLayout));
-        public ICommand LikeBookCommand => new Command(stack => LikeBookClicked(stack as StackLayout));
-        public ICommand ShareBookCommand => new Command(stack => ShareBookClicked(stack as StackLayout));
-        public ICommand LongDescriptionCommand => new Command((desc) => OpenLongDescriptionClicked(desc));
-        public ICommand ShortDescriptionCommand => new Command((desc) => OpenShortDescriptionClicked(desc));
+        public ICommand OpenBookCommand => new Command(frame => OpenBookClicked(frame as Frame));
         public ICommand SearchCommand => new Command(() => SearchClicked());
         #endregion
 
         #region Event Handlers
-        private void OpenBookClicked(StackLayout stack)
+        private async void OpenBookClicked(Frame frame)
         {
-            //
-        }
-        private void ViewMoreClicked(StackLayout stack)
-        {
-            try
+            var bookData = frame.BindingContext as BooksPropertyModel;
+            if(bookData != null)
             {
-                if (stack.BindingContext is BooksPropertyModel data)
-                {
-                    var removeShowMore = Books.Where(x => x.ISBN != data.ISBN && x.ViewMoreButtons).ToList();
-                    UpdateBookItemIndex(removeShowMore);
-                    var showMoreBooks = Books.Where(x => x.ISBN == data.ISBN).ToList();
-                    if (!showMoreBooks[0].ViewMoreButtons)
-                    {
-                        UpdateBookItemIndex(showMoreBooks, true);
-                    }
-                    else
-                    {
-                        UpdateBookItemIndex(showMoreBooks);
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-        private async void AddToCartClicked(StackLayout stackLayout)
-        {
-            if (stackLayout.BindingContext is BooksPropertyModel data)
-            {
-                await App.Current.MainPage.DisplayAlert("Attention", "This feature is under development will get back to you in some day !!!!!", "ok", "cancel");
-            }
-        }
-        private async void SmallDescClicked(StackLayout stackLayout)
-        {
-            if (stackLayout.BindingContext is BooksPropertyModel data)
-            {
-                await App.Current.MainPage.DisplayAlert(data.Title, data.ShortDescription, "ok");
-            }
-        }
-        private async void LikeBookClicked(StackLayout stackLayout)
-        {
-            if (stackLayout.BindingContext is BooksPropertyModel data)
-            {
-                await App.Current.MainPage.DisplayAlert("Like", $"Thank you for feedback for {data.Title}", "ok");
-            }
-        }
-        private async void ShareBookClicked(StackLayout stackLayout)
-        {
-            if (stackLayout.BindingContext is BooksPropertyModel data)
-            {
-                bool res = await App.Current.MainPage.DisplayAlert("Share Book", data.Title, "ok", "cancel");
-                if (res)
-                {
-                    await Share.RequestAsync(new ShareTextRequest
-                    {
-                        Text = data.Title,
-                        Title = "Share Title"
-                    });
-                }
-            }
-        }
-        private void UpdateBookItemIndex(List<BooksPropertyModel> books, bool isVisible = false)
-        {
-            if (books?.Count > 0)
-            {
-                foreach (var book in books)
-                {
-                    var index = Books.IndexOf(book);
-                    if (index > -1)
-                    {
-                        Books.RemoveAt(index);
-                        book.ViewMoreButtons = isVisible;
-                        Books.Insert(index, book);
-                    }
-                }
-            }
-        }
-        private void OpenLongDescriptionClicked(object data)
-        {
-            if (data != null)
-            {
-
-            }
-        }
-        private void OpenShortDescriptionClicked(object data)
-        {
-            if (data != null)
-            {
-
+                LoaderVisible = true;
+                await LoaderMessage($"Opening {bookData.Title}", 1500);
+                tblBook book = await App.Database.Book.GetBookByISBNId(bookData.ISBN);
+                await App.Current.MainPage.Navigation.PushAsync(new BookView(book));
+                LoaderVisible = false;
             }
         }
         #endregion
@@ -220,6 +142,8 @@ namespace Library_Mangement.ViewModels
                     bookList = await LoadBooksFromTable(allBooks);
                     if (bookList?.Count > 0)
                         Books = new ObservableCollection<BooksPropertyModel>(bookList);
+                    //await LoadFinalTextOfLoader();
+                    LoaderVisible = false;
                 }
             }
             catch (Exception ex)
@@ -231,7 +155,7 @@ namespace Library_Mangement.ViewModels
         {
             if (!string.IsNullOrEmpty(SearchText))
             {
-                var bookItems = bookList.Where(x => (!string.IsNullOrEmpty(x.Title) && x.Title.Contains(SearchText)) || (!string.IsNullOrEmpty(x.Author) && x.Author.Contains(SearchText)) || (!string.IsNullOrEmpty(x.ISBN) && x.ISBN.Contains(SearchText)) || (!string.IsNullOrEmpty(x.Categories) && x.Categories.Contains(SearchText))).ToList();
+                var bookItems = bookList.Where(x => (!string.IsNullOrEmpty(x.Title) && x.Title.Contains(SearchText)) || (!string.IsNullOrEmpty(x.ISBN) && x.ISBN.Contains(SearchText))).ToList();
                 LoaderVisible = true;
                 LottieAnimationName = "Data_NotFound.json";
                 LoaderText = "Please Wait";
@@ -268,72 +192,29 @@ namespace Library_Mangement.ViewModels
             {
                 int bookCount = 0;
                 if (Books != null) Books.Clear();
-                var directoryPath = Common.GetBasePath("BookThumbnails");
-                string[] thumbnailsPath = null;
-                List<BooksThumbnailsModel> booksThumbnailsList = new List<BooksThumbnailsModel>();
-                if (Directory.Exists(directoryPath))
-                {
-                    //DirectoryInfo dir = new DirectoryInfo(directoryPath);
-                    thumbnailsPath = Directory.GetFiles(directoryPath, "*.*", SearchOption.AllDirectories);
-                }
-                foreach (var item in thumbnailsPath)
-                {
-                    BooksThumbnailsModel booksThumbnails = new BooksThumbnailsModel();
-                    booksThumbnails.FilePath = item;
-                    string prevfileName = Path.GetFileName(item);
-                    var pattern = new Regex("[:!@#$%^&*()}{|\":?><\\-._[\\]\\-;'/.,~]");
-                    prevfileName = pattern.Replace(prevfileName, " ");
-                    if (prevfileName.ToLowerInvariant().Contains("png"))
-                    {
-                        prevfileName = prevfileName.ToLowerInvariant().Replace("png", string.Empty);
-                    }
-                    if (prevfileName.ToLowerInvariant().Contains("jpg"))
-                    {
-                        prevfileName = prevfileName.ToLowerInvariant().Replace("jpg", string.Empty);
-                    }
-                    if (prevfileName.ToLowerInvariant().Contains("pdf"))
-                    {
-                        prevfileName = prevfileName.ToLowerInvariant().Replace("pdf", string.Empty);
-                    }
-                    booksThumbnails.FileName = prevfileName;
-                    booksThumbnailsList.Add(booksThumbnails);
-                }
+                               
                 foreach (var bookItem in allBooks)
                 {
-                    var pattern = new Regex("[:!@#$%^&*()}{|\":?><\\-._[\\]\\-;'/.,~]");
-                    string newfileName = pattern.Replace(bookItem.PdfName, " ");
-                    if (newfileName.ToLowerInvariant().Contains("png"))
+                    if (File.Exists(bookItem.PngFilePath))
                     {
-                        newfileName = newfileName.ToLowerInvariant().Replace("png", string.Empty);
-                    }
-                    if (newfileName.ToLowerInvariant().Contains("jpg"))
-                    {
-                        newfileName = newfileName.ToLowerInvariant().Replace("jpg", string.Empty);
-                    }
-                    if (newfileName.ToLowerInvariant().Contains("pdf"))
-                    {
-                        newfileName = newfileName.ToLowerInvariant().Replace("pdf", string.Empty);
-                    }
-
-                    
-                    var filePath = string.Empty;
-                    if(booksThumbnailsList?.Count > 0)
-                    {
-                        filePath = booksThumbnailsList.FirstOrDefault(x => Regex.Replace(x.FileName, @"\s+", "").ToLowerInvariant().Contains(Regex.Replace(newfileName, @"\s+", ""))).FilePath;
+                        bookItem.IsCoverAvailable = true;
                     }
                     BooksPropertyModel book = new BooksPropertyModel()
                     {
-                        Author = bookItem.Authors,
                         ISBN = bookItem.ISBN,
-                        ShortDescription = bookItem.Authors,
-                        Book_ImageSource = bookItem.IsCoverAvailable ? filePath : "PlaceHolder.png",
-                        LongDescription = bookItem.PdfName,
-                        Categories = bookItem.Categories,
+                        Book_ImageSource = bookItem.IsCoverAvailable ? bookItem.PngFilePath : "PlaceHolder.png",
+                        IsCoverAvailable = bookItem.IsCoverAvailable,
                         PageCount = bookItem.PageCount,
                         Title = bookItem.Title,
-                        PublishedDate = bookItem.PublishedDate,
                     };
-                    await LoaderMessage($"Added Books To View {bookCount} out of {allBooks.Count}", 50);
+                    if(bookCount == allBooks.Count-1)
+                    {
+                        await LoaderMessage($"Loading...", 0);
+                    }
+                    else
+                    {
+                        await LoaderMessage($"Added Books To View {bookCount} out of {allBooks.Count}", 10);
+                    }
                     bookCount++;
                     books.Add(book);
                 }
@@ -342,7 +223,6 @@ namespace Library_Mangement.ViewModels
             {
 
             }
-            await LoadFinalTextOfLoader();
             return books;
         }
         private async Task LoadFinalTextOfLoader()
@@ -375,7 +255,7 @@ namespace Library_Mangement.ViewModels
             {
 
             }
-            LoaderVisible = false;
+            
         }
         private async Task LoaderMessage(string loaderText, int timeDeley, bool isStopLoader = false)
         {

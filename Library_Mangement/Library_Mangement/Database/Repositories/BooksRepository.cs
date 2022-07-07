@@ -74,6 +74,11 @@ namespace Library_Mangement.Database.Repositories
         {
             return _conn.UpdateAsync(entity);
         }
+
+        public async Task<tblBook> GetBookByISBNId(string iSBN)
+        {
+            return await _conn.Table<tblBook>().FirstOrDefaultAsync(x => x.ISBN == iSBN);
+        }
         #endregion
     }
 }

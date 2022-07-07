@@ -1,12 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <StackLayout xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:controls="clr-namespace:Library_Mangement.Controls"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Library_Mangement.Views.Cards.BookUICard" x:Name="BooksList">
     <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <FlexLayout x:Name="itemData" BindableLayout.ItemsSource="{Binding Books}" AlignContent="Start" AlignItems="Start" Direction="Row" JustifyContent="Start" Wrap="Wrap">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
-                    <Frame WidthRequest="180" Padding="15,10,10,10" BackgroundColor="Transparent">
+                    <Frame x:Name="BooksData" WidthRequest="180" Padding="15,10,10,10" BackgroundColor="Transparent">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer  Command="{Binding ParentBindingContext.OpenBookCommand, Source={x:Reference Name=BooksList}}" 
+                                                   BindingContext="{Binding Source={x:Reference  Name=BooksData}}" CommandParameter="{x:Reference BooksData}" />
+                        </Frame.GestureRecognizers>
                         <StackLayout>
                             <Image Source="{Binding Book_ImageSource}" HeightRequest="221" BackgroundColor="Transparent"></Image>
                             <Label Text="{Binding Title}" FontSize="Large" LineBreakMode="TailTruncation" HorizontalTextAlignment="Center" FontAttributes="Bold"></Label>
@@ -18,11 +22,13 @@
         </FlexLayout>
         <!--<StackLayout x:Name="BooksData" Padding="1" >
 
-            --><!--<StackLayout.GestureRecognizers>
+            -->
+        <!--<StackLayout.GestureRecognizers>
                 <TapGestureRecognizer  
                                                 Command="{Binding ParentBindingContext.OpenBookCommand, Source={x:Reference Name=BooksList}}" 
                                                 BindingContext="{Binding Source={x:Reference  Name=BooksData}}" CommandParameter="{x:Reference BooksData}" />
-            </StackLayout.GestureRecognizers>--><!--
+            </StackLayout.GestureRecognizers>-->
+        <!--
             
             <Frame CornerRadius="15" Padding="0" BorderColor="Black" Scale="1" AnchorX="1" AnchorY="0">
                 <Frame.Background>
@@ -81,7 +87,8 @@
                                             </LinearGradientBrush>
                                         </Button.Background>
                                     </Button>
-                                    --><!--<Grid RowDefinitions="Auto" ColumnDefinitions="8*,2*" Grid.Row="6" HorizontalOptions="CenterAndExpand">
+                                    -->
+        <!--<Grid RowDefinitions="Auto" ColumnDefinitions="8*,2*" Grid.Row="6" HorizontalOptions="CenterAndExpand">
                                         <Frame BackgroundColor="Gray" Grid.Row="0" IsVisible="{Binding ViewMoreButtons}" Padding="0" CornerRadius="10" Grid.Column="0">
                                             <StackLayout  Orientation="Horizontal">
                                                 <ImageButton Source="Add_Book.png" HeightRequest="40" BackgroundColor="Transparent"
@@ -104,7 +111,8 @@
                                                                         BindingContext="{Binding Source={x:Reference  Name=BooksData}}" CommandParameter="{x:Reference BooksData}"/>
                                         </StackLayout>
 
-                                    </Grid>--><!--
+                                    </Grid>-->
+        <!--
                                 </Grid>
                             </StackLayout>
                         </Grid>
