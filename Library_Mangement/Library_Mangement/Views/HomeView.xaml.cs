@@ -64,7 +64,10 @@ namespace Library_Mangement.Views
 
         private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
         {
-            _vm.SearchClicked();
+            if(string.IsNullOrEmpty(_vm.SearchText))
+            {
+                _vm.SearchClicked();
+            }
         }
     }
 }

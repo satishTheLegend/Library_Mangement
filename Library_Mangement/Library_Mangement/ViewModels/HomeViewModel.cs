@@ -104,6 +104,7 @@ namespace Library_Mangement.ViewModels
         public ICommand ShareBookCommand => new Command(stack => ShareBookClicked(stack as StackLayout));
         public ICommand LongDescriptionCommand => new Command((desc) => OpenLongDescriptionClicked(desc));
         public ICommand ShortDescriptionCommand => new Command((desc) => OpenShortDescriptionClicked(desc));
+        public ICommand SearchCommand => new Command(() => SearchClicked());
         #endregion
 
         #region Event Handlers
@@ -231,7 +232,11 @@ namespace Library_Mangement.ViewModels
             if (!string.IsNullOrEmpty(SearchText))
             {
                 var bookItems = bookList.Where(x => (!string.IsNullOrEmpty(x.Title) && x.Title.Contains(SearchText)) || (!string.IsNullOrEmpty(x.Author) && x.Author.Contains(SearchText)) || (!string.IsNullOrEmpty(x.ISBN) && x.ISBN.Contains(SearchText)) || (!string.IsNullOrEmpty(x.Categories) && x.Categories.Contains(SearchText))).ToList();
+                LoaderVisible = true;
+                LottieAnimationName = "Data_NotFound.json";
+                LoaderText = "Please Wait";
                 Books.Clear();
+                LoaderVisible = false;
                 if (bookItems?.Count > 0)
                 {
                     Books = new ObservableCollection<BooksPropertyModel>(bookItems);
@@ -245,8 +250,12 @@ namespace Library_Mangement.ViewModels
             }
             else
             {
+                LoaderVisible = true;
+                LoaderText = "OOPS !!!! We didnt found your book, Sorry !";
                 Books.Clear();
                 Books = new ObservableCollection<BooksPropertyModel>(bookList);
+                LoaderVisible = false;
+                LottieAnimationName = "Downloading_Files.json";
             }
         }
         #endregion
