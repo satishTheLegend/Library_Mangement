@@ -24,6 +24,7 @@ namespace Library_Mangement
         #region Constructor
         public App()
         {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NjAzMjM4QDMxMzkyZTM0MmUzMEZxVkRMK3NlSk0zamgxYi9NMFdnOURXRjFrci9IVkRNTDZ1M2ljT1BvY2M9");
             InitializeComponent();
             RestServiceConnection = new RestService();
             DevExpress.XamarinForms.Editors.Initializer.Init();
@@ -63,7 +64,7 @@ namespace Library_Mangement
                 }
                 else
                 {
-                    MainPage = new NavigationPage(new LandingView());
+                    MainPage = new NavigationPage(new SpalshView());
                 }
             }
             catch (Exception ex)

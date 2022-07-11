@@ -86,5 +86,59 @@ namespace Library_Mangement.Resx {
                 return ResourceManager.GetString("Session_TimeOut_Msg", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What is OCLM ?.
+        /// </summary>
+        internal static string Spash_Title_1 {
+            get {
+                return ResourceManager.GetString("Spash_Title_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Why OCLM?.
+        /// </summary>
+        internal static string Spash_Title_2 {
+            get {
+                return ResourceManager.GetString("Spash_Title_2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Why Online Library ?.
+        /// </summary>
+        internal static string Spash_Title_3 {
+            get {
+                return ResourceManager.GetString("Spash_Title_3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The house of knowledge..
+        /// </summary>
+        internal static string Splash_Summary_1 {
+            get {
+                return ResourceManager.GetString("Splash_Summary_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We must teach people through books and magazines since books are the entrances to all of our knowledge..
+        /// </summary>
+        internal static string Splash_Summary_2 {
+            get {
+                return ResourceManager.GetString("Splash_Summary_2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Libraries help you save money and answer questions you didn’t even realize you had!.
+        /// </summary>
+        internal static string Splash_Summary_3 {
+            get {
+                return ResourceManager.GetString("Splash_Summary_3", resourceCulture);
+            }
+        }
     }
 }

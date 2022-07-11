@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
+             x:Class="Library_Mangement.Views.SpalshView" BackgroundImageSource="{Binding BgImage}" NavigationPage.HasNavigationBar="False">
+  <ContentPage.Content>
+        <Grid RowDefinitions="0.75*,9*">
+            <Grid ColumnDefinitions=" 2*, 8*" Margin="0,20,0,0">
+                <lottie:AnimationView Grid.Row="0" Grid.Column="0" BackgroundColor="Transparent"
+                 IsVisible="True" ClickedCommand="{Binding PrevCommand}" Animation="Nav_Back_Button.json" AutoPlay="True" Loop="True"/>
+            </Grid>
+            <StackLayout Grid.Row="1" VerticalOptions="EndAndExpand" Spacing="20">
+                <Grid RowDefinitions="Auto">
+                    <Label Grid.Row="3" VerticalTextAlignment="Start" Margin="0,0,0,15" Text="{Binding Title}" TextColor="White" HorizontalTextAlignment="Center" FontSize="30" FontAttributes="Bold"/>
+                    <Label Grid.Row="3" Padding="10,0,10,0" VerticalTextAlignment="Center" Text="{Binding Summary}" TextColor="White" LineBreakMode="WordWrap" HorizontalTextAlignment="Center" FontSize="Large" />
+                    <lottie:AnimationView Grid.Row="4" HeightRequest="400" IsVisible="True" ClickedCommand="{Binding NextCommand}" BackgroundColor="Transparent" Animation="Next_Button.json" AutoPlay="True" Loop="True"/>
+                </Grid>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
