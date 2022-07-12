@@ -1,4 +1,5 @@
-﻿using Library_Mangement.ViewModels;
+﻿using Library_Mangement.Animations;
+using Library_Mangement.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,9 +28,18 @@ namespace Library_Mangement.Views
         #endregion
 
         #region Override Methods
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
             base.OnAppearing();
+
+            await Task.Run(async () =>
+            {
+                await ViewAnimations.FadeAnimY(Logo);
+                await ViewAnimations.FadeAnimY(BgImage);
+                await ViewAnimations.FadeAnimY(RemMe);
+                await ViewAnimations.FadeAnimY(button);
+            });
+
 #if DEBUG
             userName.Text = "Arpita";
             password.Text = "123";

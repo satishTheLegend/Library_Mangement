@@ -6,7 +6,7 @@ namespace Library_Mangement.Helper
 {
     public class AppConfig
     {
-        public const bool isAwaitTimeNeeds = true;
+        public const bool isAwaitTimeNeeds = false;
         //App Packages 
         public const string AppPackage_Development = "com.companyname.library_mangement.dev";
         public const string AppPackage_Staging = "com.companyname.library_mangement.stage";

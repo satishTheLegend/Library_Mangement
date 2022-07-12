@@ -36,7 +36,10 @@ namespace Library_Mangement.Views
                 await ViewAnimations.FadeAnimY(FaceButton);
                 await ViewAnimations.FadeAnimY(LoginButton);
                 await ViewAnimations.FadeAnimY(SignupButton);
-                await _vm.DownloadMasterData();
+                if(!_vm.LoaderVisible)
+                {
+                    await _vm.DownloadMasterData();
+                }
             });
         }
         protected void Back(object s, EventArgs e)

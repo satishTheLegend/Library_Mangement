@@ -10,7 +10,7 @@
             AbsoluteLayout.LayoutFlags="All"
             Aspect="AspectFill"
             Opacity="{Binding LandingPageOpacity}"
-            Source="Login_Background_Wall.jpg" />
+            Source="Screen_2.jpg" />
         <Image
             x:Name="Logo"
             Opacity="{Binding LandingPageOpacity}"
@@ -20,7 +20,7 @@
             HeightRequest="160"
             AbsoluteLayout.LayoutBounds="0,0,1,.5"
             AbsoluteLayout.LayoutFlags="All"
-            BackgroundColor="White"
+            BackgroundColor="Transparent"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="CenterAndExpand" />
 
