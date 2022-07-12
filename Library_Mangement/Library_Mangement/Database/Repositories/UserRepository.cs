@@ -44,11 +44,9 @@ namespace Library_Mangement.Database.Repositories
         #endregion
 
         #region Implemented Methods
-        public async Task<bool> DeleteAllRecords()
+        public async Task<int> DeleteAllRecords()
         {
-            var res = await _conn.ExecuteAsync("Delete from tblUser");
-            return res > 0;
-
+            return await _conn.ExecuteAsync("Delete from tblUser");
         }
 
         public Task<int> DeleteAsync(tblUser entity)

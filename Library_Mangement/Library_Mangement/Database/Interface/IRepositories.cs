@@ -13,6 +13,6 @@ namespace Library_Mangement.Database.Interface
         Task<int> DeleteAsync(T entity);
         Task<int> UpdateAsync(T entity);
         Task<T> FindByIdAsync(int Id);
-        Task<bool> DeleteAllRecords();
+        Task<int> DeleteAllRecords();
     }
 }

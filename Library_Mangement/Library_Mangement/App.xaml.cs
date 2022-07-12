@@ -35,7 +35,7 @@ namespace Library_Mangement
                 CurrentLoggedInUser = App.Database.User.GetActiveUserData();
             }
             RedirectToMainScreen();
-        } 
+        }
         #endregion
 
         #region Private Methods
@@ -69,7 +69,7 @@ namespace Library_Mangement
             }
             catch (Exception ex)
             {
-                
+
             }
         }
         #endregion

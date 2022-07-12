@@ -32,7 +32,7 @@ namespace Library_Mangement.Database.Repositories
         #endregion
 
         #region Database Methods
-        public Task<bool> DeleteAllRecords()
+        public Task<int> DeleteAllRecords()
         {
             throw new NotImplementedException();
         }

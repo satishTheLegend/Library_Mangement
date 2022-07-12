@@ -1,4 +1,5 @@
-﻿using Library_Mangement.Resx;
+﻿using Library_Mangement.Database.Models;
+using Library_Mangement.Resx;
 using Library_Mangement.Validation;
 using Library_Mangement.Views;
 using System;
@@ -67,7 +68,6 @@ namespace Library_Mangement.ViewModels
         public SpalshViewModel(Page splashPage)
         {
             page = splashPage;
-            NextClicked(true);
         }
         #endregion
 
@@ -79,36 +79,49 @@ namespace Library_Mangement.ViewModels
         #region Event Handlers
         public async void NextClicked(bool isNext)
         {
-            if (Id == 3 && isNext)
+            try
             {
-                await App.Current.MainPage.Navigation.PushAsync(new LandingView());
-                return;
-            }
+                if (Id == 3 && isNext)
+                {
+                    tblSettings settings = new tblSettings()
+                    {
+                        Key = "splash",
+                        Value = "1"
+                    };
+                    await App.Database.Settings.InsertAsync(settings);
+                    await App.Current.MainPage.Navigation.PushAsync(new LandingView());
+                    return;
+                }
 
-            if (!isNext && (Id == 0 || Id == 1))
-                return;
-            if(isNext)
-            {
-                Id++;
-            }
-            else
-            {
-                Id--;
-            }
-            uint transitionTime = 600;
-            double displacement = 1;
+                if (!isNext && (Id == 0 || Id == 1))
+                    return;
+                if (isNext)
+                {
+                    Id++;
+                }
+                else
+                {
+                    Id--;
+                }
+                uint transitionTime = 600;
+                double displacement = 1;
 
-            await Task.WhenAll(
-                page.FadeTo(0, transitionTime, Easing.Linear),
-                page.TranslateTo(-displacement, page.Y, transitionTime, Easing.CubicInOut));
-            //Id = isNext ? Id++ : Id--;
-            Title = TitleList[Id - 1];
-            Summary = SummaryList[Id - 1];
-            BgImage = BGImageList[Id - 1];
-            await page.TranslateTo(displacement, 0, 0);
-            await Task.WhenAll(
-                page.FadeTo(1, transitionTime, Easing.Linear),
-                page.TranslateTo(0, page.Y, transitionTime, Easing.CubicInOut));
+                await Task.WhenAll(
+                    page.FadeTo(0, transitionTime, Easing.Linear),
+                    page.TranslateTo(-displacement, page.Y, transitionTime, Easing.CubicInOut));
+                //Id = isNext ? Id++ : Id--;
+                Title = TitleList[Id - 1];
+                Summary = SummaryList[Id - 1];
+                BgImage = BGImageList[Id - 1];
+                await page.TranslateTo(displacement, 0, 0);
+                await Task.WhenAll(
+                    page.FadeTo(1, transitionTime, Easing.Linear),
+                    page.TranslateTo(0, page.Y, transitionTime, Easing.CubicInOut));
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         #endregion

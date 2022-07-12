@@ -87,37 +87,17 @@ namespace Library_Mangement.ViewModels
         {
             try
             {
-                await LoaderMessage("Master Data Download Begin.", 1700);
-                LoaderVisible = true;
-                LandingPageEnable = false;
-                LandingPageOpacity = 0.5;
-                await LoaderMessage("Downloading Master Data.", 1500);
-                List<MasterVerisonModel> verisonDataList = null;
-                string masterDataFilePath = await Common.DownloadFileAndGETFilePath("https://drive.google.com/u/0/uc?id=1d_nqcTA8SKhmQRS-0-ZCkrGQFhr5lWxx&export=download", "MasterData", "MasterDataVerison.Json");
-                if (File.Exists(masterDataFilePath))
+                bool isCheckUpdate = true;
+                var isRecordAdded = await App.Database.Settings.FindByKeyAsync("CheckVersion");
+                if (isRecordAdded != null && !string.IsNullOrEmpty(isRecordAdded.Value))
                 {
-                    using (StreamReader r = new StreamReader(masterDataFilePath))
-                    {
-                        string masterJson = r.ReadToEnd();
-                        await LoaderMessage("Checking For Master Data Verison Change.", 800);
-                        verisonDataList = JsonConvert.DeserializeObject<List<MasterVerisonModel>>(masterJson);
-                        foreach (var versionItem in verisonDataList)
-                        {
-                            var data = await App.Database.MasterDataVerison.FindItemByKey(versionItem.KeyName);
-                            if(data != null)
-                            {
-                                bool result = data.Verison != versionItem.Verison ? true : false;
-                                if(result)
-                                {
-                                    await SaveVersionRecordsToDB(versionItem);
-                                }
-                            }
-                            else
-                            {
-                                await SaveVersionRecordsToDB(versionItem);
-                            }
-                        }
-                    }
+                    DateTime lastVersionCheck = Convert.ToDateTime(isRecordAdded.Value);
+                    isCheckUpdate = DateTime.Now > lastVersionCheck.AddHours(6);
+                }
+
+                if (isCheckUpdate)
+                {
+                    await LoadMasterData();
                 }
             }
             catch (Exception ex)
@@ -126,32 +106,80 @@ namespace Library_Mangement.ViewModels
             }
             finally
             {
-                await LoaderMessage($"Setting Up All Files.", 1400);
-                string finishingText = "Please Wait Finishing Up";
-                for (int i = 0; i < 12; i++)
-                {
-                    switch (i)
-                    {
-                        case 8:
-                            finishingText = "Finializing";
-                            break;
-
-                        case 10:
-                            finishingText = "Process Completed";
-                            break;
-                    }
-
-                    for (int j = 1; j <= 4; j++)
-                    {
-                        string progress = string.Concat(Enumerable.Repeat(".", j));
-                        await LoaderMessage($"{finishingText}{progress}", 400);
-                    }
-
-                }
                 LoaderVisible = false;
                 LandingPageEnable = true;
                 LandingPageOpacity = 1.0;
                 await Task.FromResult(Task.CompletedTask);
+            }
+        }
+
+        private async Task LoadMasterData()
+        {
+            await LoaderMessage("Master Data Download Begin.", 1700);
+            LoaderVisible = true;
+            LandingPageEnable = false;
+            LandingPageOpacity = 0.5;
+            await LoaderMessage("Downloading Master Data.", 1500);
+            List<MasterVerisonModel> verisonDataList = null;
+            string masterDataFilePath = await Common.DownloadFileAndGETFilePath("https://drive.google.com/u/0/uc?id=1d_nqcTA8SKhmQRS-0-ZCkrGQFhr5lWxx&export=download", "MasterData", "MasterDataVerison.Json");
+            if (File.Exists(masterDataFilePath))
+            {
+                using (StreamReader r = new StreamReader(masterDataFilePath))
+                {
+                    string masterJson = r.ReadToEnd();
+                    await LoaderMessage("Checking For Master Data Verison Change.", 800);
+                    verisonDataList = JsonConvert.DeserializeObject<List<MasterVerisonModel>>(masterJson);
+                    foreach (var versionItem in verisonDataList)
+                    {
+                        var data = await App.Database.MasterDataVerison.FindItemByKey(versionItem.KeyName);
+                        if (data != null)
+                        {
+                            bool result = data.Verison != versionItem.Verison ? true : false;
+                            if (result)
+                            {
+                                await SaveVersionRecordsToDB(versionItem);
+                            }
+                        }
+                        else
+                        {
+                            await SaveVersionRecordsToDB(versionItem);
+                        }
+                    }
+                }
+                tblSettings settings = new tblSettings()
+                {
+                    Key = "CheckVersion",
+                    Value = DateTime.Now.ToString()
+                };
+                await App.Database.Settings.InsertAsync(settings);
+
+                await FinializeMessage();
+            }
+        }
+
+        private async Task FinializeMessage()
+        {
+            await LoaderMessage($"Setting Up All Files.", 1400);
+            string finishingText = "Please Wait Finishing Up";
+            for (int i = 0; i < 12; i++)
+            {
+                switch (i)
+                {
+                    case 8:
+                        finishingText = "Finializing";
+                        break;
+
+                    case 10:
+                        finishingText = "Process Completed";
+                        break;
+                }
+
+                for (int j = 1; j <= 4; j++)
+                {
+                    string progress = string.Concat(Enumerable.Repeat(".", j));
+                    await LoaderMessage($"{finishingText}{progress}", 400);
+                }
+
             }
         }
 
@@ -225,7 +253,7 @@ namespace Library_Mangement.ViewModels
             try
             {
                 bool isSaved = false;
-                if(!string.IsNullOrEmpty(versionItem.FileExtention))
+                if (!string.IsNullOrEmpty(versionItem.FileExtention))
                 {
                     if (versionItem.FileExtention.ToLowerInvariant() == "zip")
                         isSaved = await SaveZipDataAsync(versionItem);
@@ -260,7 +288,7 @@ namespace Library_Mangement.ViewModels
             try
             {
                 await LoaderMessage($"Books Image Download Started", 0);
-                string masterZIPFilePath =  await Common.DownloadFileAndGETFilePath(masterDataItem.Link, masterDataItem.DirectoryName, masterDataItem.FileName);
+                string masterZIPFilePath = await Common.DownloadFileAndGETFilePath(masterDataItem.Link, masterDataItem.DirectoryName, masterDataItem.FileName);
                 if (masterZIPFilePath != null)
                 {
                     await LoaderMessage($"Images Downloaded Successfully", 500);
@@ -347,7 +375,7 @@ namespace Library_Mangement.ViewModels
         private async Task LoaderMessage(string loaderText, int timeDeley)
         {
             LoaderText = $"{loaderText}";
-            if(timeDeley > 0 && AppConfig.isAwaitTimeNeeds)
+            if (timeDeley > 0 && AppConfig.isAwaitTimeNeeds)
             {
                 await Task.Delay(timeDeley);
             }

@@ -1,4 +1,5 @@
 ﻿using Library_Mangement.ViewModels;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -21,9 +22,25 @@ namespace Library_Mangement.Views
         #endregion
 
         #region Override Methods
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
-            base.OnAppearing();
+            var isRecordAdded = await App.Database.Settings.FindByKeyAsync("splash");
+            try
+            {
+                if (isRecordAdded != null && !string.IsNullOrEmpty(isRecordAdded.Value) && Convert.ToBoolean(Convert.ToInt32(isRecordAdded.Value)))
+                {
+                    await App.Current.MainPage.Navigation.PushAsync(new LandingView(true));
+                }
+                else
+                {
+                    VM.NextClicked(true);
+                }
+                base.OnAppearing();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
         #endregion
 
