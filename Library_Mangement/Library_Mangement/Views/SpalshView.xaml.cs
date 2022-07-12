@@ -15,7 +15,7 @@ namespace Library_Mangement.Views
         public SpalshView()
         {
             InitializeComponent();
-            VM = new SpalshViewModel();
+            VM = new SpalshViewModel(SplashPage);
             BindingContext = VM;
         }
         #endregion

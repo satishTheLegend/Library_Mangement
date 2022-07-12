@@ -6,7 +6,8 @@
     android:layout_height="match_parent">
     <com.airbnb.lottie.LottieAnimationView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/abc_background_cache_hint_selector_material_dark"
         android:id="@+id/animation_view1"
         android:duplicateParentState="true"
         app:lottie_fileName="Loader_Splash.json"
@@ -14,11 +15,12 @@
         app:lottie_loop="false"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="300dp"
+        android:layout_alignParentEnd="true"
     />
     <com.airbnb.lottie.LottieAnimationView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/abc_background_cache_hint_selector_material_dark"
         android:id="@+id/animation_view"
         app:lottie_fileName="Library_Splash.json"
         app:lottie_autoPlay="true"

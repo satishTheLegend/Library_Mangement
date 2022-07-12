@@ -4,6 +4,7 @@ using Library_Mangement.Views;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -15,7 +16,8 @@ namespace Library_Mangement.ViewModels
         public readonly List<string> TitleList = new List<string>() { AppResources.Spash_Title_1, AppResources.Spash_Title_2, AppResources.Spash_Title_3};
         public readonly List<string> SummaryList = new List<string>() { AppResources.Splash_Summary_1, AppResources.Splash_Summary_2, AppResources.Splash_Summary_3};
         public readonly List<string> BGImageList = new List<string>() { "Screen_1.jpg", "Screen_2.jpg", "Screen_3.jpg" };
-        
+        public readonly Page page;
+
         private ImageSource bgImage = "Screen_1.jpg";
         public ImageSource BgImage
         {
@@ -59,13 +61,12 @@ namespace Library_Mangement.ViewModels
                 OnPropertyChanged(nameof(Summary));
             }
         }
-
-
         #endregion
 
         #region Constructor
-        public SpalshViewModel()
+        public SpalshViewModel(Page splashPage)
         {
+            page = splashPage;
             NextClicked(true);
         }
         #endregion
@@ -94,11 +95,20 @@ namespace Library_Mangement.ViewModels
             {
                 Id--;
             }
+            uint transitionTime = 600;
+            double displacement = 1;
 
+            await Task.WhenAll(
+                page.FadeTo(0, transitionTime, Easing.Linear),
+                page.TranslateTo(-displacement, page.Y, transitionTime, Easing.CubicInOut));
             //Id = isNext ? Id++ : Id--;
             Title = TitleList[Id - 1];
             Summary = SummaryList[Id - 1];
             BgImage = BGImageList[Id - 1];
+            await page.TranslateTo(displacement, 0, 0);
+            await Task.WhenAll(
+                page.FadeTo(1, transitionTime, Easing.Linear),
+                page.TranslateTo(0, page.Y, transitionTime, Easing.CubicInOut));
         }
 
         #endregion
