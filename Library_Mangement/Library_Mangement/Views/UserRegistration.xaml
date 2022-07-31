@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:dxe="http://schemas.devexpress.com/xamarin/2014/forms/editors" 
+             xmlns:viewmodels="clr-namespace:Library_Mangement.ViewModels"
+             x:DataType="viewmodels:UserRegistrationViewModel" 
+             NavigationPage.HasNavigationBar="False"
+             x:Class="Library_Mangement.Views.UserRegistration" 
+             BackgroundImageSource="bg9.jpg">
+    <ContentPage.Content>
+        <Grid RowDefinitions="1*, 9*" Padding="10,0,10,0">
+            <StackLayout Grid.Row="1">
+                <StackLayout Orientation="Horizontal">
+                    <dxe:TextEdit LabelFontSize="Header" BoxHeight="45" LabelText="First Name" IsStartIconVisible="True" IsEndIconVisible="True" HorizontalOptions="FillAndExpand" Text="{Binding Registration.FirstName}" CornerRadius="20" 
+                              HasError="{Binding Registration.FirstName_IconVisible_Property}" ErrorColor="Red" ErrorText="Please Enter First Name" PlaceholderText="First Name" BackgroundColor="AliceBlue" Opacity="0.7" BorderColor="Transparent"/>
+                    <dxe:TextEdit LabelFontSize="Header" BoxHeight="45" LabelText="Last Name" IsEndIconVisible="True" HorizontalOptions="FillAndExpand" Text="{Binding Registration.LastName}" CornerRadius="20" 
+                              HasError="{Binding Registration.LastName_IconVisible_Property}" IsStartIconVisible="True" PlaceholderText="Last Name" BackgroundColor="AliceBlue" Opacity="0.7" BorderColor="Transparent"/>
+                </StackLayout>
+                <dxe:TextEdit LabelFontSize="Header" BoxHeight="45" LabelText="User Name" IsEndIconVisible="True" Text="{Binding Registration.UserName}" CornerRadius="20" 
+                              HasError="{Binding Registration.UserName_IconVisible_Property}" IsStartIconVisible="True" PlaceholderText="User Name" BackgroundColor="AliceBlue" Opacity="0.7" BorderColor="Transparent"/>
+                <dxe:TextEdit LabelFontSize="Header" BoxHeight="45" LabelText="Student Id" IsEndIconVisible="True" Text="{Binding Registration.StudentId}" CornerRadius="20" 
+                              HasError="{Binding Registration.StudentId_IconVisible_Property}" IsStartIconVisible="True" PlaceholderText="Student Id" BackgroundColor="AliceBlue" Opacity="0.7" BorderColor="Transparent"/>
+                <dxe:TextEdit LabelFontSize="Header" BoxHeight="45" LabelText="Email" IsEndIconVisible="True" Text="{Binding Registration.Email}" CornerRadius="20" 
+                              HasError="{Binding Registration.Email_IconVisible_Property}" IsStartIconVisible="True" PlaceholderText="Email" BackgroundColor="AliceBlue" Opacity="0.7" BorderColor="Transparent"/>
+                <dxe:TextEdit LabelFontSize="Header" BoxHeight="45" LabelText="Phone" IsEndIconVisible="True" CornerRadius="20" Text="{Binding Registration.Phone}"
+                              HasError="{Binding Registration.Phone_IconVisible_Property}" IsStartIconVisible="True" PlaceholderText="Phone" BackgroundColor="AliceBlue" Opacity="0.7" BorderColor="Transparent"/>
+                <dxe:DateEdit LabelFontSize="Header" BoxHeight="45" LabelText="Date Of Birth" IsEndIconVisible="True" CornerRadius="20" Date="{Binding Registration.DOB}"
+                              HasError="{Binding Registration.DOB_IconVisible_Property}" IsStartIconVisible="True" PlaceholderText="Date of Birth" BackgroundColor="AliceBlue" Opacity="0.7" BorderColor="Transparent"/>
+                <dxe:TextEdit LabelFontSize="Header" BoxHeight="45" LabelText="Collage Name" IsEndIconVisible="True" Text="{Binding Registration.CollageName}" CornerRadius="20" 
+                              HasError="{Binding Registration.CollageName_IconVisible_Property}" IsStartIconVisible="True" PlaceholderText="Collage Name" BackgroundColor="AliceBlue" Opacity="0.7" BorderColor="Transparent"/>
+                <dxe:TextEdit LabelFontSize="Header" BoxHeight="45" LabelText="Persuing Education" IsEndIconVisible="True" Text="{Binding Registration.Education}" CornerRadius="20" 
+                              HasError="{Binding Registration.Education_IconVisible_Property}" IsStartIconVisible="True" PlaceholderText="Pursuing Education" BackgroundColor="AliceBlue" Opacity="0.7" BorderColor="Transparent"/>
+                <dxe:SimpleButton Text="Register" Command="{Binding RegisterUserCommand}" BackgroundColor="CornflowerBlue" CornerRadius="20" Margin="20,10,20,0"/>
+            </StackLayout>
+        </Grid>
+        
+    </ContentPage.Content>
+</ContentPage>

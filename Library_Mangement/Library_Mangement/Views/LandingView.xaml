@@ -30,7 +30,7 @@
             AbsoluteLayout.LayoutFlags="All"
             HorizontalOptions="CenterAndExpand"
             VerticalOptions="CenterAndExpand">
-            <controls:Loader LoaderText="{Binding LoaderText}" AnimationAssetFileName="library_Loader.json" ></controls:Loader>
+            <controls:Loader LoaderText="{Binding LoaderText}" AnimationAssetFileName="library_Loader.json" LoaderProgress="{Binding LoaderPercent}"></controls:Loader>
         </StackLayout>
 
         <StackLayout IsVisible="{Binding LandingPageEnable}"
@@ -74,9 +74,9 @@
                         BackgroundColor="Transparent"
                         BorderColor="White"
                         BorderWidth="1"
-                        Clicked="Back"
                         CornerRadius="5"
                         Text="SIGN UP"
+                        Command="{Binding SignUpCommand}"
                         TextColor="White"
                         HorizontalOptions="FillAndExpand" />
                 </StackLayout>

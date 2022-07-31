@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <StackLayout xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" xmlns:progressBar="clr-namespace:Syncfusion.XForms.ProgressBar;assembly=Syncfusion.SfProgressBar.XForms"
              x:Class="Library_Mangement.Controls.Loader" x:Name="LoaderStack">
     <Grid RowDefinitions="10*">
         <Frame x:Name="LoaderFrame" CornerRadius="100" BackgroundColor="Transparent" Opacity="0.5" Padding="150,0,100,0" Grid.Row="0">
@@ -12,9 +12,32 @@
                               x:Name="animationView"
                               Animation="library_Loader.json"
                               AutoPlay="True" Loop="True"/>
-        <Label x:Name="AnimatedLoaderText" Grid.Row="0" FontSize="Large" 
+        <Label x:Name="AnimatedLoaderText" Grid.Row="0" FontSize="Small" 
            Margin="0,0,0,25" BackgroundColor="Transparent" HorizontalTextAlignment="Center" TextColor="White" VerticalOptions="EndAndExpand"/>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Margin="20,0,20,0">
+            <progressBar:SfLinearProgressBar x:Name="Progress" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="Transparent">
+
+                <progressBar:SfLinearProgressBar.RangeColors>
+
+                    <progressBar:RangeColorCollection>
+
+                        <progressBar:RangeColor Color="#00bdaf" Start="0" End="25"/>
+
+                        <progressBar:RangeColor Color="#2f7ecc" Start="25" End="50"/>
+
+                        <progressBar:RangeColor Color="#e9648e" Start="50" End="75"/>
+
+                        <progressBar:RangeColor Color="#fbb78a" Start="75" End="100"/>
+
+                    </progressBar:RangeColorCollection>
+
+                </progressBar:SfLinearProgressBar.RangeColors>
+
+            </progressBar:SfLinearProgressBar>
+            <Label x:Name="progressLabel" HorizontalOptions="End" TextColor="White" FontSize="Medium" FontAttributes="Italic"/>
+        </StackLayout>
         
+
     </Grid>
 </StackLayout>
 

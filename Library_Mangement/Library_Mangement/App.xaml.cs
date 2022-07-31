@@ -65,6 +65,7 @@ namespace Library_Mangement
                 else
                 {
                     MainPage = new NavigationPage(new SpalshView());
+                    //MainPage = new NavigationPage(new CatagoryChips());
                 }
             }
             catch (Exception ex)

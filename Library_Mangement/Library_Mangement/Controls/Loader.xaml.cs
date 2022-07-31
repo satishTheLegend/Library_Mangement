@@ -50,6 +50,29 @@ namespace Library_Mangement.Controls
                                 defaultValue: "",
                                 defaultBindingMode: BindingMode.TwoWay,
                                 propertyChanged: LoaderTextPropertyChanged);
+
+        public double LoaderProgress
+        {
+            get => (double)GetValue(LoaderProgressProperty);
+            set
+            {
+                SetValue(LoaderProgressProperty, value);
+                Progress.IsVisible = true;
+                if (value < 1)
+                {
+                    Progress.IsVisible = false;
+                }
+            }
+        }
+
+        public static BindableProperty LoaderProgressProperty = BindableProperty.Create(
+                                propertyName: "LoaderProgress",
+                                returnType: typeof(double),
+                                declaringType: typeof(Loader),
+                                defaultValue: 0.0,
+                                defaultBindingMode: BindingMode.TwoWay,
+                                propertyChanged: LoaderProgressPropertyChanged);
+
         public Color LoaderTextColor
         {
             get => (Color)GetValue(LoaderTextColorProperty);
@@ -78,7 +101,7 @@ namespace Library_Mangement.Controls
                                 defaultBindingMode: BindingMode.TwoWay,
                                 propertyChanged: LoaderIsVisiblePropertyChanged);
 
-       public double LoaderBackgroundOpacity
+        public double LoaderBackgroundOpacity
         {
             get => (double)GetValue(LoaderBackgroundOpacityProperty);
             set => SetValue(LoaderBackgroundOpacityProperty, value);
@@ -136,6 +159,26 @@ namespace Library_Mangement.Controls
             }
         }
 
+        private static void LoaderProgressPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (Loader)bindable;
+            if((double)newValue > 100)
+            {
+                control.Progress.Progress = 100;
+                control.progressLabel.Text = $"100 %";
+            }
+            else
+            {
+                control.Progress.Progress = (double)newValue;
+                if (control.Progress.Progress > 0)
+                {
+                    control.progressLabel.Text = $"{Convert.ToInt32(newValue)} %";
+                }
+            }
+            
+            
+        }
+
         private static void AnimationAssetFileNamePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var control = (Loader)bindable;
@@ -147,7 +190,7 @@ namespace Library_Mangement.Controls
                 case "Downloading_Files.json":
                     control.animationView.HeightRequest = (double)200;
                     control.animationView.WidthRequest = (double)200;
-                    control.animationView.Margin = new Thickness(0,0,0,50);
+                    control.animationView.Margin = new Thickness(0, 0, 0, 50);
                     break;
                 default:
                     break;

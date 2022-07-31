@@ -28,7 +28,7 @@
             HorizontalOptions="FillAndExpand"
             VerticalOptions="CenterAndExpand" />
             <StackLayout
-            Margin="10,30,10,30"
+            Margin="10,90,10,30"
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             Spacing="20"

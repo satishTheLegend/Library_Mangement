@@ -41,6 +41,19 @@ namespace Library_Mangement.Database.Repositories
             }
             return result;
         }
+
+        public async Task<int> AddCatagories(List<string> selectedItems, string userToken)
+        {
+            int res = 0;
+            var result = _conn.Table<tblUser>().FirstOrDefaultAsync(x=> x.UserToken == userToken).Result;
+            if(result != null)
+            {
+                result.Catagories = string.Join(",", selectedItems);
+                res = await UpdateAsync(result);
+            }
+            return res;
+        }
+
         #endregion
 
         #region Implemented Methods

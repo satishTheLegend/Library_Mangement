@@ -13,6 +13,8 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace Library_Mangement.ViewModels
 {
@@ -20,6 +22,7 @@ namespace Library_Mangement.ViewModels
     {
         #region Properties
         private Assembly _assembly = typeof(MainPage).GetTypeInfo().Assembly;
+        private string FilePath = string.Empty;
 
         private bool _loaderVisible = false;
         public bool LoaderVisible
@@ -53,6 +56,16 @@ namespace Library_Mangement.ViewModels
             }
         }
 
+        private double? _loaderPercent = 0;
+        public double? LoaderPercent
+        {
+            get => _loaderPercent;
+            set
+            {
+                _loaderPercent = value;
+                OnPropertyChanged(nameof(LoaderPercent));
+            }
+        }
         private string _loaderText;
         public string LoaderText
         {
@@ -70,16 +83,19 @@ namespace Library_Mangement.ViewModels
         #region Constructor
         public LandingViewModel()
         {
-
+            App.RestServiceConnection.ProgressEvent += RestServiceConnection_ProgressEvent;
         }
         #endregion
 
         #region Commands
-
+        public ICommand SignUpCommand => new Command(async () => await SignUP());
         #endregion
 
         #region Event Handlers
-
+        private async Task SignUP()
+        {
+            await App.Current.MainPage.Navigation.PushAsync(new UserRegistration());
+        }
         #endregion
 
         #region Public Methods
@@ -94,7 +110,6 @@ namespace Library_Mangement.ViewModels
                     DateTime lastVersionCheck = Convert.ToDateTime(isRecordAdded.Value);
                     isCheckUpdate = DateTime.Now > lastVersionCheck.AddHours(6);
                 }
-
                 if (isCheckUpdate)
                 {
                     await LoadMasterData();
@@ -112,7 +127,9 @@ namespace Library_Mangement.ViewModels
                 await Task.FromResult(Task.CompletedTask);
             }
         }
+        #endregion
 
+        #region Private Methods
         private async Task LoadMasterData()
         {
             await LoaderMessage("Master Data Download Begin.", 1700);
@@ -155,6 +172,13 @@ namespace Library_Mangement.ViewModels
 
                 await FinializeMessage();
             }
+        }
+
+        private void RestServiceConnection_ProgressEvent(double? value)
+        {
+            LoaderPercent = value;
+            //await LoaderMessage($"Download Progress {value}", 150);
+            //LoaderText = $"Download Progress {value}";
         }
 
         private async Task FinializeMessage()
@@ -241,7 +265,8 @@ namespace Library_Mangement.ViewModels
                 {
                     filePath = booksThumbnailsList.FirstOrDefault(x => Regex.Replace(x.FileName, @"\s+", "").ToLowerInvariant().Contains(Regex.Replace(newfileName, @"\s+", ""))).FilePath;
                 }
-                await LoaderMessage($"{count} book added to database", 10);
+                await LoaderMessage($"{count} book added to database", 0);
+                LoaderPercent = SetProgressBarValue(count, allBooks.Count);
                 bookItem.PngFilePath = filePath;
                 await App.Database.Book.UpdateAsync(bookItem);
                 count++;
@@ -261,6 +286,10 @@ namespace Library_Mangement.ViewModels
                         isSaved = await DownloadAllMasterDataFiles(versionItem);
                 }
 
+                if (string.IsNullOrEmpty(versionItem.FileName))
+                {
+                    FilePath = string.Empty;
+                }
                 tblVerisonMaster verisonMaster = new tblVerisonMaster()
                 {
                     KeyName = versionItem.KeyName,
@@ -268,6 +297,7 @@ namespace Library_Mangement.ViewModels
                     Verison = versionItem.Verison,
                     Active = versionItem.Active,
                     IsRecordSaveToDB = versionItem.IsRecordSaveToDB,
+                    FilePath = FilePath,
                     DirectoryName = versionItem.DirectoryName,
                     FileExtention = versionItem.FileExtention,
                     FileName = versionItem.FileName,
@@ -275,10 +305,40 @@ namespace Library_Mangement.ViewModels
                     IsRecordSaved = isSaved,
                 };
                 await App.Database.MasterDataVerison.InsertAsync(verisonMaster);
+
+                if (versionItem.KeyName == "Catagories")
+                {
+                    await SaveCatagories();
+                }
             }
             catch (Exception ex)
             {
 
+            }
+        }
+
+        private async Task SaveCatagories()
+        {
+            var catgoryJson = await App.Database.MasterDataVerison.FindItemByKey("Catagories");
+            if (catgoryJson != null && !string.IsNullOrEmpty(catgoryJson.FilePath) && File.Exists(catgoryJson.FilePath))
+            {
+                using (StreamReader r = new StreamReader(catgoryJson.FilePath))
+                {
+                    string json = r.ReadToEnd();
+                    List<CatagoryModel> CatagoriesJson = JsonConvert.DeserializeObject<List<CatagoryModel>>(json);
+                    int i = 1;
+                    foreach (var catagoryItem in CatagoriesJson)
+                    {
+                        tblCodesMaster tblCodes = new tblCodesMaster();
+                        tblCodes.CodeId = catagoryItem.CatagoryId;
+                        tblCodes.CodeText = catagoryItem.CatagoryName;
+                        tblCodes.CodeValue = await Common.DownloadFileAndGETFilePath(catagoryItem.CatagorySvgUrl, "Master", $"{catagoryItem.CatagoryId}.svg");
+                        await LoaderMessage($"Adding Book Catagories {i} Out Of {CatagoriesJson?.Count}.", 0);
+                        LoaderPercent = SetProgressBarValue(i, CatagoriesJson.Count);
+                        await App.Database.CodesMaster.InsertAsync(tblCodes);
+                        i++;
+                    }
+                }
             }
         }
 
@@ -289,8 +349,9 @@ namespace Library_Mangement.ViewModels
             {
                 await LoaderMessage($"Books Image Download Started", 0);
                 string masterZIPFilePath = await Common.DownloadFileAndGETFilePath(masterDataItem.Link, masterDataItem.DirectoryName, masterDataItem.FileName);
-                if (masterZIPFilePath != null)
+                if (File.Exists(masterZIPFilePath))
                 {
+                    FilePath = masterZIPFilePath;
                     await LoaderMessage($"Images Downloaded Successfully", 500);
                     await LoaderMessage($"Extracting Images", 500);
                     string thumbnailsFilePath = Common.GetBasePath("BookThumbnails");
@@ -314,6 +375,9 @@ namespace Library_Mangement.ViewModels
                 string masterFilePath = await Common.DownloadFileAndGETFilePath(versionItem.Link, versionItem.DirectoryName, versionItem.FileName);
                 if (File.Exists(masterFilePath))
                 {
+                    FilePath = masterFilePath;
+                    if (!versionItem.IsRecordSaveToDB)
+                        return true;
                     await LoaderMessage($"{versionItem.FileName} Data Downloaded Successfully.", 500);
                     await LoaderMessage($"{versionItem.FileName} File Stored On Your Local Device.", 900);
                     using (StreamReader r = new StreamReader(masterFilePath))
@@ -356,6 +420,7 @@ namespace Library_Mangement.ViewModels
                                 bookRecord.IsCoverAvailable = !string.IsNullOrEmpty(bookRecord.PngFilePath) ? true : false;
                                 await App.Database.Book.InsertAsync(bookRecord);
                                 await LoaderMessage($"Added Book Records {i} Out Of {booksJson?.Count}.", 0);
+                                LoaderPercent = SetProgressBarValue(i, booksJson.Count);
                                 i++;
                             }
                             isDataDownloaded = true;
@@ -372,6 +437,17 @@ namespace Library_Mangement.ViewModels
             return isDataDownloaded;
         }
 
+        private double? SetProgressBarValue(int i, int count)
+        {
+            double runtimePercent = 0.0;
+            double percentValue = count / 100;
+            if (percentValue > 0)
+            {
+                runtimePercent = i / percentValue;
+            }
+            return runtimePercent;
+        }
+
         private async Task LoaderMessage(string loaderText, int timeDeley)
         {
             LoaderText = $"{loaderText}";
@@ -380,11 +456,6 @@ namespace Library_Mangement.ViewModels
                 await Task.Delay(timeDeley);
             }
         }
-
-        #endregion
-
-        #region Private Methods
-
         #endregion
     }
 }

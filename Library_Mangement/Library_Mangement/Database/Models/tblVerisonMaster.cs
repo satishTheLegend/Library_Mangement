@@ -16,6 +16,7 @@ namespace Library_Mangement.Database.Models
         public string Verison { get; set; }
         public bool Active { get; set; }
         public bool IsRecordSaveToDB { get; set; }
+        public string FilePath { get; set; }
         public string DirectoryName { get; set; }
         public string FileExtention { get; set; }
         public string FileName { get; set; }

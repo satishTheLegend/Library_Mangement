@@ -42,15 +42,17 @@ namespace Library_Mangement.ViewModels
 
         #region Commands
         public ICommand LoginButtonCommand => new Command(async () => await Login());
+        #endregion
 
+        #region Event Handlers
         private async Task Login()
         {
-            if(!string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password))
+            if (!string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password))
             {
-                if(UserName == "Arpita" && Password == "123")
+                if (UserName == "Arpita" && Password == "123")
                 {
                     await App.Current.MainPage.DisplayAlert("", "You Logged In Successfully", "Ok");
-                    await App.Current.MainPage.Navigation.PushAsync(new HomeView());
+                    await App.Current.MainPage.Navigation.PushAsync(new CatagoryChips());
                 }
                 else
                 {
@@ -59,10 +61,6 @@ namespace Library_Mangement.ViewModels
             }
             await Task.FromResult(Task.CompletedTask);
         }
-        #endregion
-
-        #region Event Handlers
-
         #endregion
 
         #region Public Methods

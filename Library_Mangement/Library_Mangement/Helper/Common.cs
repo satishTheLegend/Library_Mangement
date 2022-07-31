@@ -106,17 +106,22 @@ namespace Library_Mangement.Helper
             string filePath = string.Empty;
             if(!string.IsNullOrEmpty(url))
             {
-                byte[] fileBytes = await App.RestServiceConnection.DownloadJsonData(url);
-                if(fileBytes != null)
+                filePath = Path.Combine(GetBasePath(directoryName), fileName);
+                if (File.Exists(filePath))
                 {
-                    filePath = Path.Combine(GetBasePath(directoryName), fileName);
-                    if(File.Exists(filePath))
-                    {
-                        File.Delete(filePath);
-                    }
-                    bool isFileSaved = await SaveFileFromByteArray(fileBytes, filePath);
-                    filePath = !isFileSaved ? "" : filePath;
+                    File.Delete(filePath);
                 }
+                await App.RestServiceConnection.DownloadJsonData(url, filePath);
+                //if(fileBytes != null)       byte[] fileBytes = 
+                //{
+                //    filePath = Path.Combine(GetBasePath(directoryName), fileName);
+                //    if(File.Exists(filePath))
+                //    {
+                //        File.Delete(filePath);
+                //    }
+                //    bool isFileSaved = await SaveFileFromByteArray(fileBytes, filePath);
+                //    filePath = !isFileSaved ? "" : filePath;
+                //}
             }
             return await Task.FromResult(filePath);
         }
@@ -192,13 +197,13 @@ namespace Library_Mangement.Helper
                 {
                     if(!File.Exists(newFilePath))
                     {
-                        var imagedata = await App.RestServiceConnection.DownloadJsonData(thumbnailUrl);
-                        if (imagedata == null) return path;
-                        bool isSaved = await SaveFileFromByteArray(imagedata, newFilePath);
-                        if (isSaved)
-                        {
-                            path = newFilePath;
-                        }
+                        await App.RestServiceConnection.DownloadJsonData(thumbnailUrl, newFilePath);
+                        //if (imagedata == null) return path; var imagedata = 
+                        //bool isSaved = await SaveFileFromByteArray(imagedata, newFilePath);
+                        //if (isSaved)
+                        //{
+                        //    path = newFilePath;
+                        //}
                     }
                     else
                     {

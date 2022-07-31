@@ -42,10 +42,6 @@ namespace Library_Mangement.Views
                 }
             });
         }
-        protected void Back(object s, EventArgs e)
-        {
-            Navigation.PopAsync();
-        }
         protected void Login(object s, EventArgs e)
         {
             Navigation.PushAsync(new UserLogin());
