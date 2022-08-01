@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<StackLayout xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:Controls="clr-namespace:Library_Mangement.Controls" 
+             xmlns:dxe="http://schemas.devexpress.com/xamarin/2014/forms/editors"
+             x:Class="Library_Mangement.Controls.EntryControl" Padding="5"
+             x:Name="EntryControlStack"
+             Orientation="Vertical" 
+             HorizontalOptions="FillAndExpand"
+             VerticalOptions="FillAndExpand"
+             >
+    <!--<StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+        <Label x:Name="EntryTitleLabel" Text="{Binding ParentBindingContext.FieldName, Source={x:Reference EntryControlStack}}" TextColor="Black" FontAttributes="Bold"/>
+        <Label x:Name="RequiredStar" Text="*" TextColor="Red" Margin="-4,0,0,0" />
+    </StackLayout>-->
+
+    <dxe:TextEdit   LabelText="{Binding ParentBindingContext.FieldName, Source={x:Reference EntryControlStack}}"
+                    x:Name="TextEdit" TextHorizontalAlignment="Center"
+                    CursorColor="Black"
+                    PlaceholderText="{Binding ParentBindingContext.PlaceHolderName, Source={x:Reference EntryControlStack}}"
+                    Text="{Binding ParentBindingContext.FieldValue, Source={x:Reference EntryControlStack}}"
+                    BoxMode="Outlined"
+                    BoxHeight="45"
+                    CornerMode="Round"
+                    BorderThickness="1.7"
+                    ErrorText="{Binding ParentBindingContext.ValidationMsg, Source={x:Reference EntryControlStack}}"
+                    HasError="{Binding ParentBindingContext.IsFieldValidationFailed, Source={x:Reference EntryControlStack}}"
+                    ErrorColor="red"
+                    CharacterCasing="Normal"
+                    CornerRadius="5"
+                    FocusedBorderColor="Black"
+                    VerticalOptions="Center"/>
+
+</StackLayout>
+    
+    
+    

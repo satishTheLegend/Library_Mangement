@@ -20,9 +20,17 @@ namespace Library_Mangement.Views
         #region Constructor
         public UserRegistration()
         {
-            _vm = new UserRegistrationViewModel();
+            _vm = new UserRegistrationViewModel(MainStackLayout);
             BindingContext = _vm;
             InitializeComponent();
+        }
+        #endregion
+
+        #region Override Methods
+        protected async override void OnAppearing()
+        {
+            await _vm.LoadData();
+            base.OnAppearing();
         }
         #endregion
 

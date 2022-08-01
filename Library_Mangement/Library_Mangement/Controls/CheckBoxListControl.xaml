@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Library_Mangement.Controls.CheckBoxListControl"
+             xmlns:input="clr-namespace:Plugin.InputKit.Shared.Controls;assembly=Plugin.InputKit" 
+             xmlns:converters="clr-namespace:Library_Mangement.Converters"
+             x:Name="CheckBoxListStack"
+             Orientation="Vertical" Padding="5"
+             HorizontalOptions="FillAndExpand"
+             VerticalOptions="FillAndExpand">
+    <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+        <Label x:Name="EntryTitleLabel" Text="{Binding ParentBindingContext.FieldName, Source={x:Reference CheckBoxListStack}}" TextColor="Black" FontAttributes="Bold"/>
+        <Label x:Name="RequiredStar" Text="*" TextColor="Red" Margin="-4,0,0,0" 
+           IsVisible="{Binding ParentBindingContext.FARequired, Source={x:Reference CheckBoxListStack}}" />
+    </StackLayout>
+    <StackLayout x:Name="RadioButtonStack" BindableLayout.ItemsSource="{Binding ParentBindingContext.OptValues, Source={x:Reference CheckBoxListStack}}">
+        <BindableLayout.ItemTemplate>
+            <DataTemplate>
+                <input:CheckBox x:Name="CbControl" Text="{Binding .}" IsChecked="{Binding .}"
+                                TextColor="Gray" Type="Check" BoxSizeRequest="18" IconColor="Black" BorderColor="Gray" TextFontSize="15" Color="Black" CheckChanged="CbControl_CheckChanged"/>
+            </DataTemplate>
+        </BindableLayout.ItemTemplate>
+    </StackLayout>
+</StackLayout>

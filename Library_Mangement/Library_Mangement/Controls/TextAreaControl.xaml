@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:dxe="http://schemas.devexpress.com/xamarin/2014/forms/editors"
+             x:Class="Library_Mangement.Controls.TextAreaControl" Padding="5"
+             xmlns:Controls="clr-namespace:Library_Mangement.Controls"
+             VerticalOptions="FillAndExpand"
+             x:Name="EditorStack"
+             HorizontalOptions="FillAndExpand">
+    <!--<StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+        <Label x:Name="EditorLabelControl" Text="{Binding ParentBindingContext.FieldName, Source={x:Reference EditorStack}}" TextColor="Black" FontAttributes="Bold"></Label>
+        <Label x:Name="RequiredStar" Text="*" TextColor="Red" Margin="-6,0,0,0" 
+           IsVisible="{Binding ParentBindingContext.FARequired, Source={x:Reference EditorStack}}" />
+    </StackLayout>
+    <Frame Padding="5" x:Name="EditorFrame" BackgroundColor="AliceBlue" HeightRequest="80" CornerRadius="8" BorderColor="gray">
+        <Controls:BorderlessEditor Text="{Binding ParentBindingContext.FieldValue, Source={x:Reference EditorStack}}" FontSize="16" AutoSize="TextChanges" BackgroundColor="AliceBlue" IsSpellCheckEnabled="False" />
+    </Frame>-->
+
+    <dxe:MultilineEdit  LabelText="{Binding ParentBindingContext.FieldName, Source={x:Reference EditorStack}}"
+                        x:Name="TextEdit" TextHorizontalAlignment="Start"
+                        CursorColor="Black"
+                        PlaceholderText="{Binding ParentBindingContext.PlaceHolderName, Source={x:Reference EditorStack}}"
+                        Text="{Binding ParentBindingContext.FieldValue, Source={x:Reference EditorStack}}"
+                        BoxMode="Outlined"
+                        BoxHeight="130"
+                        CornerMode="Round"
+                        BorderThickness="1.7"
+                        ErrorText="{Binding ParentBindingContext.ValidationMsg, Source={x:Reference EditorStack}}"
+                        HasError="{Binding ParentBindingContext.IsFieldValidationFailed, Source={x:Reference EditorStack}}"
+                        ErrorColor="red"
+                        CharacterCasing="Normal"
+                        CornerRadius="5"
+                        FocusedBorderColor="Black"
+                        VerticalOptions="Center"/>
+
+</StackLayout>

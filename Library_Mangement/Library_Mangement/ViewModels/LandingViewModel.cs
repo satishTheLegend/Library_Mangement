@@ -383,49 +383,85 @@ namespace Library_Mangement.ViewModels
                     using (StreamReader r = new StreamReader(masterFilePath))
                     {
                         string json = r.ReadToEnd();
-                        List<BooksJsonData> booksJson = JsonConvert.DeserializeObject<List<BooksJsonData>>(json);
-                        await LoaderMessage($"Reading Data From {versionItem.FileName}.", 800);
-                        if (booksJson?.Count > 0 && versionItem.IsRecordSaveToDB)
+                        if(versionItem.KeyName == "LibraryDynamicFields")
                         {
-                            await LoaderMessage($"{versionItem.FileName} Parsed Successfully.", 800);
-                            //await LoaderMessage("Started To Download Book Thumbnails.", 800);
-                            //int thumb = 0;
-                            //foreach (var bookImageItem in booksJson)
-                            //{
-                            //    await Task.Run(async () => await Common.SaveImageThumbnails(thumbnailsPath, bookImageItem.thumbnailUrl));
-                            //    await LoaderMessage($"Downloading Image {thumb} Out Of {booksJson.Count}.", 0);
-                            //    thumb++;
-                            //}
-                            //await LoaderMessage("Book Thumbnails Download Completed.", 800);
-                            int i = 0;
-                            foreach (var bookItem in booksJson)
+                            LibraryDynamicFields dynamicFields = JsonConvert.DeserializeObject<LibraryDynamicFields>(json);
+                            await LoaderMessage($"Reading Data From {versionItem.FileName}.", 800);
+                            if (dynamicFields?.data != null && versionItem.IsRecordSaveToDB)
                             {
-                                tblBook bookRecord = new tblBook()
+                                await LoaderMessage($"{versionItem.FileName} Parsed Successfully.", 800);
+                                int i = 0;
+                                foreach (var dynamicDataItem in dynamicFields?.data)
                                 {
-                                    Title = bookItem.Title,
-                                    ISBN = bookItem.ISBN,
-                                    PageCount = bookItem.PageCount,
-                                    //PngFilePath = await Common.SaveImageThumbnails(thumbnailsPath, bookItem.thumbnailUrl, true),
-                                    PublishedDate = bookItem.PublishDate,
-                                    PngLink = bookItem.PNGFileLink,
-                                    PngName = bookItem.ImageName,
-                                    PngFilePath = Common.GetPNGFilePath("BookThumbnails", bookItem.PdfFileName),
-                                    PdfLink = bookItem.PDFFileLink,
-                                    PdfName = bookItem.PdfFileName,
-                                    Status = bookItem.Status,
-                                    PdfFilePath = "",
-                                    Authors = bookItem.AuthorName,
-                                    Categories = bookItem.Catagories,
-                                };
-                                bookRecord.IsCoverAvailable = !string.IsNullOrEmpty(bookRecord.PngFilePath) ? true : false;
-                                await App.Database.Book.InsertAsync(bookRecord);
-                                await LoaderMessage($"Added Book Records {i} Out Of {booksJson?.Count}.", 0);
-                                LoaderPercent = SetProgressBarValue(i, booksJson.Count);
-                                i++;
+                                    tblLibraryDynamicFields libraryDynamicFieldsRecord = new tblLibraryDynamicFields()
+                                    {
+                                        ControlType = dynamicDataItem.ControlType,
+                                        FieldId = dynamicDataItem.FieldId,
+                                        FieldName = dynamicDataItem.FieldName,
+                                        PageName = dynamicDataItem.PageName,
+                                        Required = dynamicDataItem.Required,
+                                        Sequence = dynamicDataItem.Sequence,
+                                        Validation = dynamicDataItem.Validation,
+                                        ValidationMsg = dynamicDataItem.ValidationMsg,
+                                        ListValues = JsonConvert.SerializeObject(dynamicDataItem.listValues)
+                                    };
+                                    await App.Database.LibraryDynamicFields.InsertAsync(libraryDynamicFieldsRecord);
+                                    await LoaderMessage($"Added Fields Records {i} Out Of {dynamicFields?.data?.Count}.", 0);
+                                    LoaderPercent = SetProgressBarValue(i, dynamicFields.data.Count);
+                                    i++;
+                                }
+                                isDataDownloaded = true;
+                                await LoaderMessage($"Fields Records Added Successfully.", 100);
                             }
-                            isDataDownloaded = true;
-                            await LoaderMessage($"Books Added Successfully.", 100);
+
                         }
+                        else
+                        {
+                            List<BooksJsonData> booksJson = JsonConvert.DeserializeObject<List<BooksJsonData>>(json);
+                            await LoaderMessage($"Reading Data From {versionItem.FileName}.", 800);
+                            if (booksJson?.Count > 0 && versionItem.IsRecordSaveToDB)
+                            {
+                                await LoaderMessage($"{versionItem.FileName} Parsed Successfully.", 800);
+                                //await LoaderMessage("Started To Download Book Thumbnails.", 800);
+                                //int thumb = 0;
+                                //foreach (var bookImageItem in booksJson)
+                                //{
+                                //    await Task.Run(async () => await Common.SaveImageThumbnails(thumbnailsPath, bookImageItem.thumbnailUrl));
+                                //    await LoaderMessage($"Downloading Image {thumb} Out Of {booksJson.Count}.", 0);
+                                //    thumb++;
+                                //}
+                                //await LoaderMessage("Book Thumbnails Download Completed.", 800);
+                                int i = 0;
+                                foreach (var bookItem in booksJson)
+                                {
+                                    tblBook bookRecord = new tblBook()
+                                    {
+                                        Title = bookItem.Title,
+                                        ISBN = bookItem.ISBN,
+                                        PageCount = bookItem.PageCount,
+                                        //PngFilePath = await Common.SaveImageThumbnails(thumbnailsPath, bookItem.thumbnailUrl, true),
+                                        PublishedDate = bookItem.PublishDate,
+                                        PngLink = bookItem.PNGFileLink,
+                                        PngName = bookItem.ImageName,
+                                        PngFilePath = Common.GetPNGFilePath("BookThumbnails", bookItem.PdfFileName),
+                                        PdfLink = bookItem.PDFFileLink,
+                                        PdfName = bookItem.PdfFileName,
+                                        Status = bookItem.Status,
+                                        PdfFilePath = "",
+                                        Authors = bookItem.AuthorName,
+                                        Categories = bookItem.Catagories,
+                                    };
+                                    bookRecord.IsCoverAvailable = !string.IsNullOrEmpty(bookRecord.PngFilePath) ? true : false;
+                                    await App.Database.Book.InsertAsync(bookRecord);
+                                    await LoaderMessage($"Added Book Records {i} Out Of {booksJson?.Count}.", 0);
+                                    LoaderPercent = SetProgressBarValue(i, booksJson.Count);
+                                    i++;
+                                }
+                                isDataDownloaded = true;
+                                await LoaderMessage($"Books Added Successfully.", 100);
+                            }
+                        }
+                        
                     }
 
                 }

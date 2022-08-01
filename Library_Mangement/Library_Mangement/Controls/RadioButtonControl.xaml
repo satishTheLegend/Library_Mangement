@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:input="clr-namespace:Plugin.InputKit.Shared.Controls;assembly=Plugin.InputKit"
+             x:Class="Library_Mangement.Controls.RadioButtonControl" Padding="5"
+             x:Name="RadioButtonGroupStack"
+             Orientation="Vertical" 
+             HorizontalOptions="FillAndExpand"
+             VerticalOptions="FillAndExpand">
+    <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+        <Label x:Name="EntryTitleLabel" Text="{Binding ParentBindingContext.FieldName, Source={x:Reference RadioButtonGroupStack}}" TextColor="Black" FontAttributes="Bold"/>
+        <Label x:Name="RequiredStar" Text="*" TextColor="Red" Margin="-4,0,0,0" 
+           IsVisible="{Binding ParentBindingContext.FARequired, Source={x:Reference RadioButtonGroupStack}}"/>
+    </StackLayout>
+    
+    <input:RadioButtonGroupView x:Name="RBGroupControl">
+        <StackLayout x:Name="RadioButtonStack" BindableLayout.ItemsSource="{Binding ParentBindingContext.OptValues, Source={x:Reference RadioButtonGroupStack}}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <input:RadioButton TextColor="Gray" Text="{Binding .}" Color="Black" Checked="Rb_Checked" TextFontSize="15" />
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </StackLayout>
+    </input:RadioButtonGroupView>
+</StackLayout>

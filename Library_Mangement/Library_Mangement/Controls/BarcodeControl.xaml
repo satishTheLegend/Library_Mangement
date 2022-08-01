@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:Controls="clr-namespace:Library_Mangement.Controls" Padding="5"
+             xmlns:dxe="http://schemas.devexpress.com/xamarin/2014/forms/editors"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Name="BarcodeControlStack"
+             x:Class="Library_Mangement.Controls.BarcodeControl">
+    <!--<StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+        <Label x:Name="EntryTitleLabel" Text="{Binding ParentBindingContext.FieldName, Source={x:Reference BarcodeControlStack}}" TextColor="Black" FontAttributes="Bold"/>
+        <Label x:Name="RequiredStar" Text="*" TextColor="Red" Margin="-4,0,0,0"
+           IsVisible="{Binding ParentBindingContext.FARequired, Source={x:Reference BarcodeControlStack}}" />
+    </StackLayout>--> 
+    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+        <Button Text="Scan" VerticalOptions="StartAndExpand" HeightRequest="45" WidthRequest="80" Clicked="BarcodeScanner_Clicked"/>
+        <!--<Controls:CustomEntry x:Name="BarCodeEntry" HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand" Placeholder="{Binding ParentBindingContext.PlaceHolderName}" FontSize="15" Text="{Binding ParentBindingContext.FieldValue, Source={x:Reference BarcodeControlStack}}"/>-->
+        <dxe:TextEdit Margin="0,-6,0,0" LabelText="{Binding ParentBindingContext.FieldName, Source={x:Reference BarcodeControlStack}}"
+                    x:Name="BarCodeEntry" TextHorizontalAlignment="Center" HorizontalOptions="FillAndExpand"
+                    CursorColor="Black"
+                    PlaceholderText="{Binding ParentBindingContext.PlaceHolderName, Source={x:Reference BarcodeControlStack}}"
+                    Text="{Binding ParentBindingContext.FieldValue, Source={x:Reference BarcodeControlStack}}"
+                    BoxMode="Outlined"
+                    BoxHeight="45"
+                    CornerMode="Round"
+                    BorderThickness="1.7"
+                    ErrorText="{Binding ParentBindingContext.ValidationMsg, Source={x:Reference BarcodeControlStack}}"
+                    HasError="{Binding ParentBindingContext.IsFieldValidationFailed, Source={x:Reference BarcodeControlStack}}"
+                    ErrorColor="red"
+                    CharacterCasing="Normal"
+                    CornerRadius="5"
+                    FocusedBorderColor="Black"
+                    VerticalOptions="Center"/>
+    </StackLayout>
+</StackLayout>

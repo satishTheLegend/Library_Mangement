@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Library_Mangement.Controls.SwitchControl"
+             x:Name="SwitchControlStack" Padding="5"
+             Orientation="Vertical" 
+             HorizontalOptions="FillAndExpand"
+             VerticalOptions="FillAndExpand">
+
+    <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+        <Label x:Name="EntryTitleLabel" Text="{Binding ParentBindingContext.FieldName, Source={x:Reference SwitchControlStack}}" TextColor="Black" FontAttributes="Bold"/>
+        <Switch BackgroundColor="Transparent" OnColor="#5ca304" ThumbColor="#009585" IsToggled="{Binding ParentBindingContext.FieldValue, Source={x:Reference SwitchControlStack}}" />
+    </StackLayout>
+</StackLayout>

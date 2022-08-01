@@ -14,6 +14,7 @@ namespace Library_Mangement.Database
         readonly VerisonMasterRepository _verisonMasterRepository;
         readonly SettingsRepository _settingsRepository;
         readonly CodesMasterRepository _codesMaster;
+        readonly LibraryDynamicFieldsRepository _libraryDynamicFields;
         public LogRepository Logs
         {
             get { return _logRepository; }
@@ -40,6 +41,10 @@ namespace Library_Mangement.Database
         {
             get { return _codesMaster; }
         }
+        public LibraryDynamicFieldsRepository LibraryDynamicFields
+        {
+            get { return _libraryDynamicFields; }
+        }
 
 
         #endregion
@@ -55,6 +60,7 @@ namespace Library_Mangement.Database
                 _verisonMasterRepository = new VerisonMasterRepository(dbPath);
                 _settingsRepository = new SettingsRepository(dbPath);
                 _codesMaster = new CodesMasterRepository(dbPath);
+                _libraryDynamicFields = new LibraryDynamicFieldsRepository(dbPath);
             }
             catch (Exception ex)
             {

@@ -2,6 +2,7 @@
 using Library_Mangement.Controls;
 using Library_Mangement.Model.ApiResponse;
 using Library_Mangement.Services.PlatformServices;
+using Library_Mangement.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Library_Mangement.Helper
@@ -24,6 +26,36 @@ namespace Library_Mangement.Helper
         #endregion
 
         #region Public Methods
+        public static async Task<bool> GetCameraPermission()
+        {
+            bool result = false;
+            try
+            {
+                var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
+                if (status != PermissionStatus.Granted)
+                    status = await Permissions.RequestAsync<Permissions.Camera>();
+
+                if (status == PermissionStatus.Granted)
+                    result = true;
+
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+            return result;
+        }
+
+        public static bool ValidateInputField(DynamicPropertyDataViewModel fieldItem)
+        {
+            bool isValidated = true;
+            if (fieldItem == null || string.IsNullOrEmpty(fieldItem.FieldValue))
+            {
+                isValidated = false;
+            }
+            return isValidated;
+        }
+
         public static string GetBasePath(string type)
         {
             string Imagepath = "";

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Library_Mangement.Controls.DropDownListControl"
+             xmlns:dxe="http://schemas.devexpress.com/xamarin/2014/forms/editors"
+             x:Name="DDControl_Stack" Padding="5"
+             Orientation="Vertical" 
+             HorizontalOptions="FillAndExpand"
+             VerticalOptions="FillAndExpand">
+    <!--<StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+        <Label x:Name="EntryTitleLabel" Text="{Binding ParentBindingContext.FieldName, Source={x:Reference DDControl_Stack}}" TextColor="Black" FontAttributes="Bold"/>
+        <Label x:Name="RequiredStar" Text="*" TextColor="Red" Margin="-4,0,0,0" 
+           IsVisible="{Binding ParentBindingContext.FARequired, Source={x:Reference DDControl_Stack}}"/>
+    </StackLayout>-->
+    <dxe:ComboBoxEdit 
+            x:Name="DDControl" 
+            CursorColor="Black"
+            BoxMode="Outlined" TextHorizontalAlignment="Center"
+            BoxHeight="45"
+            CornerMode="Round"
+            BorderThickness="1.7"
+            CharacterCasing="Normal"
+            CornerRadius="5"
+            FocusedBorderColor="Black"
+            VerticalOptions="Center"
+            LabelText="{Binding ParentBindingContext.FieldName, Source={x:Reference DDControl_Stack}}"
+            PlaceholderText="{Binding ParentBindingContext.PlaceHolderName, Source={x:Reference DDControl_Stack}}"
+            ItemsSource="{Binding ParentBindingContext.OptValues, Source={x:Reference DDControl_Stack}}"
+            SelectedItem="{Binding ParentBindingContext.FieldValue, Source={x:Reference DDControl_Stack}}"
+            ErrorText="{Binding ParentBindingContext.ValidationMsg, Source={x:Reference DDControl_Stack}}"
+            HasError="{Binding ParentBindingContext.IsFieldValidationFailed, Source={x:Reference DDControl_Stack}}"
+            ErrorColor="red">
+    </dxe:ComboBoxEdit>
+</StackLayout>

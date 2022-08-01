@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:dxe="http://schemas.devexpress.com/xamarin/2014/forms/editors"
+             x:Class="Library_Mangement.Controls.DateTimePickerControl" Padding="5"
+             x:Name="DatePickerControl"
+             Orientation="Vertical" 
+             HorizontalOptions="FillAndExpand"
+             VerticalOptions="FillAndExpand">
+    <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+        <Label x:Name="EntryTitleLabel" Text="{Binding ParentBindingContext.FieldName, Source={x:Reference DatePickerControl}}" TextColor="Black" FontAttributes="Bold"/>
+        <Label x:Name="RequiredStar" Text="*" TextColor="Red" Margin="-4,0,0,0" 
+           IsVisible="{Binding ParentBindingContext.FARequired, Source={x:Reference DatePickerControl}}" />
+    </StackLayout>
+    <dxe:DateEdit
+                    LabelText=""
+                    x:Name="dateEdit"
+                    CursorColor="Black"
+                    BoxMode="Outlined"
+                    CornerMode="Round"
+                    BoxHeight="45"
+                    Date="{Binding ParentBindingContext.FieldValue, Source={x:Reference DatePickerControl}}"
+                    DisplayFormat="d"
+                    CornerRadius="4"
+                    ErrorText="{Binding ParentBindingContext.ValidationMsg, Source={x:Reference DatePickerControl}}"
+                    HasError="{Binding ParentBindingContext.IsFieldValidationFailed, Source={x:Reference DatePickerControl}}"
+                    ErrorColor="red"
+                    FocusedBorderColor="Gray"
+                    IsEndIconVisible="True"
+                    TextHorizontalAlignment="Center"
+                    VerticalOptions="Center"/>
+</StackLayout>
