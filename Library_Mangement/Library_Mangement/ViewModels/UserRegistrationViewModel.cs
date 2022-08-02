@@ -6,6 +6,7 @@ using Library_Mangement.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -17,6 +18,7 @@ namespace Library_Mangement.ViewModels
     {
         #region Properties
         private UserRegistrationModel _registration;
+        private ScrollView _scrollView = null;
         private StackLayout _mainStack = null;
         private ObservableCollection<DynamicPropertyDataViewModel> _fieldItems;
         public ObservableCollection<DynamicPropertyDataViewModel> FieldItems
@@ -44,9 +46,10 @@ namespace Library_Mangement.ViewModels
         #endregion
 
         #region Constructor
-        public UserRegistrationViewModel(StackLayout mainStack)
+        public UserRegistrationViewModel(ScrollView scrollView, StackLayout mainStack)
         {
-            _mainStack = mainStack;
+            this._scrollView = scrollView;
+            this._mainStack = mainStack;
         }
         #endregion
 
@@ -59,6 +62,11 @@ namespace Library_Mangement.ViewModels
         private async Task RegisterUser()
         {
             ValidateModel();
+            var isFailedFieldAvailable = FieldItems.Any(x=> x.IsValidationFaild);
+            if(isFailedFieldAvailable)
+            {
+                
+            }
             await Task.FromResult(true);
         }
         #endregion
@@ -87,13 +95,8 @@ namespace Library_Mangement.ViewModels
                     FieldItems.Add(dynamicProperty);
                 }
                 DynamicControlsView uiLoader = new DynamicControlsView();
-                StackLayout viewStack = new StackLayout { Padding = new Thickness(5) };
-                await uiLoader.LoadView(viewStack, FieldItems);
-                if(_mainStack == null)
-                {
-                    _mainStack = new StackLayout { Padding = new Thickness(5) };
-                    _mainStack.Children.Add(viewStack);
-                }
+                await uiLoader.LoadView(_mainStack, FieldItems);
+                _scrollView.Content = _mainStack;
 
             }
             catch(Exception ex)

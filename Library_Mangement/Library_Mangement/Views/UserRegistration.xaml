@@ -6,9 +6,18 @@
              x:DataType="viewmodels:UserRegistrationViewModel" 
              NavigationPage.HasNavigationBar="False"
              x:Class="Library_Mangement.Views.UserRegistration" 
-             BackgroundImageSource="bg9.jpg">
+             BackgroundImageSource="Screen_1.jpg">
     <ContentPage.Content>
-        <StackLayout x:Name="MainStackLayout"/>
+        <StackLayout>
+            <Label Text="SIGN UP" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="Large" Margin="0,20,0,0" TextColor="White" TextTransform="Uppercase" />
+            <ScrollView x:Name="MainStackScroll">
+                <StackLayout x:Name="MainStack" VerticalOptions="CenterAndExpand" Padding="10"/>
+            </ScrollView>
+            <StackLayout Padding="10">
+                <dxe:SimpleButton Text="Register" HeightRequest="40" Padding="0,-1,0,0" Command="{Binding RegisterUserCommand}" BackgroundColor="CornflowerBlue" 
+                                  CornerRadius="20" />
+            </StackLayout>
+        </StackLayout>
         <!--<Grid RowDefinitions="1*, 9*" Padding="10,0,10,0">
             <StackLayout Grid.Row="1">
                 

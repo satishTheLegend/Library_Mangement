@@ -7,7 +7,6 @@ namespace Library_Mangement.ViewModels
 {
     public class DynamicPropertyDataViewModel : ValidatableBase
     {
-
         #region Properties
         private int _fieldId;
         public int FieldId

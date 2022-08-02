@@ -20,9 +20,9 @@ namespace Library_Mangement.Views
         #region Constructor
         public UserRegistration()
         {
-            _vm = new UserRegistrationViewModel(MainStackLayout);
-            BindingContext = _vm;
             InitializeComponent();
+            _vm = new UserRegistrationViewModel(MainStackScroll, MainStack);
+            BindingContext = _vm;
         }
         #endregion
 

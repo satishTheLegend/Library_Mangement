@@ -29,10 +29,6 @@ namespace Library_Mangement.Controls
 
         public async Task LoadView(StackLayout ParentStack, ObservableCollection<DynamicPropertyDataViewModel> Items)
         {
-            if(ParentStack == null)
-            {
-                ParentStack = new StackLayout();
-            }
             View result = null;
             try
             {

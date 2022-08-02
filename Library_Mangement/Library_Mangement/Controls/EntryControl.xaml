@@ -16,8 +16,14 @@
 
     <dxe:TextEdit   LabelText="{Binding ParentBindingContext.FieldName, Source={x:Reference EntryControlStack}}"
                     x:Name="TextEdit" TextHorizontalAlignment="Center"
-                    CursorColor="Black"
-                    PlaceholderText="{Binding ParentBindingContext.PlaceHolderName, Source={x:Reference EntryControlStack}}"
+                    CursorColor="White"
+                    ClearIconColor="White"
+                    ClearIconVisibility="Auto"
+                    TextColor="White"
+                    PlaceholderColor="White"
+                    LabelColor="White"
+                    FocusedLabelColor="White"
+                    LabelFontSize="Medium"
                     Text="{Binding ParentBindingContext.FieldValue, Source={x:Reference EntryControlStack}}"
                     BoxMode="Outlined"
                     BoxHeight="45"
@@ -28,9 +34,9 @@
                     ErrorColor="red"
                     CharacterCasing="Normal"
                     CornerRadius="5"
-                    FocusedBorderColor="Black"
+                    FocusedBorderColor="White"
                     VerticalOptions="Center"/>
-
+    <!--PlaceholderText="{Binding ParentBindingContext.PlaceHolderName, Source={x:Reference EntryControlStack}}"-->
 </StackLayout>
     
     

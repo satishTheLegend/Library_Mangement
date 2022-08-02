@@ -7,15 +7,19 @@
              Orientation="Vertical" 
              HorizontalOptions="FillAndExpand"
              VerticalOptions="FillAndExpand">
-    <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+    <!--<StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
         <Label x:Name="EntryTitleLabel" Text="{Binding ParentBindingContext.FieldName, Source={x:Reference DatePickerControl}}" TextColor="Black" FontAttributes="Bold"/>
         <Label x:Name="RequiredStar" Text="*" TextColor="Red" Margin="-4,0,0,0" 
            IsVisible="{Binding ParentBindingContext.FARequired, Source={x:Reference DatePickerControl}}" />
-    </StackLayout>
+    </StackLayout>-->
     <dxe:DateEdit
-                    LabelText=""
+                    LabelText="{Binding ParentBindingContext.FieldName, Source={x:Reference DatePickerControl}}"
                     x:Name="dateEdit"
-                    CursorColor="Black"
+                    CursorColor="White"
+                    IconColor="White"
+                    TextColor="White"
+                    PlaceholderColor="White"
+                    LabelColor="White"
                     BoxMode="Outlined"
                     CornerMode="Round"
                     BoxHeight="45"
@@ -25,7 +29,7 @@
                     ErrorText="{Binding ParentBindingContext.ValidationMsg, Source={x:Reference DatePickerControl}}"
                     HasError="{Binding ParentBindingContext.IsFieldValidationFailed, Source={x:Reference DatePickerControl}}"
                     ErrorColor="red"
-                    FocusedBorderColor="Gray"
+                    FocusedBorderColor="White"
                     IsEndIconVisible="True"
                     TextHorizontalAlignment="Center"
                     VerticalOptions="Center"/>

@@ -48,12 +48,12 @@ namespace Library_Mangement.Helper
 
         public static bool ValidateInputField(DynamicPropertyDataViewModel fieldItem)
         {
-            bool isValidated = true;
+            bool isFailedValidated = false;
             if (fieldItem == null || string.IsNullOrEmpty(fieldItem.FieldValue))
             {
-                isValidated = false;
+                isFailedValidated = true;
             }
-            return isValidated;
+            return isFailedValidated;
         }
 
         public static string GetBasePath(string type)
