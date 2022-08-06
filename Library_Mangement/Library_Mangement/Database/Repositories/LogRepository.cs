@@ -1,5 +1,6 @@
 ﻿using Library_Mangement.Database.Interface;
 using Library_Mangement.Database.Models;
+using Library_Mangement.Helper;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -31,35 +32,56 @@ namespace Library_Mangement.Database.Repositories
         }
         #endregion
 
-        #region Database Methods
-        public Task<int> DeleteAllRecords()
+        #region Public Methods
+
+        public void AddLogs(string logType, string moduleName, string description)
         {
-            throw new NotImplementedException();
+            Task.Run(async() => await AddDataLogs(logType, moduleName, description));
         }
 
-        public Task<int> DeleteAsync(tblLogs entity)
+        public async Task<int> AddDataLogs(string logType, string moduleName,string description)
         {
-            throw new NotImplementedException();
+            tblLogs tblLogs = new tblLogs()
+            {
+                LogType = string.IsNullOrEmpty(logType) ? AppConfig.LogType_Info : logType,
+                Datetime = DateTime.Now,
+                Description = string.IsNullOrEmpty(description) ? "No Description Available" : description,
+                ModuleName = string.IsNullOrEmpty(moduleName) ? string.Empty : moduleName,
+                UserInfo = App.CurrentLoggedInUser == null ? string.Empty : $"{App.CurrentLoggedInUser.FirstName} {App.CurrentLoggedInUser.LastName} | {App.CurrentLoggedInUser.Email} | {App.CurrentLoggedInUser.UserName}",
+            };
+            return await InsertAsync(tblLogs);
+        }
+        #endregion
+
+        #region Implemented Methods
+        public async Task<int> DeleteAllRecords()
+        {
+            return await _conn.ExecuteAsync("Delete from tblLogs");
         }
 
-        public Task<tblLogs> FindByIdAsync(int Id)
+        public async Task<int> DeleteAsync(tblLogs entity)
         {
-            throw new NotImplementedException();
+            return await _conn.DeleteAsync(entity);
         }
 
-        public Task<List<tblLogs>> GetDataAsync()
+        public async Task<tblLogs> FindByIdAsync(int Id)
         {
-            throw new NotImplementedException();
+            return await _conn.Table<tblLogs>().FirstOrDefaultAsync(x => x.Id == Id);
         }
 
-        public Task<int> InsertAsync(tblLogs entity)
+        public async Task<List<tblLogs>> GetDataAsync()
         {
-            throw new NotImplementedException();
+            return await _conn.Table<tblLogs>().ToListAsync();
         }
 
-        public Task<int> UpdateAsync(tblLogs entity)
+        public async Task<int> InsertAsync(tblLogs entity)
         {
-            throw new NotImplementedException();
+            return await _conn.InsertAsync(entity);
+        }
+
+        public async Task<int> UpdateAsync(tblLogs entity)
+        {
+            return await _conn.UpdateAsync(entity);
         }
         #endregion
     }

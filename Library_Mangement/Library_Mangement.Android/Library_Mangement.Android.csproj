@@ -132,6 +132,10 @@
     <Folder Include="Resources\raw\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\EDFSCore\EDFSCore.csproj">
+      <Project>{81ed4d3f-3a52-476c-8f70-327ed1ddacaa}</Project>
+      <Name>EDFSCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Library_Mangement\Library_Mangement.csproj">
       <Project>{68403C4A-C1B3-49EF-8BFE-9E38CFA6FDEC}</Project>
       <Name>Library_Mangement</Name>

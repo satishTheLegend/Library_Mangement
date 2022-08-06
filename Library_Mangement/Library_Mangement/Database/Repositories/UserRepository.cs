@@ -77,14 +77,24 @@ namespace Library_Mangement.Database.Repositories
             return _conn.Table<tblUser>().ToListAsync();
         }
 
-        public Task<int> InsertAsync(tblUser entity)
+        public async Task<int> InsertAsync(tblUser entity)
         {
-            return _conn.InsertAsync(entity);
+            int res = 0;
+            var user = _conn.Table<tblUser>().FirstAsync(x => x.Email == entity.Email && x.RollNo == entity.RollNo && x.Phone == x.Phone);
+            if(user == null)
+            {
+                res = await _conn.InsertAsync(entity);
+            }
+            else
+            {
+                res = await UpdateAsync(entity);
+            }
+            return res;
         }
 
-        public Task<int> UpdateAsync(tblUser entity)
+        public async Task<int> UpdateAsync(tblUser entity)
         {
-            return _conn.UpdateAsync(entity);
+            return await _conn.UpdateAsync(entity);
         }
         #endregion
     }

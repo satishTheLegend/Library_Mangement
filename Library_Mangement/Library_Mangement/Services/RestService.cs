@@ -6,6 +6,9 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using EDFSCore;
+using Xamarin.Essentials;
+using Library_Mangement.Model.ApiResponse.GETModels;
 
 namespace Library_Mangement.Services
 {
@@ -13,9 +16,11 @@ namespace Library_Mangement.Services
     public class RestService
     {
         #region Properties
+        public static readonly string _strModuleName = nameof(RestService);
+        public static string LogParams = string.Empty;
         public const int RequestTimeOutInSeconds = 15;
         public readonly HttpClient HttpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(RequestTimeOutInSeconds) };
-        public event ProgressBar ProgressEvent;
+        public static event ProgressBar ProgressEvent;
         #endregion
 
         #region Constructor
@@ -26,6 +31,57 @@ namespace Library_Mangement.Services
         #endregion
 
         #region Public Methods
+        public static async Task<ApiResponseResult<Login>> LoginAsync(string email, string password)
+        {
+            GetLogParamString(null, true);
+            IDictionary<string, string> userData = new Dictionary<string, string>();
+            userData.Add(AppConfig.RestService_Param_Email, email);
+            userData.Add(AppConfig.RestService_Param_Password, password);
+            //userData.Add(AppConfig.RestService_Param_LogParams, LogParams);
+            string requestUrl = $"{ServerBaseUrl}{AppConfig.ApiKeypoints_Login}";
+            var response = await CrossEDFSCore.Current.PostRequestAsync<Login>(requestUrl, userData);
+            return response;
+        }
+
+        public static async Task<T> MasterDataDownload<T>(string apiEndPoint)
+        {
+            string requestUrl = $"{ServerBaseUrl}{apiEndPoint}";
+            var response = await CrossEDFSCore.Current.GetRequest<T>(requestUrl);
+            return response;
+        }
+
+        #region Download File From URI
+         public static async Task<string> DownloadFile(string fileUrl, string directory)
+        {
+            Uri uri = new Uri(fileUrl);
+            if (uri.IsFile)
+            {
+                string filename = System.IO.Path.GetFileName(uri.LocalPath);
+                directory = Path.Combine(directory, filename);
+            }
+            //if (File.Exists(directory))
+            //{
+            //    File.Delete(directory);
+            //    File.Create(directory);
+            //}
+            //FileInfo fileInfo = new FileInfo(directory);
+            DirectoryInfo directoryInfo = new DirectoryInfo(directory);
+            if (!directoryInfo.Exists)
+            {
+                directoryInfo.Create();
+            }
+            using (var client = new HttpClientDownloadWithProgress(fileUrl, directory))
+            {
+                client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) => {
+                    //ProgressEvent?.Invoke($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
+                    ProgressEvent?.Invoke(progressPercentage);
+                };
+                await client.StartDownload();
+            }
+            return directory;
+        }
+        #endregion
+       
         public async Task DownloadJsonData(string fileUrl, string destinationFilePath)
         {
             try
@@ -66,6 +122,8 @@ namespace Library_Mangement.Services
                 return;
             }
         }
+
+
         #endregion
 
         #region Private Methods
@@ -76,8 +134,59 @@ namespace Library_Mangement.Services
 
         #endregion
 
-        #region Handlers
+        #region Other
 
+        #endregion
+        #region Private Methods
+        private static string ServerBaseUrl
+        {
+            get
+            {
+                string strUrl = string.Empty;
+                switch (AppInfo.PackageName)
+                {
+                    case AppConfig.AppPackage_Development:
+                        strUrl = AppConfig.BaseUrl_Development;
+                        break;
+                    case AppConfig.AppPackage_Staging:
+                        strUrl = AppConfig.BaseUrl_Staging;
+                        break;
+                    case AppConfig.AppPackage_Production:
+                        strUrl = AppConfig.BaseUrl_Production;
+                        break;
+                }
+                return strUrl;
+            }
+        }
+
+        private static Dictionary<string, object> GetAuthHeader()
+        {
+            Dictionary<string, object> userHeader = new Dictionary<string, object>();
+            var userToken = Preferences.Get(AppConfig.UserPref_UserToken, "");
+            userHeader.Add(AppConfig.RestService_Param_UserToken, userToken);
+            return userHeader;
+        }
+        private static void GetLogParamString(string StudentId = null, bool forLogin = false)
+        {
+            try
+            {
+                string logParams = string.Empty;
+                var deviceInfo = Common.DeviceDetails();
+                if (deviceInfo != null)
+                {
+                    if (string.IsNullOrEmpty(StudentId))
+                    {
+                        StudentId = App.CurrentLoggedInUser == null ? "" : App.CurrentLoggedInUser.StudentId;
+                    }
+                    logParams = $"Xamarin | {deviceInfo.Platform}_{deviceInfo.OSVersion} | {deviceInfo.AppVersion} | {deviceInfo.NetworkOperatorName} | {deviceInfo.DeviceManufacturer}_{deviceInfo.DeviceModel} | StudentId - {StudentId}";
+                }
+                LogParams = logParams;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandlerService.SendErrorLog(_strModuleName, ex);
+            }
+        }
         #endregion
     }
 }

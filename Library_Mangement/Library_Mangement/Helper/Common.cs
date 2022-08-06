@@ -1,8 +1,11 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
 using Library_Mangement.Controls;
+using Library_Mangement.Model;
 using Library_Mangement.Model.ApiResponse;
+using Library_Mangement.Services;
 using Library_Mangement.Services.PlatformServices;
 using Library_Mangement.ViewModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,7 +21,7 @@ namespace Library_Mangement.Helper
     public static class Common
     {
         #region Properties
-
+        private static readonly string _moduleName = nameof(Common);
         #endregion
 
         #region Constructor
@@ -26,6 +29,84 @@ namespace Library_Mangement.Helper
         #endregion
 
         #region Public Methods
+
+        #region Device Info
+        public static DeviceInformation DeviceDetails()
+        {
+            DeviceInformation result = new DeviceInformation();
+            try
+            {
+                result.AppName = AppInfo.Name;
+                result.AppVersion = AppInfo.VersionString;
+                result.BuildNumber = AppInfo.BuildString;
+                result.PackageName = AppInfo.PackageName;
+                result.Platform = $"{DeviceInfo.Platform}";
+                result.DeviceManufacturer = DeviceInfo.Manufacturer;
+                result.DeviceModel = DeviceInfo.Model;
+                result.OSVersion = DeviceInfo.VersionString;
+                result.DeviceID = DependencyService.Get<IDeviceInfo>().DeviceID;
+                result.NetworkOperatorName = DependencyService.Get<IDeviceInfo>().NetworkOperatorName;
+            }
+            catch (Exception ex)
+            {
+            }
+            return result;
+        }
+        #endregion
+
+        #region App Releated Methods
+        public static string GetBuildMode
+        {
+            get
+            {
+                string result = "";
+                try
+                {
+                    var packageName = AppInfo.PackageName;
+                    switch (packageName)
+                    {
+                        case AppConfig.AppPackage_Development:
+                            result = "DEV";
+                            break;
+
+                        case AppConfig.AppPackage_Staging:
+                            result = "STAGE";
+                            break;
+
+                        case AppConfig.AppPackage_Production:
+                            result = "PROD";
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+                return result;
+            }
+        }
+        #endregion
+
+        #region Object Serialization Method
+        public static string JsonConvertSerializeObject(object data)
+        {
+            string strdetails = "";
+            try
+            {
+                strdetails = JsonConvert.SerializeObject(data);
+            }
+            catch (Exception ex)
+            {
+                strdetails = $"JsonSerializeException = >> {ex.Message} <<";
+                //Task.Run(async () => await App.LogDatabase.Log.AddDataLogs(AppConfig.Log_Info, _strModuleName, $"JsonConvertSerializeObject Exception :::: {ex.StackTrace}"));
+            }
+            return strdetails;
+        }
+        #endregion
+
         public static async Task<bool> GetCameraPermission()
         {
             bool result = false;
@@ -58,36 +139,36 @@ namespace Library_Mangement.Helper
 
         public static string GetBasePath(string type)
         {
-            string Imagepath = "";
+            string dir = "";
             try
             {
                 string basePath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Personal)}";
-                string packageName = DependencyService.Get<IDeviceInfo>().PackageName;
-                switch (packageName)
+                switch (AppInfo.PackageName)
                 {
                     case AppConfig.AppPackage_Development:
-                        Imagepath = Path.Combine(basePath, AppConfig.AppName, "D", type);
+                        dir = Path.Combine(basePath, AppConfig.AppName, "D", type);
                         break;
 
                     case AppConfig.AppPackage_Staging:
-                        Imagepath = Path.Combine(basePath, AppConfig.AppName, "S", type);
+                        dir = Path.Combine(basePath, AppConfig.AppName, "S", type);
                         break;
 
                     case AppConfig.AppPackage_Production:
-                        Imagepath = Path.Combine(basePath, AppConfig.AppName, "P", type);
+                        dir = Path.Combine(basePath, AppConfig.AppName, "P", type);
                         break;
                 }
             }
             catch (Exception ex)
             {
-
+                ExceptionHandlerService.SendErrorLog(_moduleName, ex);
             }
-            if(!string.IsNullOrEmpty(Imagepath) && !Directory.Exists(Imagepath))
+            if (!Directory.Exists(dir))
             {
-                Directory.CreateDirectory(Imagepath);
+                Directory.CreateDirectory(dir);
             }
-            return Imagepath;
+            return dir;
         }
+
         public static byte[] GetByteFromResource(Assembly assemblyData, string fileName, string fileType)
         {
             byte[] byteData = null;
@@ -115,11 +196,38 @@ namespace Library_Mangement.Helper
             return byteData;
         }
 
+        public static Keyboard GetKeyboardType(string keyboardType)
+        {
+            Keyboard keyboard = null;
+            try
+            {
+                switch (keyboardType)
+                {
+                    case "Text":
+                        keyboard = Keyboard.Text;
+                        break;
+
+                    case "Password":
+                        keyboard = Keyboard.Default;
+                        break;
+
+                    default:
+                        keyboard = Keyboard.Default;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return keyboard;
+        }
+
         public static bool UnzipFileAsync(string zipFilePath, string unzipFolderPath)
         {
             try
             {
-                if(Directory.Exists(unzipFolderPath))
+                if (Directory.Exists(unzipFolderPath))
                 {
                     Directory.Delete(unzipFolderPath, true);
                 }
@@ -136,7 +244,7 @@ namespace Library_Mangement.Helper
         public static async Task<string> DownloadFileAndGETFilePath(string url, string directoryName, string fileName)
         {
             string filePath = string.Empty;
-            if(!string.IsNullOrEmpty(url))
+            if (!string.IsNullOrEmpty(url))
             {
                 filePath = Path.Combine(GetBasePath(directoryName), fileName);
                 if (File.Exists(filePath))
@@ -199,7 +307,7 @@ namespace Library_Mangement.Helper
                 bool isZipSaved = await SaveFileFromByteArray(zipFileBytes, tempzipFileNewPath);
                 if (!isZipSaved)
                     return false;
-                if(Directory.Exists(unzipFolderPath))
+                if (Directory.Exists(unzipFolderPath))
                 {
                     Directory.Delete(unzipFolderPath, true);
                     Directory.CreateDirectory(unzipFolderPath);
@@ -210,7 +318,7 @@ namespace Library_Mangement.Helper
                 }
                 System.IO.Compression.ZipFile.ExtractToDirectory(tempzipFileNewPath, unzipFolderPath);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -225,9 +333,9 @@ namespace Library_Mangement.Helper
                 Uri uri = new Uri(thumbnailUrl);
                 string filename = Path.GetFileName(uri.AbsolutePath);
                 string newFilePath = Path.Combine(thumbnailsPath, filename);
-                if(!getFilePath)
+                if (!getFilePath)
                 {
-                    if(!File.Exists(newFilePath))
+                    if (!File.Exists(newFilePath))
                     {
                         await App.RestServiceConnection.DownloadJsonData(thumbnailUrl, newFilePath);
                         //if (imagedata == null) return path; var imagedata = 

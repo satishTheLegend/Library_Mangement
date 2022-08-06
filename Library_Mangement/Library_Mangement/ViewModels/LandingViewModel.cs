@@ -2,6 +2,8 @@
 using Library_Mangement.Helper;
 using Library_Mangement.Model;
 using Library_Mangement.Model.ApiResponse;
+using Library_Mangement.Model.ApiResponse.GETModels;
+using Library_Mangement.Services;
 using Library_Mangement.Validation;
 using Library_Mangement.Views;
 using Newtonsoft.Json;
@@ -99,6 +101,40 @@ namespace Library_Mangement.ViewModels
         #endregion
 
         #region Public Methods
+        public async Task DownloadMasterData_Updated()
+        {
+            try
+            {
+                await SyncMasterData();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                LoaderVisible = false;
+                LandingPageEnable = true;
+                LandingPageOpacity = 1.0;
+                await Task.FromResult(Task.CompletedTask);
+            }
+        }
+
+        private async Task SyncMasterData()
+        {
+            bool isMasterDataNotAvailable = false;
+            var masterData = await RestService.MasterDataDownload<OCLMMasterVeriosnControl>(AppConfig.ApiKeypoints_OCLM_MasterVersionControl);
+            foreach (var masterItem in masterData.data)
+            {
+                isMasterDataNotAvailable = await App.Database.MasterDataVerison.IsMasterDataVersionMissing(masterItem);
+            }
+
+            if(isMasterDataNotAvailable)
+            {
+                BooksJsonMasterData booksMaster = await RestService.MasterDataDownload<BooksJsonMasterData>(AppConfig.ApiKeypoints_BooksMaster);
+            }
+        }
+
         public async Task DownloadMasterData()
         {
             try
@@ -132,45 +168,52 @@ namespace Library_Mangement.ViewModels
         #region Private Methods
         private async Task LoadMasterData()
         {
-            await LoaderMessage("Master Data Download Begin.", 1700);
-            LoaderVisible = true;
-            LandingPageEnable = false;
-            LandingPageOpacity = 0.5;
-            await LoaderMessage("Downloading Master Data.", 1500);
-            List<MasterVerisonModel> verisonDataList = null;
-            string masterDataFilePath = await Common.DownloadFileAndGETFilePath("https://drive.google.com/u/0/uc?id=1d_nqcTA8SKhmQRS-0-ZCkrGQFhr5lWxx&export=download", "MasterData", "MasterDataVerison.Json");
-            if (File.Exists(masterDataFilePath))
+            try
             {
-                using (StreamReader r = new StreamReader(masterDataFilePath))
+                await LoaderMessage("Master LoginData Download Begin.", 1700);
+                LoaderVisible = true;
+                LandingPageEnable = false;
+                LandingPageOpacity = 0.5;
+                await LoaderMessage("Downloading Master LoginData.", 1500);
+                List<MasterVerisonModel> verisonDataList = null;
+                string masterDataFilePath = await Common.DownloadFileAndGETFilePath("https://drive.google.com/u/0/uc?id=1d_nqcTA8SKhmQRS-0-ZCkrGQFhr5lWxx&export=download", "MasterData", "MasterDataVerison.Json");
+                if (File.Exists(masterDataFilePath))
                 {
-                    string masterJson = r.ReadToEnd();
-                    await LoaderMessage("Checking For Master Data Verison Change.", 800);
-                    verisonDataList = JsonConvert.DeserializeObject<List<MasterVerisonModel>>(masterJson);
-                    foreach (var versionItem in verisonDataList)
+                    using (StreamReader r = new StreamReader(masterDataFilePath))
                     {
-                        var data = await App.Database.MasterDataVerison.FindItemByKey(versionItem.KeyName);
-                        if (data != null)
+                        string masterJson = r.ReadToEnd();
+                        await LoaderMessage("Checking For Master LoginData Verison Change.", 800);
+                        verisonDataList = JsonConvert.DeserializeObject<List<MasterVerisonModel>>(masterJson);
+                        foreach (var versionItem in verisonDataList)
                         {
-                            bool result = data.Verison != versionItem.Verison ? true : false;
-                            if (result)
+                            var data = await App.Database.MasterDataVerison.FindItemByKey(versionItem.KeyName);
+                            if (data != null)
+                            {
+                                bool result = data.Verison != versionItem.Verison ? true : false;
+                                if (result)
+                                {
+                                    await SaveVersionRecordsToDB(versionItem);
+                                }
+                            }
+                            else
                             {
                                 await SaveVersionRecordsToDB(versionItem);
                             }
                         }
-                        else
-                        {
-                            await SaveVersionRecordsToDB(versionItem);
-                        }
                     }
-                }
-                tblSettings settings = new tblSettings()
-                {
-                    Key = "CheckVersion",
-                    Value = DateTime.Now.ToString()
-                };
-                await App.Database.Settings.InsertAsync(settings);
+                    tblSettings settings = new tblSettings()
+                    {
+                        Key = "CheckVersion",
+                        Value = DateTime.Now.ToString()
+                    };
+                    await App.Database.Settings.InsertAsync(settings);
 
-                await FinializeMessage();
+                    await FinializeMessage();
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
@@ -378,7 +421,7 @@ namespace Library_Mangement.ViewModels
                     FilePath = masterFilePath;
                     if (!versionItem.IsRecordSaveToDB)
                         return true;
-                    await LoaderMessage($"{versionItem.FileName} Data Downloaded Successfully.", 500);
+                    await LoaderMessage($"{versionItem.FileName} LoginData Downloaded Successfully.", 500);
                     await LoaderMessage($"{versionItem.FileName} File Stored On Your Local Device.", 900);
                     using (StreamReader r = new StreamReader(masterFilePath))
                     {
@@ -386,7 +429,7 @@ namespace Library_Mangement.ViewModels
                         if(versionItem.KeyName == "LibraryDynamicFields")
                         {
                             LibraryDynamicFields dynamicFields = JsonConvert.DeserializeObject<LibraryDynamicFields>(json);
-                            await LoaderMessage($"Reading Data From {versionItem.FileName}.", 800);
+                            await LoaderMessage($"Reading LoginData From {versionItem.FileName}.", 800);
                             if (dynamicFields?.data != null && versionItem.IsRecordSaveToDB)
                             {
                                 await LoaderMessage($"{versionItem.FileName} Parsed Successfully.", 800);
@@ -401,6 +444,8 @@ namespace Library_Mangement.ViewModels
                                         PageName = dynamicDataItem.PageName,
                                         Required = dynamicDataItem.Required,
                                         Sequence = dynamicDataItem.Sequence,
+                                        GroupName = dynamicDataItem.GroupName,
+                                        KeyboardType = dynamicDataItem.KeyboardType,
                                         Validation = dynamicDataItem.Validation,
                                         ValidationMsg = dynamicDataItem.ValidationMsg,
                                         ListValues = JsonConvert.SerializeObject(dynamicDataItem.listValues)
@@ -418,7 +463,7 @@ namespace Library_Mangement.ViewModels
                         else
                         {
                             List<BooksJsonData> booksJson = JsonConvert.DeserializeObject<List<BooksJsonData>>(json);
-                            await LoaderMessage($"Reading Data From {versionItem.FileName}.", 800);
+                            await LoaderMessage($"Reading LoginData From {versionItem.FileName}.", 800);
                             if (booksJson?.Count > 0 && versionItem.IsRecordSaveToDB)
                             {
                                 await LoaderMessage($"{versionItem.FileName} Parsed Successfully.", 800);

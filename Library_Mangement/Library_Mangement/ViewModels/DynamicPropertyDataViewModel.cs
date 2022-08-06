@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.Forms;
 
 namespace Library_Mangement.ViewModels
 {
@@ -27,6 +28,26 @@ namespace Library_Mangement.ViewModels
             {
                 _fieldName = value;
                 OnPropertyChanged(nameof(FieldName));
+            }
+        }
+        private Keyboard _keyboardType;
+        public Keyboard KeyboardType
+        {
+            get => _keyboardType;
+            set
+            {
+                _keyboardType = value;
+                OnPropertyChanged(nameof(KeyboardType));
+            }
+        }
+        private string _groupName;
+        public string GroupName
+        {
+            get => _groupName;
+            set
+            {
+                _groupName = value;
+                OnPropertyChanged(nameof(GroupName));
             }
         }
         private string _placeHolderName;
@@ -138,16 +159,6 @@ namespace Library_Mangement.ViewModels
             }
         }
 
-        private bool _isValidationFaild;
-        public bool IsValidationFaild
-        {
-            get => _isValidationFaild;
-            set
-            {
-                _isValidationFaild = value;
-                OnPropertyChanged(nameof(IsValidationFaild));
-            }
-        }
         private bool _isFieldValidationFaild;
         public bool IsFieldValidationFailed
         {

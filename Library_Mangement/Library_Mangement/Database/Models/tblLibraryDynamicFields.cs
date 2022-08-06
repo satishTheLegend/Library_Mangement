@@ -14,6 +14,8 @@ namespace Library_Mangement.Database.Models
         public string Validation { get; set; }
         public string ValidationMsg { get; set; }
         public int Sequence { get; set; }
+        public string GroupName { get; set; }
+        public string KeyboardType { get; set; }
         public string FieldName { get; set; }
         public string ControlType { get; set; }
         public string PageName { get; set; }

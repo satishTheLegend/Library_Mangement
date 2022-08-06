@@ -1,6 +1,8 @@
-﻿using Library_Mangement.Controls;
+﻿using Acr.UserDialogs;
+using Library_Mangement.Controls;
 using Library_Mangement.Helper;
 using Library_Mangement.Model;
+using Library_Mangement.Resx;
 using Library_Mangement.Validation;
 using Library_Mangement.Views;
 using System;
@@ -62,10 +64,11 @@ namespace Library_Mangement.ViewModels
         private async Task RegisterUser()
         {
             ValidateModel();
-            var isFailedFieldAvailable = FieldItems.Any(x=> x.IsValidationFaild);
-            if(isFailedFieldAvailable)
+            var isFailedFieldAvailable = FieldItems.Any(x=> x.IsFieldValidationFailed);
+            if(!isFailedFieldAvailable)
             {
-                
+                await App.Current.MainPage.DisplayAlert("Alert","Registration Successful", AppResources.Ok);
+                await App.Current.MainPage.Navigation.PopAsync();
             }
             await Task.FromResult(true);
         }
@@ -86,6 +89,8 @@ namespace Library_Mangement.ViewModels
                     dynamicProperty.Sequence = fieldItems.Sequence;
                     dynamicProperty.Required = fieldItems.Required;
                     dynamicProperty.FieldName = fieldItems.FieldName;
+                    dynamicProperty.GroupName = fieldItems.GroupName;
+                    dynamicProperty.KeyboardType = Common.GetKeyboardType(fieldItems.FieldName);
                     dynamicProperty.ControlType = fieldItems.ControlType;
                     dynamicProperty.PageName = fieldItems.PageName;
                     dynamicProperty.Validation = fieldItems.Validation;
@@ -115,8 +120,28 @@ namespace Library_Mangement.ViewModels
                 {
                     FieldItem.IsFieldValidationFailed = Common.ValidateInputField(FieldItem);
                 }
+                else
+                {
+                    FieldItem.IsFieldValidationFailed = false;
+                }
 
             }
+
+            var groupFields = FieldItems.Where(x => !string.IsNullOrEmpty(x.GroupName)).ToList();
+            if(groupFields?.Count > 0)
+            {
+                bool isMatched = groupFields[0].FieldValue == groupFields[1].FieldValue ? false : true;
+                if(isMatched)
+                {
+                    var result = FieldItems.FirstOrDefault(x => x.FieldId == groupFields[1].FieldId);
+                    if (result != null)
+                    {
+                        result.IsFieldValidationFailed = true;
+                        result.ValidationMsg = "Please Enter The Same Password";
+                    }
+                }
+            }
+
         }
         #endregion
     }

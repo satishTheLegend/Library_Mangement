@@ -1,5 +1,6 @@
 ﻿using Library_Mangement.Database.Interface;
 using Library_Mangement.Database.Models;
+using Library_Mangement.Model.ApiResponse.GETModels;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -29,9 +30,17 @@ namespace Library_Mangement.Database.Repositories
         #endregion
 
         #region Public Methods
-        public Task<tblVerisonMaster> FindItemByKey(string key)
+        public async Task<bool> IsMasterDataVersionMissing(MasterDataList masterItem)
         {
-            return _conn.Table<tblVerisonMaster>().FirstOrDefaultAsync(x => x.KeyName == key);
+            tblVerisonMaster ver = await _conn.Table<tblVerisonMaster>().FirstOrDefaultAsync(x => x.Key == masterItem.key && x.Value == masterItem.value);
+            if(ver == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         #endregion
 
@@ -59,7 +68,7 @@ namespace Library_Mangement.Database.Repositories
         public async Task<int> InsertAsync(tblVerisonMaster entity)
         {
             int result = -1;
-            tblVerisonMaster book = await _conn.Table<tblVerisonMaster>().FirstOrDefaultAsync(x => x.KeyName == entity.KeyName);
+            tblVerisonMaster book = await _conn.Table<tblVerisonMaster>().FirstOrDefaultAsync(x => x.Key == entity.Key);
             if (book == null)
             {
                 result = await _conn.InsertAsync(entity);
@@ -74,7 +83,7 @@ namespace Library_Mangement.Database.Repositories
         public Task<int> UpdateAsync(tblVerisonMaster entity)
         {
             return _conn.UpdateAsync(entity);
+
+            #endregion
         }
-        #endregion
     }
-}

@@ -20,6 +20,7 @@
                     ClearIconColor="White"
                     ClearIconVisibility="Auto"
                     TextColor="White"
+                    Keyboard="{Binding ParentBindingContext.KeyboardType, Source={x:Reference EntryControlStack}}"
                     PlaceholderColor="White"
                     LabelColor="White"
                     FocusedLabelColor="White"

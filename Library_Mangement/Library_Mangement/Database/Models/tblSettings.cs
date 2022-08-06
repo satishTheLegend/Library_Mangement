@@ -9,5 +9,6 @@ namespace Library_Mangement.Database.Models
     {
         public string Key { get; set; }
         public string Value { get; set; }
+        public string Value1 { get; set; }
     }
 }
