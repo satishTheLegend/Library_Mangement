@@ -52,8 +52,13 @@ namespace Library_Mangement.Helper
 
         // Api EndPoint Keys
         public const string ApiKeypoints_Login = "LibraryLogin/Login";
+        public const string ApiKeypoints_Register = "LibraryLogin/Register";
+        public const string ApiKeypoints_UpdateUserDetails = "LibraryLogin/UpdateUserDetails";
         public const string ApiKeypoints_BooksMaster = "BooksJsonMaster/GetBooks";
         public const string ApiKeypoints_OCLM_MasterVersionControl = "LibraryMasterVersion/GetVersion";
+        public const string ApiKeypoints_OCLM_DynamicFields = "OCLMDynamicFields/GetFields";
+        public const string ApiKeypoints_OCLM_GetCodes = "CodesMaster/GetCodes";
+        public const string ApiKeypoints_OCLM_AddCodes = "CodesMaster/AddCodes";
 
         //App Theme
         public const string AppTheme_Theme = "Default";

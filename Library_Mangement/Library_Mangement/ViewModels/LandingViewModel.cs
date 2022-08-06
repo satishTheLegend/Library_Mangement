@@ -132,6 +132,8 @@ namespace Library_Mangement.ViewModels
             if(isMasterDataNotAvailable)
             {
                 BooksJsonMasterData booksMaster = await RestService.MasterDataDownload<BooksJsonMasterData>(AppConfig.ApiKeypoints_BooksMaster);
+                OCLMDynamicFields fieldsMaster = await RestService.MasterDataDownload<OCLMDynamicFields>(AppConfig.ApiKeypoints_OCLM_DynamicFields);
+                LibraryCodesMaster codesMaster = await RestService.MasterDataDownload<LibraryCodesMaster>(AppConfig.ApiKeypoints_OCLM_Codes);
             }
         }
 
