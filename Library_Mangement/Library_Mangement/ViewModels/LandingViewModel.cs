@@ -7,6 +7,7 @@ using Library_Mangement.Services;
 using Library_Mangement.Validation;
 using Library_Mangement.Views;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -105,7 +106,11 @@ namespace Library_Mangement.ViewModels
         {
             try
             {
-                await SyncMasterData();
+                var isConnected = CrossConnectivity.Current.IsConnected;
+                if (isConnected)
+                {
+                    await SyncMasterData(); 
+                }
             }
             catch (Exception ex)
             {

@@ -142,7 +142,7 @@ namespace Library_Mangement.ViewModels
                 HideCards = true;
                 await LoaderMessage($"Getting Books From Database", 1300);
                 
-                tblBook allBooks = await App.Database.Book.GetDataAsync();
+                List<tblBook> allBooks = await App.Database.Book.GetDataAsync();
                 if(allBooks?.Count > 0)
                 {
                     await LoaderMessage($"Fetched {allBooks.Count} Books From Database", 1300);
@@ -161,29 +161,29 @@ namespace Library_Mangement.ViewModels
 
         private async Task GetBookList(List<tblBook> allBooks)
         {
-            try
-            {
-                int i = 0;
-                foreach (var bookItem in allBooks)
-                {
-                    i++;
-                    BooksPropertyModel book = new BooksPropertyModel()
-                    {
-                        Title = bookItem.Title,
-                        ISBN = bookItem.ISBN,
-                        PageCount = bookItem.PageCount,
-                        Auther = bookItem.Authors,
-                        Catagory = bookItem.Categories,
-                        PublishYear = bookItem.PublishedDate,
-                    };
-                    Books.Add(book);
-                    await LoaderMessage($"Adding Books To View Completed {i} out of {allBooks.Count} ....", 1300);
-                }
-            }
-            catch (Exception ex)
-            {
-                // Book_ImageSource = File.Exists(bookItem.PngFilePath) ? bookItem.PngFilePath : "PlaceHolder.png",
-            }
+            //try
+            //{
+            //    int i = 0;
+            //    foreach (var bookItem in allBooks)
+            //    {
+            //        i++;
+            //        BooksPropertyModel book = new BooksPropertyModel()
+            //        {
+            //            Title = bookItem.Title,
+            //            ISBN = bookItem.ISBN,
+            //            PageCount = bookItem.PageCount,
+            //            Auther = bookItem.Authors,
+            //            Catagory = bookItem.Categories,
+            //            PublishYear = bookItem.PublishedDate,
+            //        };
+            //        Books.Add(book);
+            //        await LoaderMessage($"Adding Books To View Completed {i} out of {allBooks.Count} ....", 1300);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    // Book_ImageSource = File.Exists(bookItem.PngFilePath) ? bookItem.PngFilePath : "PlaceHolder.png",
+            //}
         }
 
         //public async Task LoadBooksInfo()
@@ -226,7 +226,7 @@ namespace Library_Mangement.ViewModels
                     LoaderVisible = false;
                     if (bookItems?.Count > 0)
                     {
-                        Books = new ObservableCollection<BooksPropertyModel>(bookItems);
+                        //Books = new ObservableCollection<BooksPropertyModel>(bookItems);
                     }
                     else
                     {
@@ -240,7 +240,7 @@ namespace Library_Mangement.ViewModels
                     LoaderVisible = true;
                     LoaderText = "OOPS !!!! We didnt found your book, Sorry !";
                     Books.Clear();
-                    Books = new ObservableCollection<BooksPropertyModel>(bookList);
+                    //Books = new ObservableCollection<BooksPropertyModel>(bookList);
                     LoaderVisible = false;
                     LottieAnimationName = "Downloading_Files.json";
                 }
