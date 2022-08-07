@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:controls="clr-namespace:Library_Mangement.Controls" 
+             xmlns:templates="clr-namespace:Library_Mangement.Views.Cards"
+             x:Class="Library_Mangement.Views.Dashboard" NavigationPage.HasNavigationBar="False"
+             x:Name="DashboardView">
+    <ContentPage.Content>
+        <Grid RowDefinitions="0.6*,9*">
+            <Frame Grid.Row="0" CornerRadius="50" Padding="0" Margin="0,10,0,0" BorderColor="Purple" BackgroundColor="Transparent">
+                <SearchBar Text="{Binding SearchText}" SearchCommand="{Binding SearchCommand}" CancelButtonColor="Black"   Keyboard="Chat"></SearchBar>
+            </Frame>
+            <Grid Grid.Row="1">
+                <controls:Loader VerticalOptions="CenterAndExpand" AnimationAssetFileName="{Binding LottieAnimationName}" IsVisible="{Binding LoaderVisible}" LoaderText="{Binding LoaderText}" LoaderBackgroundOpacity="0.5" LoaderBackgroundColor="Transparent" LoaderTextColor="Black"></controls:Loader>
+                <ScrollView>
+                    <templates:BookUICard BindingContext="{Binding Path=BindingContext,Source={x:Reference DashboardView}}"/>
+                </ScrollView>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

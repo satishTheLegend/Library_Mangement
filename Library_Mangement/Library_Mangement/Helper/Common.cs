@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -130,9 +131,34 @@ namespace Library_Mangement.Helper
         public static bool ValidateInputField(DynamicPropertyDataViewModel fieldItem)
         {
             bool isFailedValidated = false;
-            if (fieldItem == null || string.IsNullOrEmpty(fieldItem.FieldValue))
+
+            switch (fieldItem.InputType.ToLowerInvariant())
             {
-                isFailedValidated = true;
+                case "text":
+                case "password":
+                    if (fieldItem == null || string.IsNullOrEmpty(fieldItem.FieldValue))
+                    {
+                        isFailedValidated = true;
+                    }
+                    break;
+
+                case "num":
+                    fieldItem.ValidationMsg = $"{fieldItem} is required.";
+                    if(!long.TryParse(fieldItem.FieldValue, out _))
+                    {
+                        isFailedValidated = true;
+                        fieldItem.ValidationMsg = $"{fieldItem.FieldName} Field can contain only Numeric Values.";
+                    }
+                    break;
+
+                case "email":
+                    fieldItem.ValidationMsg = $"{fieldItem} is required";
+                    if (!Regex.IsMatch(fieldItem.FieldValue, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase))
+                    {
+                        isFailedValidated = true;
+                        fieldItem.ValidationMsg = $"This is not valid email.";
+                    }
+                    break;
             }
             return isFailedValidated;
         }
@@ -169,6 +195,49 @@ namespace Library_Mangement.Helper
             return dir;
         }
 
+        public static async Task<bool> SaveFileFromByteArray(byte[] fileBytes, string fullFilePath)
+        {
+            bool fileSaved = false;
+            try
+            {
+                if (!File.Exists(fullFilePath))
+                {
+                    File.WriteAllBytes(fullFilePath, fileBytes);
+                    fileSaved = true;
+                }
+                else
+                {
+                    fileSaved = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandlerService.SendErrorLog(_moduleName, ex);
+            }
+            return await Task.FromResult(fileSaved);
+        }
+
+        public static async Task<bool> GetStoragePermission()
+        {
+            bool result = false;
+            try
+            {
+                var status = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
+
+                if (status != PermissionStatus.Granted)
+                    status = await Permissions.RequestAsync<Permissions.StorageWrite>();
+
+                if (status == PermissionStatus.Granted)
+                    result = true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandlerService.SendErrorLog(_moduleName, ex);
+                result = false;
+            }
+            return result;
+        }
+
         public static byte[] GetByteFromResource(Assembly assemblyData, string fileName, string fileType)
         {
             byte[] byteData = null;
@@ -201,14 +270,22 @@ namespace Library_Mangement.Helper
             Keyboard keyboard = null;
             try
             {
-                switch (keyboardType)
+                switch (keyboardType.ToLowerInvariant())
                 {
-                    case "Text":
+                    case "text":
                         keyboard = Keyboard.Text;
                         break;
 
-                    case "Password":
+                    case "password":
                         keyboard = Keyboard.Default;
+                        break;
+
+                    case "num":
+                        keyboard = Keyboard.Numeric;
+                        break;
+
+                    case "email":
+                        keyboard = Keyboard.Email;
                         break;
 
                     default:
@@ -275,27 +352,6 @@ namespace Library_Mangement.Helper
                 filename = System.IO.Path.GetFileName(uri.LocalPath);
             }
             return filename;
-        }
-        public static async Task<bool> SaveFileFromByteArray(byte[] fileBytes, string fullFilePath)
-        {
-            bool fileSaved = false;
-            try
-            {
-                if (!File.Exists(fullFilePath))
-                {
-                    File.WriteAllBytes(fullFilePath, fileBytes);
-                    fileSaved = true;
-                }
-                else
-                {
-                    fileSaved = true;
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return await Task.FromResult(fileSaved);
         }
 
         public static async Task<bool> UnzipFileAsync(byte[] zipFileBytes, string zipFileName, string unzipFolderPath)

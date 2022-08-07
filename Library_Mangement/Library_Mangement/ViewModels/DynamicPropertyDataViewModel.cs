@@ -50,6 +50,18 @@ namespace Library_Mangement.ViewModels
                 OnPropertyChanged(nameof(GroupName));
             }
         }
+
+        private string _inputType;
+        public string InputType
+        {
+            get => _inputType;
+            set
+            {
+                _inputType = value;
+                OnPropertyChanged(nameof(InputType));
+            }
+        }
+
         private string _placeHolderName;
         public string PlaceHolderName
         {

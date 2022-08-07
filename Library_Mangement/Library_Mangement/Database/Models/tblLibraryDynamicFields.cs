@@ -9,6 +9,7 @@ namespace Library_Mangement.Database.Models
     public class tblLibraryDynamicFields : BaseModel
     {
         [PrimaryKey] [AutoIncrement]
+        public int Id { get; set; }
         public int FieldId { get; set; }
         public bool Required { get; set; }
         public string Validation { get; set; }

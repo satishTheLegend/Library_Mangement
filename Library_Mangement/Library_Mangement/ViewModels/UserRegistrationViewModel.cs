@@ -2,7 +2,10 @@
 using Library_Mangement.Controls;
 using Library_Mangement.Helper;
 using Library_Mangement.Model;
+using Library_Mangement.Model.ApiResponse;
+using Library_Mangement.Model.ApiResponse.PostModels;
 using Library_Mangement.Resx;
+using Library_Mangement.Services;
 using Library_Mangement.Validation;
 using Library_Mangement.Views;
 using System;
@@ -63,14 +66,61 @@ namespace Library_Mangement.ViewModels
         #region Event Handlers
         private async Task RegisterUser()
         {
-            ValidateModel();
-            var isFailedFieldAvailable = FieldItems.Any(x=> x.IsFieldValidationFailed);
-            if(!isFailedFieldAvailable)
+            try
             {
-                await App.Current.MainPage.DisplayAlert("Alert","Registration Successful", AppResources.Ok);
-                await App.Current.MainPage.Navigation.PopAsync();
+                UserDialogs.Instance.ShowLoading("");
+                ValidateModel();
+                var isFailedFieldAvailable = FieldItems.Any(x => x.IsFieldValidationFailed);
+                if (!isFailedFieldAvailable)
+                {
+                    UserRegistrationPost userModel = GetUserRegistrationModel();
+                    if (userModel != null)
+                    {
+                        UserRegistrationApiResp resp = await RestService.RegisterUser(userModel);
+                        if (resp != null && resp.data != null)
+                        {
+                            await App.Current.MainPage.DisplayAlert($"{resp.statusCode}", resp.message, AppResources.Ok);
+                            await App.Current.MainPage.Navigation.PopAsync();
+                        }
+                    }
+                    else
+                    {
+                        await App.Current.MainPage.DisplayAlert($"Alert", "Please Fix Validation Errors !!!! Then Try Again", AppResources.Ok);
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+            UserDialogs.Instance.HideLoading();
             await Task.FromResult(true);
+        }
+
+        private UserRegistrationPost GetUserRegistrationModel()
+        {
+            UserRegistrationPost userRegistration = new UserRegistrationPost();
+            try
+            {
+                userRegistration.RollNo = Convert.ToInt32(FieldItems.FirstOrDefault(x => x.FieldId == 104).FieldValue);
+                userRegistration.FirstName = FieldItems.FirstOrDefault(x => x.FieldId == 101).FieldValue;
+                userRegistration.LastName = FieldItems.FirstOrDefault(x => x.FieldId == 102).FieldValue;
+                userRegistration.UserName = FieldItems.FirstOrDefault(x => x.FieldId == 103).FieldValue;
+                userRegistration.Email = FieldItems.FirstOrDefault(x => x.FieldId == 105).FieldValue;
+                userRegistration.Phone = FieldItems.FirstOrDefault(x => x.FieldId == 106).FieldValue;
+                userRegistration.Password = FieldItems.FirstOrDefault(x => x.FieldId == 111).FieldValue;
+                userRegistration.CollageName = FieldItems.FirstOrDefault(x => x.FieldId == 109).FieldValue;
+                userRegistration.CurrentEducation = FieldItems.FirstOrDefault(x => x.FieldId == 110).FieldValue;
+                userRegistration.ProfileAvatar = string.Empty;
+                userRegistration.Catagories = FieldItems.FirstOrDefault(x => x.FieldId == 113).FieldValue;
+                userRegistration.Gender = FieldItems.FirstOrDefault(x => x.FieldId == 108).FieldValue;
+                userRegistration.BirthDate = Convert.ToDateTime(FieldItems.FirstOrDefault(x => x.FieldId == 107).FieldValue);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return userRegistration;
         }
         #endregion
 
@@ -90,7 +140,8 @@ namespace Library_Mangement.ViewModels
                     dynamicProperty.Required = fieldItems.Required;
                     dynamicProperty.FieldName = fieldItems.FieldName;
                     dynamicProperty.GroupName = fieldItems.GroupName;
-                    dynamicProperty.KeyboardType = Common.GetKeyboardType(fieldItems.FieldName);
+                    dynamicProperty.KeyboardType = Common.GetKeyboardType(fieldItems.KeyboardType);
+                    dynamicProperty.InputType = fieldItems.KeyboardType;
                     dynamicProperty.ControlType = fieldItems.ControlType;
                     dynamicProperty.PageName = fieldItems.PageName;
                     dynamicProperty.Validation = fieldItems.Validation;

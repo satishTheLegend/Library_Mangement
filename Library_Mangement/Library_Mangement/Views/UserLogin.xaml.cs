@@ -41,8 +41,8 @@ namespace Library_Mangement.Views
             });
 
 #if DEBUG
-            userName.Text = "satish973@example.com";
-            password.Text = "Demo1234";
+            userName.Text = "a@p.com";
+            password.Text = "ap";
 #endif
         }
         #endregion

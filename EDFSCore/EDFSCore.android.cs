@@ -1464,9 +1464,70 @@ namespace EDFSCore
             return await Task.FromResult(response);
         }
 
-        public Task<T> GetRequest<T>(string ApiUrl, IDictionary<string, string> Parameters = null, IDictionary<string, string> Headers = null)
+        public async Task<T> GetRequest<T>(string ApiUrl, IDictionary<string, string> Parameters = null, IDictionary<string, string> Headers = null)
         {
-            throw new NotImplementedException();
+            ApiResponseResult<object> errorResponse = new ApiResponseResult<object>();
+            T response = default(T);
+
+            try
+            {
+                var client = new HttpClient();
+                client.BaseAddress = new Uri(ApiUrl);
+                string paramsFormatted = "";
+                string responseText = "";
+                if (Parameters != null && Parameters.Count > 0)
+                {
+                    paramsFormatted = string.Join("&", Parameters.Select(x => x.Key + "=" + (x.Value)));
+                    ApiUrl = ApiUrl + "?" + paramsFormatted;
+                }
+                if (Headers != null)
+                {
+                    foreach (var item in Headers)
+                    {
+                        var headerValue = item.Value == null ? string.Empty : item.Value.ToString();
+                        client.DefaultRequestHeaders.Add(item.Key, headerValue);
+                    }
+                }
+
+
+                var resp = await client.GetAsync(ApiUrl);
+                responseText = await resp.Content.ReadAsStringAsync();
+                response = Deserialize<T>(responseText);
+
+            }
+            catch (WebException webex)
+            {
+                errorResponse.Status = "-2";
+                using (WebResponse webResp = webex.Response)
+                {
+                    errorResponse.Message = webex.Message;
+                    var resString = JsonConvert.SerializeObject(errorResponse);
+                    response = Deserialize<T>(resString);
+                };
+            }
+            catch (OperationCanceledException)
+            {
+                errorResponse.Status = "-2";
+                errorResponse.Message = "Please check your internet connection, and try again later.";
+                var resString = JsonConvert.SerializeObject(errorResponse);
+                response = Deserialize<T>(resString);
+            }
+            catch (JsonReaderException)
+            {
+                errorResponse.Status = "-2";
+                errorResponse.Message = "We are not able to connect to Server. Please try after sometime.";
+                var resString = JsonConvert.SerializeObject(errorResponse);
+                response = Deserialize<T>(resString);
+            }
+            catch (Exception ex)
+            {
+                errorResponse.Status = "-2";
+                errorResponse.Message = ex.Message;
+                var resString = JsonConvert.SerializeObject(errorResponse);
+                response = Deserialize<T>(resString);
+            }
+
+            return await Task.FromResult(response);
         }
 
         public class CountingRequestBody : RequestBody

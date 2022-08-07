@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+             x:Class="Library_Mangement.Controls.MultiSelectionComboBox"
+             x:Name="DDComboBox_Stack"
+             VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Padding="5">
+
+    <Label Text="{Binding ParentBindingContext.FieldName, Source={x:Reference DDComboBox_Stack}}" TextColor="White" FontSize="Body" Padding="0" Margin="0"/>
+    <Frame HeightRequest="40" Padding="0" CornerRadius="5" HorizontalOptions="FillAndExpand" BackgroundColor="Red">
+        <combobox:SfComboBox x:Name="comboBox" BackgroundColor="White" HeightRequest="50" ItemPadding="2" DisplayMemberPath="Name" ImageMemberPath="Image"
+            SelectedItem="{Binding ParentBindingContext.FieldValue, Source={x:Reference DDComboBox_Stack}}"
+            SelectedDropDownItemColor="White" MultiSelectMode="Token" TokensWrapMode="None" 
+            DataSource="{Binding ParentBindingContext.OptValues, Source={x:Reference DDComboBox_Stack}}"/>
+    </Frame>
+</StackLayout>

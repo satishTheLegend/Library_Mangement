@@ -2,8 +2,10 @@
 using Library_Mangement.Converters;
 using Library_Mangement.Helper;
 using Library_Mangement.Model;
+using Library_Mangement.Model.ApiResponse.GETModels;
 using Library_Mangement.Services;
 using Library_Mangement.ViewModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,7 +36,7 @@ namespace Library_Mangement.Controls
             {
                 foreach (var DataItem in Items)
                 {
-                    
+
                     switch (DataItem.ControlType)
                     {
                         case "message":
@@ -65,7 +67,11 @@ namespace Library_Mangement.Controls
                             result = await CheckboxlistView(DataItem);
                             break;
 
-                        case "dropdownlist":
+                        case "MultiSelctionDropDown":
+                            result = await MultiSelectionComboBoxView(DataItem);
+                            break;
+
+                        case "Dropdown":
                             result = await DropdownlistView(DataItem);
                             break;
 
@@ -96,7 +102,7 @@ namespace Library_Mangement.Controls
             Label lbl = null;
             try
             {
-                lbl = new Label { FontSize = 12, FontAttributes = FontAttributes.Bold, Text = dataItem.FieldName};
+                lbl = new Label { FontSize = 12, FontAttributes = FontAttributes.Bold, Text = dataItem.FieldName };
             }
             catch (Exception ex)
             {
@@ -114,7 +120,7 @@ namespace Library_Mangement.Controls
             }
             catch (Exception ex)
             {
-                
+
             }
             return entryControl;
         }
@@ -128,7 +134,7 @@ namespace Library_Mangement.Controls
             }
             catch (Exception ex)
             {
-                
+
             }
             return barcodeControl;
         }
@@ -142,7 +148,7 @@ namespace Library_Mangement.Controls
             }
             catch (Exception ex)
             {
-                
+
             }
             return textAreaControl;
         }
@@ -156,12 +162,12 @@ namespace Library_Mangement.Controls
             }
             catch (Exception ex)
             {
-                
+
             }
             return radioButtonGroup;
         }
 
-        
+
 
         private async Task<CheckBoxListControl> CheckboxlistView(DynamicPropertyDataViewModel dataItem)
         {
@@ -173,7 +179,7 @@ namespace Library_Mangement.Controls
             }
             catch (Exception ex)
             {
-                
+
             }
             return checkBoxListControl;
         }
@@ -183,17 +189,17 @@ namespace Library_Mangement.Controls
             DropDownListControl dropDownListControl = null;
             try
             {
-                //dataItem.OptValues = await GetOptValues(dataItem);
+                dataItem.OptValues = await GetOptValues(dataItem);
                 dropDownListControl = new DropDownListControl { ParentBindingContext = dataItem };
             }
             catch (Exception ex)
             {
-                
+
             }
             return dropDownListControl;
         }
 
-        private View DatepickerView(DynamicPropertyDataViewModel dataItem)
+        private DateTimePickerControl DatepickerView(DynamicPropertyDataViewModel dataItem)
         {
             DateTimePickerControl datePickerControl = null;
             try
@@ -202,12 +208,12 @@ namespace Library_Mangement.Controls
             }
             catch (Exception ex)
             {
-                
+
             }
             return datePickerControl;
         }
 
-        private View SwitchView(DynamicPropertyDataViewModel dataItem)
+        private SwitchControl SwitchView(DynamicPropertyDataViewModel dataItem)
         {
             SwitchControl switchControl = null;
             try
@@ -216,33 +222,56 @@ namespace Library_Mangement.Controls
             }
             catch (Exception ex)
             {
-                
+
             }
             return switchControl;
         }
 
+        private async Task<MultiSelectionComboBox> MultiSelectionComboBoxView(DynamicPropertyDataViewModel dataItem)
+        {
+            MultiSelectionComboBox multiSelectionCombo = null;
+            try
+            {
+                dataItem.OptValues = await GetOptValues(dataItem);
+                multiSelectionCombo = new MultiSelectionComboBox { ParentBindingContext = dataItem };
+            }
+            catch (Exception ex)
+            {
 
+            }
+            return multiSelectionCombo;
+        }
 
-        //private async Task<List<string>> GetOptValues(DynamicPropertyDataViewModel dataItem)
-        //{
-        //    List<string> list = null;
-        //    if (dataItem.IncentiveDataModelUpdated == null)
-        //    {
-        //        var subRadioButtonList = await App.Database.ListObjectMaster.GetItemAsync(dataItem.DocTypeId);
-        //        if (subRadioButtonList?.Count > 0)
-        //        {
-        //            list = subRadioButtonList.Select(y => y.value).ToList();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        var subRadioButtonUnitList = await App.Database.MeasureUnitValueMaster.GetItemAsync(dataItem.DocTypeId);
-        //        if (subRadioButtonUnitList?.Count > 0)
-        //        {
-        //            list = subRadioButtonUnitList.Select(y => y.Values).ToList();
-        //        }
-        //    }
-        //    return list;
-        //}
+        private async Task<List<string>> GetOptValues(DynamicPropertyDataViewModel dataItem)
+        {
+            List<string> list = null;
+            try
+            {
+                if (!string.IsNullOrEmpty(dataItem.ListValues))
+                {
+                    List<ListValue> listValues = JsonConvert.DeserializeObject<List<ListValue>>(dataItem.ListValues);
+                    if (listValues != null && listValues?.Count > 0)
+                    {
+                        list = listValues.Where(x => !string.IsNullOrEmpty(x.value)).Select(y => y.value).ToList();
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(dataItem.GroupName))
+                        {
+                            var catagoryList = await App.Database.CodesMaster.GetListByGroupName(dataItem.GroupName);
+                            if (catagoryList?.Count > 0)
+                            {
+                                list = catagoryList.Select(y => y.CodeName).ToList();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return list;
+        }
     }
 }

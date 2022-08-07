@@ -33,7 +33,7 @@ namespace Library_Mangement.Database.Repositories
         public async Task<bool> IsMasterDataVersionMissing(MasterDataList masterItem)
         {
             tblVerisonMaster ver = await _conn.Table<tblVerisonMaster>().FirstOrDefaultAsync(x => x.Key == masterItem.key && x.Value == masterItem.value);
-            if(ver == null)
+            if (ver == null)
             {
                 return true;
             }
@@ -87,3 +87,4 @@ namespace Library_Mangement.Database.Repositories
             #endregion
         }
     }
+}

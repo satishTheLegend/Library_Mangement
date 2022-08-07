@@ -42,6 +42,12 @@ namespace Library_Mangement.Database.Repositories
             return result;
         }
 
+        public async Task<tblUser> GetUserByEmailAndPhone(string email, string phone)
+        {
+            return await _conn.Table<tblUser>().FirstOrDefaultAsync(x => x.Email == email && x.Phone == phone);
+        }
+
+
         public async Task<int> AddCatagories(List<string> selectedItems, string userToken)
         {
             int res = 0;

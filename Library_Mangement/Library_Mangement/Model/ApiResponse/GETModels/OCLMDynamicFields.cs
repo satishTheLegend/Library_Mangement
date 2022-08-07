@@ -18,7 +18,7 @@ namespace Library_Mangement.Model.ApiResponse.GETModels
         public string PageName { get; set; }
         public List<ListValue> listValues { get; set; }
 
-        public OCLMDynamicFIeldsDataModelApiResp()
+        public DynFieldsData()
         {
             listValues = new List<ListValue>();
         }

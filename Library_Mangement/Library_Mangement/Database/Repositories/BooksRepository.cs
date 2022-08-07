@@ -48,9 +48,9 @@ namespace Library_Mangement.Database.Repositories
             return _conn.Table<tblBook>().FirstOrDefaultAsync(x => x.Id == Id);
         }
 
-        public Task<List<tblBook>> GetDataAsync()
+        public async Task<List<tblBook>> GetDataAsync()
         {
-            return _conn.Table<tblBook>().ToListAsync();
+            return await _conn.Table<tblBook>().ToListAsync();
         }
 
         public async Task<int> InsertAsync(tblBook entity)

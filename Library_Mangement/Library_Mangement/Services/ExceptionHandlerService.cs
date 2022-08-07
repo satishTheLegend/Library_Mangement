@@ -17,7 +17,7 @@ namespace Library_Mangement.Services
         {
             try
             {
-                Task.Run(async () => await UploadExceptionDetails(moduleName, ex, methodParams, memberName, sourceFilePath, sourceLineNumber, extraMessage));
+                Task.Run(() => UploadExceptionDetails(moduleName, ex, methodParams, memberName, sourceFilePath, sourceLineNumber, extraMessage));
             }
             catch (Exception error)
             {
@@ -25,7 +25,7 @@ namespace Library_Mangement.Services
             }
         }
 
-        private static async Task UploadExceptionDetails(string moduleName, Exception ex, object methodParams,
+        private static void UploadExceptionDetails(string moduleName, Exception ex, object methodParams,
                 string memberName, string sourceFilePath, int sourceLineNumber, string extraMessage)
         {
             //var deviceInfo = DependencyService.Get<IDeviceInfo>();
@@ -45,7 +45,7 @@ namespace Library_Mangement.Services
             string loginUser = "";
             if (App.CurrentLoggedInUser != null)
             {
-                loginUser = $"AdvisorId - {App.CurrentLoggedInUser.StudentId}";
+                loginUser = $"RollNo - {App.CurrentLoggedInUser.FirstName} | {App.CurrentLoggedInUser.LastName} | {App.CurrentLoggedInUser.Email}";
             }
             logModel.DeviceName = deviceInfo.DeviceModel;
             logModel.AndroidLevel = $"{deviceInfo.Platform} | {deviceInfo.OSVersion} ";
@@ -67,7 +67,7 @@ namespace Library_Mangement.Services
                 logModel.ExtraInfo = ex.StackTrace;
                 logModel.Message = ex.Message;
             }
-            //await App.LogDatabase.Log.AddExceptionLogs(logModel);
+            App.LogDatabase.Log.AddLogs(AppConfig.LogType_Error, moduleName, Common.JsonConvertSerializeObject(logModel));
             var networkFlag = CrossConnectivity.Current.IsConnected;
             if (networkFlag)
             {

@@ -67,8 +67,9 @@ namespace Library_Mangement.Helper
         public const int SessionCheck_Minutes = 1380; //1380 - 23 hours
         public const int SessionTimeOut_Minutes = 1440;//1440 - 24 hours
 
-        // App Data Folder Names
+        // App userDataResp Folder Names
         public const string DirName_Profile_Pic = "UserProfile";
+        public const string DirName_Books_Thumbnails = "BookThumbnails";
 
         public class ValidateMessageType
         {

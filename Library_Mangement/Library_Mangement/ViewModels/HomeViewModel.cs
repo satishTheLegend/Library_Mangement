@@ -1,6 +1,7 @@
 ﻿using Library_Mangement.Database.Models;
 using Library_Mangement.Helper;
 using Library_Mangement.Model;
+using Library_Mangement.Services;
 using Library_Mangement.Validation;
 using Library_Mangement.Views;
 using System;
@@ -153,33 +154,40 @@ namespace Library_Mangement.ViewModels
         }
         public void SearchClicked()
         {
-            if (!string.IsNullOrEmpty(SearchText))
+            try
             {
-                var bookItems = bookList.Where(x => (!string.IsNullOrEmpty(x.Title) && x.Title.Contains(SearchText)) || (!string.IsNullOrEmpty(x.ISBN) && x.ISBN.Contains(SearchText))).ToList();
-                LoaderVisible = true;
-                LottieAnimationName = "Data_NotFound.json";
-                LoaderText = "Please Wait";
-                Books.Clear();
-                LoaderVisible = false;
-                if (bookItems?.Count > 0)
+                if (!string.IsNullOrEmpty(SearchText))
                 {
-                    Books = new ObservableCollection<BooksPropertyModel>(bookItems);
+                    var bookItems = bookList.Where(x => (!string.IsNullOrEmpty(x.Title) && x.Title.Contains(SearchText)) || (!string.IsNullOrEmpty(x.ISBN) && x.ISBN.Contains(SearchText))).ToList();
+                    LoaderVisible = true;
+                    LottieAnimationName = "Data_NotFound.json";
+                    LoaderText = "Please Wait";
+                    Books.Clear();
+                    LoaderVisible = false;
+                    if (bookItems?.Count > 0)
+                    {
+                        Books = new ObservableCollection<BooksPropertyModel>(bookItems);
+                    }
+                    else
+                    {
+                        LottieAnimationName = "Data_NotFound.json";
+                        LoaderVisible = true;
+                        LoaderText = "OOPS !!!! We didnt found your book, Sorry !";
+                    }
                 }
                 else
                 {
-                    LottieAnimationName = "Data_NotFound.json";
                     LoaderVisible = true;
                     LoaderText = "OOPS !!!! We didnt found your book, Sorry !";
+                    Books.Clear();
+                    Books = new ObservableCollection<BooksPropertyModel>(bookList);
+                    LoaderVisible = false;
+                    LottieAnimationName = "Downloading_Files.json";
                 }
             }
-            else
+            catch (Exception ex)
             {
-                LoaderVisible = true;
-                LoaderText = "OOPS !!!! We didnt found your book, Sorry !";
-                Books.Clear();
-                Books = new ObservableCollection<BooksPropertyModel>(bookList);
-                LoaderVisible = false;
-                LottieAnimationName = "Downloading_Files.json";
+
             }
         }
         #endregion
@@ -195,9 +203,9 @@ namespace Library_Mangement.ViewModels
                                
                 foreach (var bookItem in allBooks)
                 {
-                    if (File.Exists(bookItem.PngFilePath))
+                    if (!File.Exists(bookItem.PngFilePath))
                     {
-                        bookItem.IsCoverAvailable = true;
+                        await RestService.DownloadFileFromURIAndSaveIt(bookItem.PngFilePath, bookItem.PngFilePath);
                     }
                     BooksPropertyModel book = new BooksPropertyModel()
                     {

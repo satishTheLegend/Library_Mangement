@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Library_Mangement.ViewModels
@@ -61,11 +62,9 @@ namespace Library_Mangement.ViewModels
                 if (loginData != null)
                 {
                     await SaveUserLogin(loginData);
+                    Preferences.Set(AppConfig.UserPref_UserToken, loginData.userToken);
                     await App.Current.MainPage.DisplayAlert("", $"Welcome Back {loginData.firstName} {loginData.lastName}", AppResources.Ok);
-                    if(!string.IsNullOrEmpty(loginData.catagories))
-                        await App.Current.MainPage.Navigation.PushAsync(new CatagoryChips());
-                    else
-                        await App.Current.MainPage.Navigation.PushAsync(new HomeView());
+                    await App.Current.MainPage.Navigation.PushAsync(new Dashboard());
                 }
                 else
                 {
@@ -74,8 +73,6 @@ namespace Library_Mangement.ViewModels
             }
             await Task.FromResult(Task.CompletedTask);
         }
-
-
         #endregion
 
         #region Public Methods
@@ -88,7 +85,7 @@ namespace Library_Mangement.ViewModels
             try
             {
                 string profileDirectoryPath = Common.GetBasePath(AppConfig.DirName_Profile_Pic);
-                string profilePath = !string.IsNullOrEmpty(loginData.profileAvatar) ? await RestService.DownloadFile(loginData.profileAvatar, profileDirectoryPath) : string.Empty;
+                string profilePath = !string.IsNullOrEmpty(loginData.profileAvatar) ? RestService.DownloadFile(loginData.profileAvatar, profileDirectoryPath) : string.Empty;
                 tblUser user = new tblUser()
                 {
                     FirstName = loginData.firstName,
@@ -109,7 +106,7 @@ namespace Library_Mangement.ViewModels
                 };
                 App.CurrentLoggedInUser = user;
                 await App.Database.User.InsertAsync(user);
-                App.LogDatabase.Log.AddLogs(AppConfig.LogType_Info, _moduleName, $"User Login Data :::: {user}");
+                App.LogDatabase.Log.AddLogs(AppConfig.LogType_Info, _moduleName, $"User Login userDataResp :::: {user}");
             }
             catch (Exception ex)
             {

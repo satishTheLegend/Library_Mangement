@@ -11,8 +11,13 @@ namespace Library_Mangement.Database.Models
         [PrimaryKey]
         [AutoIncrement]
         public int Id { get; set; }
-        public string CodeId { get; set; }
+        public int CodeId { get; set; }
+        public string CodeName { get; set; }
         public string CodeText { get; set; }
         public string CodeValue { get; set; }
+        public int CodeSeq { get; set; }
+        public string GroupName { get; set; }
+        public string CodeDesc { get; set; }
+        public string status { get; set; }
     }
 }

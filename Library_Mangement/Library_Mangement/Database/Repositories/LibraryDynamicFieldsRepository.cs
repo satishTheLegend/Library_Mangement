@@ -59,7 +59,7 @@ namespace Library_Mangement.Database.Repositories
         public async Task<int> InsertAsync(tblLibraryDynamicFields entity)
         {
             int result = -1;
-            tblLibraryDynamicFields book = await _conn.Table<tblLibraryDynamicFields>().FirstOrDefaultAsync(x => x.FieldId == entity.FieldId);
+            tblLibraryDynamicFields book = await _conn.Table<tblLibraryDynamicFields>().FirstOrDefaultAsync(x => x.FieldId == entity.FieldId && x.FieldName == x.FieldName);
             if (book == null)
             {
                 result = await _conn.InsertAsync(entity);
