@@ -81,9 +81,6 @@ namespace Library_Mangement.Droid
             Manifest.Permission.WriteCallLog,
             Manifest.Permission.ReadLogs,
             Manifest.Permission.InstantAppForegroundService,
-            Manifest.Permission.StartForegroundServicesFromBackground,
-            Manifest.Permission.RequestCompanionStartForegroundServicesFromBackground,
-
         };
 
         Task GetPermissionsAsync()

@@ -3,13 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:controls="clr-namespace:Library_Mangement.Controls"
              x:Class="Library_Mangement.Views.Cards.BookUICard" x:Name="BooksList">
-    <StackLayout BindableLayout.ItemsSource="{Binding Books}">
+
+   
+    <!--<StackLayout BindableLayout.ItemsSource="{Binding booksView.Books}">
         <BindableLayout.ItemTemplate>
             <DataTemplate>
-                <Frame x:Name="BooksData" CornerRadius="15" Padding="0">
+                <Frame x:Name="booksData" CornerRadius="15" Padding="0">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer  Command="{Binding ParentBindingContext.OpenBookCommand, Source={x:Reference Name=BooksList}}" 
-                                                   BindingContext="{Binding Source={x:Reference  Name=BooksData}}" CommandParameter="{x:Reference BooksData}" />
+                                                   BindingContext="{Binding Source={x:Reference  Name=booksData}}" CommandParameter="{x:Reference booksData}" />
                     </Frame.GestureRecognizers>
                     <Grid RowDefinitions="1.5*,9*" RowSpacing="1" HorizontalOptions="FillAndExpand">
                         <controls:GradientColorControl Grid.Row="0" BackgroundColor="Transparent" Grid.ColumnSpan="2">
@@ -34,26 +36,6 @@
                                             <Label Text="Authers:" Grid.Column="0" WidthRequest="80" LineBreakMode="NoWrap" TextColor="White" FontSize="Header" FontAttributes="Bold" />
                                             <Label Text="{Binding Title}" Grid.Column="1" LineBreakMode="NoWrap" TextColor="White" FontSize="Header" FontAttributes="Bold" />
                                         </StackLayout>
-                                        <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                                            <Label LineBreakMode="NoWrap" Text="Publish Year :" Grid.Column="0" WidthRequest="80" TextColor="White" FontSize="Header" FontAttributes="Bold" />
-                                            <Label LineBreakMode="NoWrap" Text="{Binding PublishedDate}" Grid.Column="1" TextColor="White" FontSize="Header" FontAttributes="Bold" />
-                                        </StackLayout>
-                                        <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                                            <Label LineBreakMode="NoWrap" Text="Catagory :" Grid.Column="0" WidthRequest="80" TextColor="White" FontSize="Header" FontAttributes="Bold" />
-                                            <Label LineBreakMode="NoWrap" Text="{Binding Categories}" Grid.Column="1" TextColor="White" FontSize="Header" FontAttributes="Bold" />
-                                        </StackLayout>
-                                        <StackLayout Grid.Row="3" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                                            <Label LineBreakMode="NoWrap" Text="Book Pages :" Grid.Column="0" WidthRequest="80" TextColor="White" FontSize="Header" FontAttributes="Bold" />
-                                            <Label LineBreakMode="NoWrap" Text="{Binding PageCount}" Grid.Column="1" TextColor="White" FontSize="Header" FontAttributes="Bold" />
-                                        </StackLayout>
-                                        <StackLayout Grid.Row="4" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                                            <Label LineBreakMode="NoWrap" Text="Book Id :" Grid.Column="0" WidthRequest="80" TextColor="White" FontSize="Header" FontAttributes="Bold" />
-                                            <Label LineBreakMode="NoWrap" Text="{Binding ISBN}" Grid.Column="1" TextTransform="Uppercase" TextColor="White" FontSize="Header" FontAttributes="Bold" />
-                                        </StackLayout>
-                                        <StackLayout Grid.Row="5" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                                            <Label LineBreakMode="NoWrap" Text="Auther :" Grid.Column="0" WidthRequest="80" TextColor="White" FontSize="Header" FontAttributes="Bold" />
-                                            <Label LineBreakMode="NoWrap" Text="{Binding Auther}" Grid.Column="1" TextTransform="Uppercase" TextColor="White" FontSize="Header" FontAttributes="Bold" />
-                                        </StackLayout>
                                         <Button x:Name="gradient" TextColor="White" FontSize="Large" FontAttributes="Bold" TextTransform="None" Grid.Row="5" CornerRadius="20" Text="View Book">
                                             <Button.Background>
                                                 <LinearGradientBrush EndPoint="1,8">
@@ -71,5 +53,61 @@
                 </Frame>
             </DataTemplate>
         </BindableLayout.ItemTemplate>
-    </StackLayout>
+    </StackLayout>-->
+    <!--<CollectionView ItemsSource="{Binding Books}" IsGrouped="True"  VerticalScrollBarVisibility="Never">
+        <CollectionView.GroupHeaderTemplate>
+            <DataTemplate>
+                <Label  Text="{Binding _bookCatagory}"
+                           TextColor="Gray"
+                            Padding="10,4,0,5"
+                           FontSize="16" FontAttributes="Bold">
+                </Label>
+            </DataTemplate>
+        </CollectionView.GroupHeaderTemplate>
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <AbsoluteLayout>
+                    <StackLayout x:Name="BooksData" AbsoluteLayout.LayoutBounds="0,10,140,10" Padding="3"
+                                            AbsoluteLayout.LayoutFlags="PositionProportional">
+                        <ImageButton Source="{Binding Book_ImageSource}" IsEnabled="True" HeightRequest="200" Aspect="Fill" />
+                        <Label Text="{Binding Title}" HorizontalTextAlignment="Center" FontSize="Small" FontAttributes="Bold" LineBreakMode="TailTruncation"/>
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer  Command="{Binding ParentBindingContext.OpenBookCommand, Source={x:Reference Name=BooksList}}" 
+                                                   BindingContext="{Binding Source={x:Reference  Name=BooksData}}" CommandParameter="{x:Reference BooksData}" />
+                        </StackLayout.GestureRecognizers>
+                    </StackLayout>
+                </AbsoluteLayout>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>-->
+    <!--<StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <CollectionView ItemsSource="{Binding Books}" IsGrouped="True"  VerticalScrollBarVisibility="Never">
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <Label  Text="{Binding _bookCatagory}"
+                           TextColor="Gray"
+                            Padding="10,4,0,5"
+                           FontSize="16" FontAttributes="Bold">
+                    </Label>
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <FlexLayout Margin="0,0,0,0" BindableLayout.ItemsSource="{Binding Books}" Padding="5" AlignContent="Start" AlignItems="Start" Direction="Row" JustifyContent="Start" Wrap="Wrap">
+                        <AbsoluteLayout>
+                            <StackLayout x:Name="BooksData" AbsoluteLayout.LayoutBounds="0,10,140,10" Padding="3"
+                                            AbsoluteLayout.LayoutFlags="PositionProportional">
+                                <ImageButton Source="{Binding Book_ImageSource}" IsEnabled="True" HeightRequest="200" Aspect="Fill" />
+                                <Label Text="{Binding Title}" HorizontalTextAlignment="Center" FontSize="Small" FontAttributes="Bold" LineBreakMode="TailTruncation"/>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer  Command="{Binding ParentBindingContext.OpenBookCommand, Source={x:Reference Name=BooksList}}" 
+                                                   BindingContext="{Binding Source={x:Reference  Name=BooksData}}" CommandParameter="{x:Reference BooksData}" />
+                                </StackLayout.GestureRecognizers>
+                            </StackLayout>
+                        </AbsoluteLayout>
+                    </FlexLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>-->
 </StackLayout>

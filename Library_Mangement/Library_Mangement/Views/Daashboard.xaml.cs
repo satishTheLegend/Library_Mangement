@@ -106,6 +106,11 @@ namespace Library_Mangement.Views
                                 _vm.ShowForm();
                             break;
 
+                        case "Explore Books":
+                            await App.Current.MainPage.Navigation.PushAsync(new BookView());//_vm.ExploreBooksClicked();
+                            //BooksUICards.ParentBindingContext = BindingContext;
+                            break;
+
                         case "Notifications":
                             break;
 
@@ -157,7 +162,7 @@ namespace Library_Mangement.Views
             {
                 MainSwipeView.Close();
                 CloseAnimation();
-            }                
+            }
         }
 
         //private void CloseRequested(object sender, EventArgs e)
@@ -187,6 +192,7 @@ namespace Library_Mangement.Views
             await Task.Delay(200);
             UserDialogs.Instance.HideLoading();
         }
+
     }
 
 

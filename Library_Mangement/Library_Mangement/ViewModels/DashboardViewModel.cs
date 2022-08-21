@@ -10,6 +10,7 @@ using Library_Mangement.Resx;
 using Library_Mangement.Services;
 using Library_Mangement.Validation;
 using Library_Mangement.Views;
+using Library_Mangement.Views.Cards;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,38 +29,51 @@ namespace Library_Mangement.ViewModels
     {
         #region Properties
         List<tblBook> bookList = null;
-        public List<Menu> MyMenu { get; set; }
+        //public List<Menu> MyMenu { get; set; }
         public string ProfileImg { get; set; } = string.Empty;
+
 
         public DashboardBinding dashboard { get; set; }
         public ProfileBinding profile { get; set; }
+        public BooksBinding booksView { get; set; }
 
-        private ObservableCollection<tblBook> _books;
-        public ObservableCollection<tblBook> Books
+        //private ObservableCollection<tblBook> _books;
+        //public ObservableCollection<tblBook> Books
+        //{
+        //    get => _books;
+        //    set
+        //    {
+        //        _books = value;
+        //        //LoaderVisible = true;
+        //        //try
+        //        //{
+        //        //    if (Books?.Count > 0)
+        //        //    {
+        //        //        LottieAnimationName = "Downloading_Files.json";
+        //        //        LoaderVisible = false;
+        //        //    }
+        //        //    else
+        //        //    {
+        //        //        LottieAnimationName = "Data_NotFound.json";
+        //        //        LoaderText = "OOPS !!!! We didnt found your book, Sorry !";
+        //        //    }
+        //        //}
+        //        //catch (Exception ex)
+        //        //{
+
+        //        //}
+        //        OnPropertyChanged(nameof(Books));
+        //    }
+        //}
+
+        private List<Menu> _myMenu;
+        public List<Menu> MyMenu
         {
-            get => _books;
+            get => _myMenu;
             set
             {
-                _books = value;
-                //LoaderVisible = true;
-                //try
-                //{
-                //    if (Books?.Count > 0)
-                //    {
-                //        LottieAnimationName = "Downloading_Files.json";
-                //        LoaderVisible = false;
-                //    }
-                //    else
-                //    {
-                //        LottieAnimationName = "Data_NotFound.json";
-                //        LoaderText = "OOPS !!!! We didnt found your book, Sorry !";
-                //    }
-                //}
-                //catch (Exception ex)
-                //{
-
-                //}
-                OnPropertyChanged(nameof(Books));
+                _myMenu = value;
+                OnPropertyChanged(nameof(_myMenu));
             }
         }
 
@@ -138,6 +152,7 @@ namespace Library_Mangement.ViewModels
         {
             dashboard = new DashboardBinding();
             profile = new ProfileBinding();
+            booksView = new BooksBinding();
             dashboard.UserName = $"{App.CurrentLoggedInUser.FirstName} {App.CurrentLoggedInUser.LastName}";
             if (!string.IsNullOrEmpty(App.CurrentLoggedInUser.ProfilePicPath) && File.Exists(App.CurrentLoggedInUser.ProfilePicPath))
             {
@@ -150,9 +165,8 @@ namespace Library_Mangement.ViewModels
         public ICommand OpenBookCommand => new Command(frame => OpenBookClicked(frame as Frame));
         public ICommand SearchCommand => new Command(() => SearchClicked());
         public ICommand ChangeProfileCommand => new Command(() => ChangeProfileClicked());
-
-
         public ICommand UpdateUserCommand => new Command(async() => await UpdateUserClicked());
+        public ICommand ExploreBooksCommand => new Command(async() => await ExploreBooksClicked());
         #endregion
 
         #region Event Handlers
@@ -164,7 +178,7 @@ namespace Library_Mangement.ViewModels
                 LoaderVisible = true;
                 await LoaderMessage($"Opening {bookData.Title}", 1500);
                 tblBook book = await App.Database.Book.GetBookByISBNId(bookData.ISBN);
-                await App.Current.MainPage.Navigation.PushAsync(new BookView(book));
+                //await App.Current.MainPage.Navigation.PushAsync(new BookView(book));
                 LoaderVisible = false;
             }
         }
@@ -205,7 +219,28 @@ namespace Library_Mangement.ViewModels
             }
             UserDialogs.Instance.HideLoading();
         }
+        public async Task ExploreBooksClicked()
+        {
+            UserDialogs.Instance.ShowLoading(LoaderText);
+            VisibleCheck("ExploreBooks");
+            await LoadBooksInfo_Updated();
+            UserDialogs.Instance.HideLoading();
+        }
 
+        private void VisibleCheck(string item)
+        {
+            switch (item.ToLowerInvariant())
+            {
+                case "explorebooks":
+                    dashboard.DashboardVisible = false;
+                    profile.ProfileVisible = false;
+                    booksView.IsbooksVisible = true;
+                    break;
+
+                default:
+                    break;
+            }
+        }
         #endregion
 
         #region Public Methods
@@ -326,8 +361,8 @@ namespace Library_Mangement.ViewModels
         {
             try
             {
-                LoaderVisible = true;
-                HideCards = true;
+                //LoaderVisible = true;
+                //HideCards = true;
                 await LoaderMessage($"Getting Books From Database", 1300);
 
                 List<tblBook> allBooks = await App.Database.Book.GetDataAsync();
@@ -335,11 +370,21 @@ namespace Library_Mangement.ViewModels
                 {
                     await LoaderMessage($"Fetched {allBooks.Count} Books From Database", 1300);
                     await LoaderMessage($"Arrenging Books Please Wait ....", 1300);
+                    var booksModelList = await GetBookList(allBooks);
+                    booksView.BooksData = new ObservableCollection<BooksPropertyModel>(booksModelList);
+                    var catagorygroup = booksModelList.GroupBy(x=> x.Catagory).ToList();
+                    List<BooksGroup> booksList = new List<BooksGroup>();
+                    foreach (var catagoryItem in catagorygroup)
+                    {
+                        ObservableCollection<BooksPropertyModel> bookCatagory = new ObservableCollection<BooksPropertyModel>(catagoryItem);
+                        booksList.Add(new BooksGroup(catagoryItem.Key.ToString(), bookCatagory));
+                    }
+                    booksView.Books = new ObservableCollection<BooksGroup>(booksList);
                     //await GetBookList(allBooks);
-                    Books = new ObservableCollection<tblBook>(allBooks);
+                    //Books = new ObservableCollection<tblBook>(allBooks);
                 }
-                LoaderVisible = false;
-                HideCards = false;
+                //LoaderVisible = false;
+                //HideCards = false;
             }
             catch (Exception ex)
             {
@@ -347,31 +392,35 @@ namespace Library_Mangement.ViewModels
             }
         }
 
-        private async Task GetBookList(List<tblBook> allBooks)
+        private async Task<List<BooksPropertyModel>> GetBookList(List<tblBook> allBooks)
         {
-            //try
-            //{
-            //    int i = 0;
-            //    foreach (var bookItem in allBooks)
-            //    {
-            //        i++;
-            //        BooksPropertyModel book = new BooksPropertyModel()
-            //        {
-            //            Title = bookItem.Title,
-            //            ISBN = bookItem.ISBN,
-            //            PageCount = bookItem.PageCount,
-            //            Auther = bookItem.Authors,
-            //            Catagory = bookItem.Categories,
-            //            PublishYear = bookItem.PublishedDate,
-            //        };
-            //        Books.Add(book);
-            //        await LoaderMessage($"Adding Books To View Completed {i} out of {allBooks.Count} ....", 1300);
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    // Book_ImageSource = File.Exists(bookItem.PngFilePath) ? bookItem.PngFilePath : "PlaceHolder.png",
-            //}
+            List<BooksPropertyModel> booksList = new List<BooksPropertyModel>();
+            try
+            {
+                int i = 0;
+                foreach (var bookItem in allBooks)
+                {
+                    i++;
+                    BooksPropertyModel book = new BooksPropertyModel()
+                    {
+                        Title = bookItem.Title,
+                        ISBN = bookItem.ISBN,
+                        PageCount = bookItem.PageCount,
+                        Auther = bookItem.Authors,
+                        Book_ImageSource = File.Exists(bookItem.PngFilePath) ? bookItem.PngFilePath : "PlaceHolder.png",
+                        Catagory = bookItem.Categories,
+                        PublishYear = bookItem.PublishedDate,
+                        IsCoverAvailable = bookItem.IsCoverAvailable,
+                    };
+                    booksList.Add(book);
+                    await LoaderMessage($"Adding Books To View Completed {i} out of {allBooks.Count} ....", 1300);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Book_ImageSource = File.Exists(bookItem.PngFilePath) ? bookItem.PngFilePath : "PlaceHolder.png",
+            }
+            return booksList;
         }
 
         //public async Task LoadBooksInfo()
@@ -410,7 +459,7 @@ namespace Library_Mangement.ViewModels
                     LoaderVisible = true;
                     LottieAnimationName = "Data_NotFound.json";
                     LoaderText = "Please Wait";
-                    Books.Clear();
+                    //Books.Clear();
                     LoaderVisible = false;
                     if (bookItems?.Count > 0)
                     {
@@ -427,7 +476,7 @@ namespace Library_Mangement.ViewModels
                 {
                     LoaderVisible = true;
                     LoaderText = "OOPS !!!! We didnt found your book, Sorry !";
-                    Books.Clear();
+                    //Books.Clear();
                     //Books = new ObservableCollection<BooksPropertyModel>(bookList);
                     LoaderVisible = false;
                     LottieAnimationName = "Downloading_Files.json";
@@ -473,6 +522,7 @@ namespace Library_Mangement.ViewModels
             {
                 new Menu{ Name = "Home", Icon = "home.png"},
                 new Menu{ Name = "Profile", Icon = "user.png"},
+                new Menu{ Name = "Explore Books", Icon = "explore_books.png"},
                 new Menu{ Name = "Notifications", Icon = "notification.png"},
                 new Menu{ Name = "Cart", Icon = "shopping_cart.png"},
                 new Menu{ Name = "My Orders", Icon = "order.png"},
@@ -521,7 +571,7 @@ namespace Library_Mangement.ViewModels
             if(!string.IsNullOrEmpty(filePath))
             {
                 profile.DefaultProfile = filePath;
-                profile.DefaultProfile = filePath;
+                dashboard.ProfileImage = filePath;
                 ProfileImg = filePath;
             }
             if(!string.IsNullOrEmpty(ProfileImg))
@@ -542,7 +592,7 @@ namespace Library_Mangement.ViewModels
             try
             {
                 int bookCount = 0;
-                if (Books != null) Books.Clear();
+                //if (//Books != null) Books.Clear();
 
                 foreach (var bookItem in allBooks)
                 {
@@ -611,10 +661,11 @@ namespace Library_Mangement.ViewModels
         private async Task LoaderMessage(string loaderText, int timeDeley, bool isStopLoader = false)
         {
             LoaderText = $"{loaderText}";
-            if (timeDeley > 0 && AppConfig.isAwaitTimeNeeds)
-            {
-                await Task.Delay(timeDeley);
-            }
+            
+            //if (timeDeley > 0 && AppConfig.isAwaitTimeNeeds)
+            //{
+            //    await Task.Delay(timeDeley);
+            //}
         }
         #region Private Methods
         private void ValidateModel()

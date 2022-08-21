@@ -115,7 +115,7 @@ namespace Library_Mangement.Droid
                 intent.AddFlags(ActivityFlags.SingleTop);
                 intent.PutExtra("Title", "Title");
 
-                var pendingIntent = PendingIntent.GetActivity(this, 0, intent, PendingIntentFlags.Mutable); 
+                var pendingIntent = PendingIntent.GetActivity(this, 0, intent, PendingIntentFlags.UpdateCurrent); 
                 notifBuilder = new NotificationCompat.Builder(context, foregroundChannelId)
                     .SetContentTitle("Library Checking For New Data")
                     .SetSmallIcon(Resource.Mipmap.icon)

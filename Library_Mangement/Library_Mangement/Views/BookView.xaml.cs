@@ -1,5 +1,6 @@
 ﻿using Library_Mangement.Database.Models;
 using Library_Mangement.Model;
+using Library_Mangement.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,33 @@ namespace Library_Mangement.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BookView : ContentPage
     {
-        public BookView(tblBook activeBookData)
+        #region Properties
+        public readonly BookViewModel _vm;
+        #endregion
+
+        #region Constructor
+        public BookView()
         {
             InitializeComponent();
-            if(activeBookData != null)
+            _vm = new BookViewModel();
+            BindingContext = _vm;
+        }
+        #endregion
+
+        #region Override
+        protected async override void OnAppearing()
+        {
+            base.OnAppearing();
+            try
             {
-                bookView.Title = !string.IsNullOrEmpty(activeBookData.Title) ? activeBookData.Title : "Book Details";
+                await _vm.LoadBooks();
+            }
+            catch (Exception ex)
+            {
+
             }
         }
+        #endregion
+
     }
 }

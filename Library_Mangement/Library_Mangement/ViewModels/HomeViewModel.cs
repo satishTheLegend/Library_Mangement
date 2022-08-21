@@ -122,7 +122,7 @@ namespace Library_Mangement.ViewModels
                 LoaderVisible = true;
                 await LoaderMessage($"Opening {bookData.Title}", 1500);
                 tblBook book = await App.Database.Book.GetBookByISBNId(bookData.ISBN);
-                await App.Current.MainPage.Navigation.PushAsync(new BookView(book));
+                //await App.Current.MainPage.Navigation.PushAsync(new BookView(book));
                 LoaderVisible = false;
             }
         }

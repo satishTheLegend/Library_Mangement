@@ -61,6 +61,7 @@ namespace Library_Mangement
                     if (sessionExpire)
                     {
                         MainPage = new NavigationPage(new LandingView(true));
+                        //MainPage = new NavigationPage(new DevelopmentView());
                         await App.Current.MainPage.DisplayAlert(AppResources.Session_TimeOut_Alert_Title, AppResources.Session_TimeOut_Msg, AppResources.Ok);
                     }
                     else
@@ -71,6 +72,7 @@ namespace Library_Mangement
                 else
                 {
                     
+                    //MainPage = new NavigationPage(new DevelopmentView());
                     MainPage = new NavigationPage(new SpalshView());
                     //MainPage = new NavigationPage(new CatagoryChips());
                 }
