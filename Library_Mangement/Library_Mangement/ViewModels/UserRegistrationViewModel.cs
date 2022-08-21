@@ -99,6 +99,7 @@ namespace Library_Mangement.ViewModels
 
         private UserRegistrationPost GetUserRegistrationModel()
         {
+            var deviceInfo = Common.DeviceDetails();
             UserRegistrationPost userRegistration = new UserRegistrationPost();
             try
             {
@@ -112,6 +113,7 @@ namespace Library_Mangement.ViewModels
                 userRegistration.CollageName = FieldItems.FirstOrDefault(x => x.FieldId == 109).FieldValue;
                 userRegistration.CurrentEducation = FieldItems.FirstOrDefault(x => x.FieldId == 110).FieldValue;
                 userRegistration.ProfileAvatar = string.Empty;
+                userRegistration.DeviceId = deviceInfo.DeviceID;
                 userRegistration.Catagories = FieldItems.FirstOrDefault(x => x.FieldId == 113).FieldValue;
                 userRegistration.Gender = FieldItems.FirstOrDefault(x => x.FieldId == 108).FieldValue;
                 userRegistration.BirthDate = Convert.ToDateTime(FieldItems.FirstOrDefault(x => x.FieldId == 107).FieldValue);

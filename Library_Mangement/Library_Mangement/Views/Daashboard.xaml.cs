@@ -1,4 +1,7 @@
-﻿using Library_Mangement.ViewModels;
+﻿using Acr.UserDialogs;
+using Library_Mangement.Resx;
+using Library_Mangement.Services;
+using Library_Mangement.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +20,7 @@ namespace Library_Mangement.Views
     {
         #region Properties
         readonly DashboardViewModel _vm;
+        bool _isOpened = false;
         #endregion
 
         #region Constructor
@@ -25,10 +29,10 @@ namespace Library_Mangement.Views
             try
             {
                 InitializeComponent();
-                //_vm = new DashboardViewModel();
-                //BindingContext = _vm;
-                MyMenu = GetMenus();
-                this.BindingContext = this;
+                _vm = new DashboardViewModel();
+                BindingContext = _vm;
+                //MyMenu = GetMenus();
+                //this.BindingContext = this;
             }
             catch (Exception ex)
             {
@@ -46,25 +50,7 @@ namespace Library_Mangement.Views
         #endregion
 
         #region Public Methods
-        public List<Menu> MyMenu { get; set; }
 
-        private List<Menu> GetMenus()
-        {
-            return new List<Menu>
-            {
-                new Menu{ Name = "Home", Icon = "home.png"},
-                new Menu{ Name = "Profile", Icon = "user.png"},
-                new Menu{ Name = "Notifications", Icon = "notification.png"},
-                new Menu{ Name = "Cart", Icon = "shopping_cart.png"},
-                new Menu{ Name = "My Orders", Icon = "order.png"},
-                new Menu{ Name = "Wish List", Icon = "WishList.png"},
-                new Menu{ Name = "Account Settings", Icon = "accsettings.png"},
-                new Menu{ Name = "My Reviews", Icon = "rating.png"},
-                new Menu{ Name = "App Settings", Icon = "AppSettings.png"},
-                new Menu{ Name = "Help Support", Icon = "support.png"},
-                new Menu{ Name = "Logout", Icon = "logout.png"},
-            };
-        }
         #endregion
 
         #region Private Methods
@@ -77,6 +63,7 @@ namespace Library_Mangement.Views
 
         private async void CloseAnimation()
         {
+            _isOpened = false;
             await swipeContent.RotateTo(0, 300, Easing.SinOut);
             pancake.CornerRadius = 0;
             await swipeContent.ScaleYTo(1, 300, Easing.SinOut);
@@ -84,12 +71,77 @@ namespace Library_Mangement.Views
 
         private void OpenSwipe(object sender, EventArgs e)
         {
-            MainSwipeView.Open(OpenSwipeItem.LeftItems);
-            OpenAnimation();
+            if (!_isOpened)
+            {
+                MainSwipeView.Open(OpenSwipeItem.LeftItems);
+                OpenAnimation();
+                _isOpened = true;
+            }
+            else
+            {
+                MainSwipeView.Close();
+                CloseAnimation();
+            }
         }
 
-        private void CloseSwipe(object sender, EventArgs e)
+        private async void CloseSwipe(object sender, EventArgs e)
         {
+            var stack = sender as StackLayout;
+            if (stack != null)
+            {
+                var menuItem = stack.BindingContext as ViewModels.Menu;
+                if (menuItem != null)
+                {
+                    switch (menuItem.Name)
+                    {
+                        case "Home":
+                            _vm.dashboard.DashboardVisible = true;
+                            _vm.profile.ProfileVisible = false;
+                            break;
+
+                        case "Profile":
+                            if (_vm.profile.FieldItems == null || _vm.profile.FieldItems?.Count < 1)
+                                await _vm.LoadRegistrationForm(profileStack);
+                            else
+                                _vm.ShowForm();
+                            break;
+
+                        case "Notifications":
+                            break;
+
+                        case "Cart":
+                            break;
+
+                        case "My Orders":
+                            break;
+
+                        case "Wish List":
+
+                            break;
+
+                        case "Account Settings":
+                            break;
+
+                        case "My Reviews":
+                            break;
+
+                        case "App Settings":
+
+                            break;
+
+                        case "Help Support":
+
+                            break;
+
+                        case "Logout":
+
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
             MainSwipeView.Close();
             CloseAnimation();
         }
@@ -102,19 +154,40 @@ namespace Library_Mangement.Views
         private void SwipeEnded(object sender, SwipeEndedEventArgs e)
         {
             if (!e.IsOpen)
+            {
+                MainSwipeView.Close();
                 CloseAnimation();
+            }                
         }
 
         //private void CloseRequested(object sender, EventArgs e)
         //{
         //    CloseAnimation();
         //}
+
+        private void SearchBar_Focused(object sender, FocusEventArgs e)
+        {
+            //overviewstack.IsVisible = false;
+        }
+
+        private void SearchBar_Unfocused(object sender, FocusEventArgs e)
+        {
+            //overviewstack.IsVisible = true;
+        }
+
         #endregion
+
+        private async void OpenProfile(object sender, EventArgs e)
+        {
+            UserDialogs.Instance.ShowLoading();
+            if (_vm.profile.FieldItems == null || _vm.profile.FieldItems?.Count < 1)
+                await _vm.LoadRegistrationForm(profileStack);
+            else
+                _vm.ShowForm();
+            await Task.Delay(200);
+            UserDialogs.Instance.HideLoading();
+        }
     }
-    public class Menu
-    {
-        public string Name { get; set; }
-        public string Icon { get; set; }
-    }
+
 
 }

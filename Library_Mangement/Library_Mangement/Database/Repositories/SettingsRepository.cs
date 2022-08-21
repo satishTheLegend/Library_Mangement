@@ -30,7 +30,19 @@ namespace Library_Mangement.Database.Repositories
         #endregion
 
         #region Public Methods
-
+        public async Task<bool> IsDataContainsInValue(string key ,string value)
+        {
+            var data = await _conn.Table<tblSettings>().FirstOrDefaultAsync(x => x.Key == key && x.Value.Contains(value));
+            if(data != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
         #endregion
 
         #region Implemented Methods
@@ -61,7 +73,17 @@ namespace Library_Mangement.Database.Repositories
 
         public async Task<int> InsertAsync(tblSettings entity)
         {
-            return await _conn.InsertAsync(entity);
+            int result = 0;
+            var data = await _conn.Table<tblSettings>().FirstOrDefaultAsync(x => x.Value == entity.Value);
+            if(data != null)
+            {
+                result = await UpdateAsync(entity);
+            }
+            else
+            {
+                result = await _conn.InsertAsync(entity);
+            }
+            return result;
         }
 
         public async Task<int> UpdateAsync(tblSettings entity)

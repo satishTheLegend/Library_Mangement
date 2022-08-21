@@ -17,6 +17,7 @@ namespace Library_Mangement.Model.ApiResponse.PostModels
         public string CurrentEducation { get; set; }
         public string ProfileAvatar { get; set; }
         public string Catagories { get; set; }
+        public string DeviceId { get; set; }
         public string Gender { get; set; }
         public DateTime BirthDate { get; set; }
     }

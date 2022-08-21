@@ -18,6 +18,7 @@ namespace Library_Mangement.Model.ApiResponse
         public string currentEducation { get; set; }
         public string profileAvatar { get; set; }
         public object catagories { get; set; }
+        public string DeviceId { get; set; }
         public string gender { get; set; }
         public DateTime birthDate { get; set; }
         public DateTime userTokenCreatedDate { get; set; }

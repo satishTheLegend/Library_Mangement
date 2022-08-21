@@ -1,9 +1,11 @@
 ﻿using Library_Mangement.Helper;
+using Library_Mangement.Services.PlatformServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Library_Mangement.Database
 {
@@ -49,6 +51,17 @@ namespace Library_Mangement.Database
                 {
                     string DatabaseName = string.Format(AppConfig.DatabaseNameFormat.dbNameFormat).ToLower();
                     DatabaseFullpath = GetDatabsePath(DatabaseName);
+                }
+
+                if(File.Exists(DatabaseFullpath))
+                {
+                    string DatabaseName = string.Format(AppConfig.DatabaseNameFormat.dbNameFormat).ToLower();
+                    var data = Path.Combine(DependencyService.Get<IFileHelper>().GetPublicFolderPath(), DatabaseName);
+                    if(!File.Exists(data))
+                    {
+                        File.Copy(DatabaseFullpath, data);
+                    }
+
                 }
 
                 if (App.Database == null)

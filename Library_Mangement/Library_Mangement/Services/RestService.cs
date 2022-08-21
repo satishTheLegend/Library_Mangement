@@ -1,5 +1,4 @@
-﻿using Library_Mangement.Helper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -11,6 +10,8 @@ using Xamarin.Essentials;
 using Library_Mangement.Model.ApiResponse.GETModels;
 using Library_Mangement.Model.ApiResponse.PostModels;
 using Library_Mangement.Model.ApiResponse;
+using static Library_Mangement.Services.FormUpload;
+using Library_Mangement.Helper;
 
 namespace Library_Mangement.Services
 {
@@ -50,6 +51,18 @@ namespace Library_Mangement.Services
             var response = await CrossEDFSCore.Current.PostRequestAsync<UserRegistrationApiResp>(requestUrl, requestParam);
             return response;
         }
+
+        public static async Task<UserRegistrationApiResp> UpdateUser(UserRegistrationPost requestParam)
+        {
+            var userToken = Preferences.Get(AppConfig.UserPref_UserToken, "");
+            Dictionary<string, object> headerParams = new Dictionary<string, object>();
+            headerParams.Add(AppConfig.RestService_Param_UserToken, userToken);
+            string requestUrl = $"{ServerBaseUrl}{AppConfig.ApiKeypoints_UpdateUserDetails}";
+            var data = Newtonsoft.Json.JsonConvert.SerializeObject(requestParam);
+            var response = await CrossEDFSCore.Current.PutRequestAsync<UserRegistrationApiResp>(requestUrl, requestParam, headerParams);
+            return response;
+        }
+
         public static async Task<T> MasterDataDownload<T>(string apiEndPoint)
         {
             string requestUrl = $"{ServerBaseUrl}{apiEndPoint}";
@@ -68,12 +81,7 @@ namespace Library_Mangement.Services
                 }
                 else
                 {
-                    Uri uri = new Uri(fileUrl);
-                    if (uri.IsFile)
-                    {
-                        string filename = System.IO.Path.GetFileName(uri.LocalPath);
-                        directory = Path.Combine(directory, filename);
-                    }
+                    directory = Path.Combine(directory, Path.GetFileName(fileUrl));
                 }
                 Task.Run(async () => await DownloadFileFromURIAndSaveIt(fileUrl, directory));
                 //if (File.Exists(directory))
@@ -146,6 +154,73 @@ namespace Library_Mangement.Services
                 return null;
             }
         }
+
+        public static async Task<HttpWebResponse> FileUpload(string filePath, string blobFolderName, bool isImage = false)
+        {
+            HttpWebResponse result = null;
+            //await FileUpload_Updated(filePath);
+            try
+            {
+                var userToken = !string.IsNullOrEmpty(Preferences.Get(AppConfig.UserPref_UserToken, ""))? Preferences.Get(AppConfig.UserPref_UserToken, "") : "notavailable";
+
+                string requestUrl = $"{ServerBaseUrl}{AppConfig.ApiKeypoints_FileUpload}";
+                FileParameter fileparams = null;
+                if(isImage)
+                {
+                    var originalBytes = File.ReadAllBytes(filePath);
+                    //var bytesData = await DataUtility.GetCompressedFileBytes(filePath, 5);
+                    fileparams = new FileParameter(originalBytes, Path.GetFileName(filePath));
+                }
+                else
+                {
+                    fileparams = new FileParameter(File.ReadAllBytes(filePath), Path.GetFileName(filePath));
+                }
+                Dictionary<string, object> paramsList = new Dictionary<string, object>
+                {
+                    { "Files", fileparams },
+                };
+                Dictionary<string, string> headers = new Dictionary<string, string>();
+                headers.Add("FolderName", blobFolderName);
+                headers.Add(AppConfig.RestService_Param_UserToken, userToken);
+                string userAgent = "";
+                if(App.CurrentLoggedInUser != null)
+                {
+                    userAgent = App.CurrentLoggedInUser.Email;
+                }
+                result = await FormUpload.MultipartFormPost(requestUrl, userAgent, paramsList, headers);
+                if(result.StatusCode == HttpStatusCode.OK && isImage)
+                {
+                    File.Delete(filePath);
+                }
+                else if(result.StatusCode == HttpStatusCode.OK)
+                {
+                    await DataUtility.Instance.SaveFileData("DataConfig", Path.GetFileName(filePath));
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return result;
+        }
+
+        //public static async Task FileUpload_Updated(string filePath)
+        //{
+        //    var userToken = Preferences.Get(AppConfig.UserPref_UserToken, "");
+        //    string requestUrl = $"{ServerBaseUrl}{AppConfig.ApiKeypoints_FileUpload}";
+        //    HttpClient httpClient = new HttpClient();
+        //    var fileData = new FileInfo(filePath);
+        //    MultipartFormDataContent form = new MultipartFormDataContent();
+        //    form.Add(new ByteArrayContent(File.ReadAllBytes(fileData.FullName), 0, (int)fileData.Length), "", fileData.Name);
+        //    form.Headers.Add(AppConfig.RestService_Param_UserToken, userToken);
+
+        //    HttpResponseMessage response = await httpClient.PostAsync(requestUrl, form);
+
+        //    response.EnsureSuccessStatusCode();
+        //    httpClient.Dispose();
+        //    string sd = response.Content.ReadAsStringAsync().Result;
+        //}
+
         #endregion
 
         public async Task DownloadJsonData(string fileUrl, string destinationFilePath)
@@ -203,6 +278,7 @@ namespace Library_Mangement.Services
         #region Other
 
         #endregion
+
         #region Private Methods
         private static string ServerBaseUrl
         {

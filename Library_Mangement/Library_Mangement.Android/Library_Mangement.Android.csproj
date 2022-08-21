@@ -17,7 +17,7 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v12.1</TargetFrameworkVersion>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
@@ -59,6 +59,9 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Aspose.Imaging">
+      <Version>22.8.0</Version>
+    </PackageReference>
     <PackageReference Include="Com.Airbnb.Xamarin.Forms.Lottie">
       <Version>3.0.4</Version>
     </PackageReference>
@@ -99,8 +102,12 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackgroundService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="PlatformServices\DeviceInfo.cs" />
+    <Compile Include="PlatformServices\FileHelper.cs" />
+    <Compile Include="PlatformServices\MediaService.cs" />
+    <Compile Include="PlatformServices\PermissionUtil.cs" />
     <Compile Include="RenderersAndroid\BorderlessEntryRenderer.cs" />
     <Compile Include="RenderersAndroid\PancakeDrawable.cs" />
     <Compile Include="RenderersAndroid\PancakeViewRenderer.cs" />
@@ -254,6 +261,21 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\rating.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\menu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\user_default_img.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\borrow_books.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\view_downloaded_books.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\explore_books.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>

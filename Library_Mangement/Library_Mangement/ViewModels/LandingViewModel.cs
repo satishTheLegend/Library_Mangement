@@ -141,8 +141,8 @@ namespace Library_Mangement.ViewModels
 
                 if (isMasterDataNotAvailable)
                 {
-                    await LoaderMessage("Downloading Master userDataResp.", 1500);
-                    await LoaderMessage("Downloading books userDataResp.", 1500);
+                    await LoaderMessage("Downloading Master Data.", 1500);
+                    await LoaderMessage("Downloading books Data.", 1500);
                     BooksJsonMasterData booksMaster = await RestService.MasterDataDownload<BooksJsonMasterData>(AppConfig.ApiKeypoints_BooksMaster);
                     await LoaderMessage($"We Have {booksMaster.data?.Count} new Books For You", 1500);
                     await LoaderMessage($"Downloading Dynamic Fields", 500);

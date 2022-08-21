@@ -18,6 +18,7 @@ namespace Library_Mangement.Database.Models
         public string CollageName { get; set; }
         public string Education { get; set; }
         public string Email { get; set; }
+        public string Password { get; set; }
         public string Catagories { get; set; }
         public string Phone { get; set; }
         public string Gender { get; set; }

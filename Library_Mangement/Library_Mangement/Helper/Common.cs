@@ -6,6 +6,8 @@ using Library_Mangement.Services;
 using Library_Mangement.Services.PlatformServices;
 using Library_Mangement.ViewModels;
 using Newtonsoft.Json;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -412,6 +414,128 @@ namespace Library_Mangement.Helper
                 }
             }
             return path;
+        }
+
+
+        public static async Task<bool> GetMicroPhonePermission()
+        {
+            bool result = false;
+            try
+            {
+                var status = await Permissions.CheckStatusAsync<Permissions.Microphone>();
+
+                if (status != PermissionStatus.Granted)
+                    status = await Permissions.RequestAsync<Permissions.Microphone>();
+
+                if (status == PermissionStatus.Granted)
+                    result = true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandlerService.SendErrorLog(_moduleName, ex);
+                result = false;
+            }
+            return result;
+        }
+
+
+        public static async Task<bool> GetPhotosPermission()
+        {
+            bool result = false;
+            try
+            {
+                var status = await Permissions.CheckStatusAsync<Permissions.Photos>();
+
+                if (status != PermissionStatus.Granted)
+                    status = await Permissions.RequestAsync<Permissions.Photos>();
+
+                if (status == PermissionStatus.Granted)
+                    result = true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandlerService.SendErrorLog(_moduleName, ex);
+                result = false;
+            }
+            return result;
+        }
+
+        public async static Task<string> ClickImageAndGetPath()
+        {
+
+            string filePath = string.Empty;
+            try
+            {
+                bool storageStatus = true;
+                bool photostatus = true;
+                bool camerastatus = await GetCameraPermission();
+                if (Device.RuntimePlatform == Device.Android)
+                    storageStatus = await Common.GetStoragePermission();
+                if (Device.RuntimePlatform == Device.Android)
+                    photostatus = await Common.GetPhotosPermission();
+
+                if (camerastatus && storageStatus && photostatus)
+                {
+                    MediaFile file = await PickImageAsync();
+                    if (file == null)
+                        return null;
+                    filePath = file.Path;
+                }
+            }
+            catch (Exception ex)
+            {
+                return filePath;
+            }
+            return filePath;
+        }
+
+        public static async Task<MediaFile> PickImageAsync()
+        {
+            PickMediaOptions pickMedia = new PickMediaOptions
+            {
+                MaxWidthHeight = 1024,
+                PhotoSize = PhotoSize.Large,
+                CompressionQuality = 70
+            };
+            return await CrossMedia.Current.PickPhotoAsync(pickMedia);
+        }
+
+        public static async Task<List<MediaFile>> PickMultipleImagesAsync(int maxWidthHeight, int compressionQuality, bool isAllowPermissions, int imageSelectionCount = 5)
+        {
+            List<MediaFile> files = null;
+            try
+            {
+                if (!isAllowPermissions)
+                    return null;
+
+                await CrossMedia.Current.Initialize();
+
+                PickMediaOptions pickMedia = new PickMediaOptions
+                {
+                    MaxWidthHeight = maxWidthHeight,
+                    PhotoSize = PhotoSize.MaxWidthHeight,
+                    CompressionQuality = compressionQuality
+                };
+
+                MultiPickerOptions multiPicker = new MultiPickerOptions
+                {
+                    MaximumImagesCount = imageSelectionCount,
+                    AlbumSelectTitle = "Select Album",
+                    PhotoSelectTitle = "Select Photo",
+                    BackButtonTitle = "Back",
+                    DoneButtonTitle = "Done",
+                    LoadingTitle = "Loading",
+                };
+                files = await CrossMedia.Current.PickPhotosAsync(pickMedia, multiPicker);
+
+                if (files?.Count == 0 || files == null)
+                    return null;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandlerService.SendErrorLog(_moduleName, ex);
+            }
+            return files;
         }
 
         public static string GetPNGFilePath(string directoryName, string pdfFileName)

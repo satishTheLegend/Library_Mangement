@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.2.0.564" />
+    <PackageReference Include="Aspose.Imaging" Version="22.8.0" />
     <PackageReference Include="Com.Airbnb.Xamarin.Forms.Lottie" Version="3.0.4" />
     <PackageReference Include="DevExpress.XamarinForms.Editors" Version="21.2.8" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -24,6 +25,7 @@
     <PackageReference Include="Syncfusion.Xamarin.SfProgressBar" Version="19.4.0.54" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
+    <PackageReference Include="Xam.Plugin.Media" Version="5.0.1" />
     <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.4.11.982" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2478" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
@@ -38,11 +40,18 @@
     <Folder Include="Resources\" />
     <Folder Include="ServiceMessages\" />
     <Folder Include="Triggers\" />
+    <Folder Include="UIViews\" />
     <Folder Include="Utilities\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\EDFSCore\EDFSCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Mono.Android">
+      <HintPath>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v10.0\Mono.Android.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

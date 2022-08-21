@@ -3,6 +3,7 @@ using Library_Mangement.Database.Models;
 using Library_Mangement.Helper;
 using Library_Mangement.Resx;
 using Library_Mangement.Services;
+using Library_Mangement.Services.MediaServices;
 using Library_Mangement.Themes;
 using Library_Mangement.Views;
 using System;
@@ -13,17 +14,22 @@ namespace Library_Mangement
 {
     public partial class App : Application
     {
+
         #region Properties
         public static LogDatabase LogDatabase;
         public static AppDatabase Database;
         public static RestService RestServiceConnection;
+        public static IMediaService MediaService;
+        public static BackgroundServices BackgroundServices;
+        public string notificationMsg = "Checking data";
         public static tblUser CurrentLoggedInUser { get; set; }
         public static bool IsAppInitialize = false;
         #endregion
 
         #region Constructor
-        public App()
+        public App(IMediaService mediaService)
         {
+            MediaService = mediaService;
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NjAzMjM4QDMxMzkyZTM0MmUzMEZxVkRMK3NlSk0zamgxYi9NMFdnOURXRjFrci9IVkRNTDZ1M2ljT1BvY2M9");
             InitializeComponent();
             RestServiceConnection = new RestService();
@@ -59,7 +65,7 @@ namespace Library_Mangement
                     }
                     else
                     {
-                        //MainPage = new NavigationPage(new FlyoutView(false, true));
+                        MainPage = new NavigationPage(new Dashboard());
                     }
                 }
                 else

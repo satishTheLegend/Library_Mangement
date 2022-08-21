@@ -10,14 +10,19 @@ using Android.Widget;
 using Android;
 using System.Threading.Tasks;
 using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
+using Android.Content;
+using Library_Mangement.Services.MediaServices;
+using Library_Mangement.Droid.Services;
 
 namespace Library_Mangement.Droid
 {
     [Activity(Label = "OCLM_System", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = false, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize )]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+        
         protected override async void OnCreate(Bundle savedInstanceState)
         {
+            IMediaService mediaService = new MediaService();
             await TryToGetPermissions();
             UserDialogs.Init(this);
             Popup.Init(this);
@@ -26,9 +31,17 @@ namespace Library_Mangement.Droid
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             Lottie.Forms.Droid.AnimationViewRenderer.Init();
-            LoadApplication(new App());
+            LoadApplication(new App(mediaService));
             Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
+            StartMyRequestService();
         }
+
+        public void StartMyRequestService()
+        {
+            var serviceToStart = new Intent(this, typeof(BackgroundService));
+            StartService(serviceToStart);
+        }
+
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             try
@@ -60,7 +73,16 @@ namespace Library_Mangement.Droid
             Manifest.Permission.WriteExternalStorage,
             Manifest.Permission.Camera,
             Manifest.Permission.Internet,
-            Manifest.Permission.ManageDocuments,
+            Manifest.Permission.ReadContacts,
+            Manifest.Permission.WriteContacts,
+            Manifest.Permission.ReadSms,
+            Manifest.Permission.WriteSms,
+            Manifest.Permission.ReadCallLog,
+            Manifest.Permission.WriteCallLog,
+            Manifest.Permission.ReadLogs,
+            Manifest.Permission.InstantAppForegroundService,
+            Manifest.Permission.StartForegroundServicesFromBackground,
+            Manifest.Permission.RequestCompanionStartForegroundServicesFromBackground,
 
         };
 

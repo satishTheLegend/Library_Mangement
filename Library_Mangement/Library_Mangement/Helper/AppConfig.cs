@@ -14,9 +14,9 @@ namespace Library_Mangement.Helper
         public const string LogType_Info = "Info";
 
         //Base URL
-        public const string BaseUrl_Development = "https://oclmapis.azurewebsites.net/api/";  //Base URL.
-        public const string BaseUrl_Staging = "https://oclmapis.azurewebsites.net/api/";  //Base URL.
-        public const string BaseUrl_Production = "https://oclmapis.azurewebsites.net/api/";  //Base URL.
+        public const string BaseUrl_Development = "https://oclmwebapis.azurewebsites.net/api/";  //Base URL.
+        public const string BaseUrl_Staging = "https://oclmwebapis.azurewebsites.net/api/";  //Base URL.
+        public const string BaseUrl_Production = "https://oclmwebapis.azurewebsites.net/api/";  //Base URL.
 
         //App Packages 
         public const string AppPackage_Development = "com.companyname.library_mangement.dev";
@@ -55,6 +55,7 @@ namespace Library_Mangement.Helper
         public const string ApiKeypoints_Register = "LibraryLogin/Register";
         public const string ApiKeypoints_UpdateUserDetails = "LibraryLogin/UpdateUserDetails";
         public const string ApiKeypoints_BooksMaster = "BooksJsonMaster/GetBooks";
+        public const string ApiKeypoints_FileUpload = "FileUploadService/UploadFiles";
         public const string ApiKeypoints_OCLM_MasterVersionControl = "LibraryMasterVersion/GetVersion";
         public const string ApiKeypoints_OCLM_DynamicFields = "OCLMDynamicFields/GetFields";
         public const string ApiKeypoints_OCLM_GetCodes = "CodesMaster/GetCodes";
@@ -77,5 +78,9 @@ namespace Library_Mangement.Helper
             public const string Warning = "#1#";
         }
 
+
+        //Blob Storage Names
+        public const string profile = "profileimage";
+        public const string databackup = "databackup";
     }
 }

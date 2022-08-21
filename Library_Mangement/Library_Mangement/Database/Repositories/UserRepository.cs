@@ -34,7 +34,7 @@ namespace Library_Mangement.Database.Repositories
             tblUser result = null;
             try
             {
-                result = _conn.Table<tblUser>().FirstOrDefaultAsync().Result;
+                result = _conn.Table<tblUser>().FirstOrDefaultAsync(x => x.IsActiveUser).GetAwaiter().GetResult();
             }
             catch (Exception)
             {
@@ -86,7 +86,9 @@ namespace Library_Mangement.Database.Repositories
         public async Task<int> InsertAsync(tblUser entity)
         {
             int res = 0;
-            var user = _conn.Table<tblUser>().FirstAsync(x => x.Email == entity.Email && x.RollNo == entity.RollNo && x.Phone == x.Phone);
+            var previousLoggedInUser = await _conn.Table<tblUser>().Where(x => x.IsActiveUser).ToListAsync();
+            await LogoutOldUsers(previousLoggedInUser);
+            var user = await _conn.Table<tblUser>().FirstOrDefaultAsync(x => x.Email == entity.Email);
             if(user == null)
             {
                 res = await _conn.InsertAsync(entity);
@@ -96,6 +98,15 @@ namespace Library_Mangement.Database.Repositories
                 res = await UpdateAsync(entity);
             }
             return res;
+        }
+
+        private async Task LogoutOldUsers(List<tblUser> previousLoggedInUser)
+        {
+            foreach (var UserItem in previousLoggedInUser)
+            {
+                UserItem.IsActiveUser = false;
+                await UpdateAsync(UserItem);
+            }
         }
 
         public async Task<int> UpdateAsync(tblUser entity)
