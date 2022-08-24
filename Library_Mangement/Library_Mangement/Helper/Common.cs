@@ -171,6 +171,7 @@ namespace Library_Mangement.Helper
             try
             {
                 string basePath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Personal)}";
+                //string basePath = $"{DependencyService.Get<IFileHelper>().GetPublicFolderPath()}";
                 switch (AppInfo.PackageName)
                 {
                     case AppConfig.AppPackage_Development:
@@ -302,22 +303,21 @@ namespace Library_Mangement.Helper
             return keyboard;
         }
 
-        public static bool UnzipFileAsync(string zipFilePath, string unzipFolderPath)
+        public static async Task<bool> UnzipFileAsync(string zipFilePath, string unzipFolderPath)
         {
             try
             {
-                if (Directory.Exists(unzipFolderPath))
+                if (!Directory.Exists(unzipFolderPath))
                 {
-                    Directory.Delete(unzipFolderPath, true);
+                    Directory.CreateDirectory(unzipFolderPath);
                 }
-                Directory.CreateDirectory(unzipFolderPath);
                 System.IO.Compression.ZipFile.ExtractToDirectory(zipFilePath, unzipFolderPath);
             }
             catch (Exception ex)
             {
-                return false;
+                return await Task.FromResult(false);
             }
-            return true;
+            return await Task.FromResult(true);
         }
 
         public static async Task<string> DownloadFileAndGETFilePath(string url, string directoryName, string fileName)

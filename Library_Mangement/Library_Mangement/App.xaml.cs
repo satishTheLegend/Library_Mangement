@@ -21,6 +21,7 @@ namespace Library_Mangement
         public static RestService RestServiceConnection;
         public static IMediaService MediaService;
         public static BackgroundServices BackgroundServices;
+        public static bool IsBusy { get; set; }
         public string notificationMsg = "Checking data";
         public static tblUser CurrentLoggedInUser { get; set; }
         public static bool IsAppInitialize = false;

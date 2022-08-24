@@ -88,7 +88,7 @@ namespace Library_Mangement.ViewModels
             try
             {
                 string profileDirectoryPath = Common.GetBasePath(AppConfig.DirName_Profile_Pic);
-                string profilePath = !string.IsNullOrEmpty(loginData.profileAvatar) ? RestService.DownloadFile(loginData.profileAvatar, profileDirectoryPath) : string.Empty;
+                string profilePath = !string.IsNullOrEmpty(loginData.profileAvatar) ? await RestService.DownloadFile(loginData.profileAvatar, profileDirectoryPath, null, true) : string.Empty;
                 tblUser user = new tblUser()
                 {
                     FirstName = loginData.firstName,

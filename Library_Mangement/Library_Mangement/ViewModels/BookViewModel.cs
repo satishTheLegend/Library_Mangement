@@ -148,13 +148,15 @@ namespace Library_Mangement.ViewModels
                 int i = 0;
                 foreach (var bookItem in allBooks)
                 {
+                    string[] allFiels = Directory.GetFiles(Path.GetDirectoryName(bookItem.PngFilePath));
+                    bool isFileExist = File.Exists(bookItem.PngFilePath);
                     i++;
                     BooksPropertyModel book = new BooksPropertyModel();
                     book.Title = bookItem.Title;
                     book.ISBN = bookItem.ISBN;
                     book.PageCount = bookItem.PageCount;
                     book.Auther = bookItem.Authors;
-                    //book.Book_ImageSource = File.Exists(bookItem.PngFilePath) ? bookItem.PngFilePath : "PlaceHolder.png";
+                    book.Book_ImageSource = File.Exists(bookItem.PngFilePath) ? bookItem.PngFilePath : "PlaceHolder.png";
                     book.Catagory = bookItem.Categories;
                     book.PublishYear = bookItem.PublishedDate;
                     book.IsCoverAvailable = bookItem.IsCoverAvailable;

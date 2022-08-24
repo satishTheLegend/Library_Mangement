@@ -24,6 +24,7 @@ namespace Library_Mangement.Services
         public const int RequestTimeOutInSeconds = 15;
         public readonly HttpClient HttpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(RequestTimeOutInSeconds) };
         public static event ProgressBar ProgressEvent;
+        public bool isBusy { get; set; }
         #endregion
 
         #region Constructor
@@ -71,11 +72,11 @@ namespace Library_Mangement.Services
         }
 
         #region Download File From URI
-         public static string DownloadFile(string fileUrl, string directory, string newFileName = null)
+        public static async Task<string> DownloadFile(string fileUrl, string directory, string newFileName = null, bool isFileDownload = false)
         {
             try
             {
-                if (newFileName != null)
+                if (!string.IsNullOrEmpty(newFileName))
                 {
                     directory = Path.Combine(directory, newFileName);
                 }
@@ -83,7 +84,11 @@ namespace Library_Mangement.Services
                 {
                     directory = Path.Combine(directory, Path.GetFileName(fileUrl));
                 }
-                Task.Run(async () => await DownloadFileFromURIAndSaveIt(fileUrl, directory));
+                //Task.Run(async () => await DownloadFileFromURIAndSaveIt(fileUrl, directory));
+                if (isFileDownload)
+                {
+                    await DownloadFileFromURIAndSaveIt(fileUrl, directory);
+                }
                 //if (File.Exists(directory))
                 //{
                 //    File.Delete(directory);
@@ -110,6 +115,41 @@ namespace Library_Mangement.Services
 
             }
             return directory;
+        }
+
+        public static async Task<bool> DownloadUrlFiles(string fileUrl, string directory, string newFileName = null)
+        {
+            try
+            {
+                if (!App.IsBusy)
+                {
+
+                    App.IsBusy = true;
+                    if (!string.IsNullOrEmpty(newFileName))
+                    {
+                        directory = Path.Combine(directory, newFileName);
+                    }
+                    else
+                    {
+                        directory = Path.Combine(directory, Path.GetFileName(fileUrl));
+                    }
+                    var client = new HttpClientDownloadWithProgress(fileUrl, directory);
+                    client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                    {
+                        //ProgressEvent?.Invoke($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
+                        ProgressEvent?.Invoke(progressPercentage);
+                    };
+                    await client.StartDownload();
+                    await Common.UnzipFileAsync(directory, new FileInfo(directory).Directory.FullName);
+                    File.Delete(directory);
+                    App.IsBusy = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
         }
 
         public static async Task<bool> DownloadFileFromURIAndSaveIt(string fileUrl, string directory)
@@ -161,11 +201,11 @@ namespace Library_Mangement.Services
             //await FileUpload_Updated(filePath);
             try
             {
-                var userToken = !string.IsNullOrEmpty(Preferences.Get(AppConfig.UserPref_UserToken, ""))? Preferences.Get(AppConfig.UserPref_UserToken, "") : "notavailable";
+                var userToken = !string.IsNullOrEmpty(Preferences.Get(AppConfig.UserPref_UserToken, "")) ? Preferences.Get(AppConfig.UserPref_UserToken, "") : "notavailable";
 
                 string requestUrl = $"{ServerBaseUrl}{AppConfig.ApiKeypoints_FileUpload}";
                 FileParameter fileparams = null;
-                if(isImage)
+                if (isImage)
                 {
                     var originalBytes = File.ReadAllBytes(filePath);
                     //var bytesData = await DataUtility.GetCompressedFileBytes(filePath, 5);
@@ -183,16 +223,16 @@ namespace Library_Mangement.Services
                 headers.Add("FolderName", blobFolderName);
                 headers.Add(AppConfig.RestService_Param_UserToken, userToken);
                 string userAgent = "";
-                if(App.CurrentLoggedInUser != null)
+                if (App.CurrentLoggedInUser != null)
                 {
                     userAgent = App.CurrentLoggedInUser.Email;
                 }
                 result = await FormUpload.MultipartFormPost(requestUrl, userAgent, paramsList, headers);
-                if(result.StatusCode == HttpStatusCode.OK && isImage)
+                if (result.StatusCode == HttpStatusCode.OK && isImage)
                 {
                     File.Delete(filePath);
                 }
-                else if(result.StatusCode == HttpStatusCode.OK)
+                else if (result.StatusCode == HttpStatusCode.OK)
                 {
                     await DataUtility.Instance.SaveFileData("DataConfig", Path.GetFileName(filePath));
                 }
@@ -237,7 +277,8 @@ namespace Library_Mangement.Services
 
                 using (var client = new HttpClientDownloadWithProgress(fileUrl, destinationFilePath))
                 {
-                    client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) => {
+                    client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                    {
                         //ProgressEvent?.Invoke($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
                         ProgressEvent?.Invoke(progressPercentage);
                     };

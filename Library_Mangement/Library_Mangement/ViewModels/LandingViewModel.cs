@@ -141,6 +141,8 @@ namespace Library_Mangement.ViewModels
 
                 if (isMasterDataNotAvailable)
                 {
+                    await LoaderMessage("Downloading Master Settings.", 1500);
+                    SettingsGetModel oclmSettings = await RestService.MasterDataDownload<SettingsGetModel>(AppConfig.ApiKeypoints_OCLM_GetSettings);
                     await LoaderMessage("Downloading Master Data.", 1500);
                     await LoaderMessage("Downloading books Data.", 1500);
                     BooksJsonMasterData booksMaster = await RestService.MasterDataDownload<BooksJsonMasterData>(AppConfig.ApiKeypoints_BooksMaster);
@@ -149,8 +151,8 @@ namespace Library_Mangement.ViewModels
                     OCLMDynamicFields fieldsMaster = await RestService.MasterDataDownload<OCLMDynamicFields>(AppConfig.ApiKeypoints_OCLM_DynamicFields);
                     await LoaderMessage($"Downloading Master Codes", 500);
                     LibraryCodesMaster codesMaster = await RestService.MasterDataDownload<LibraryCodesMaster>(AppConfig.ApiKeypoints_OCLM_GetCodes);
-                    await LoaderMessage($"Saving Master userDataResp", 500);
-                    await SaveMasterData(booksMaster, fieldsMaster, codesMaster, masterDataVersionControl);
+                    await LoaderMessage($"Saving Master Data", 500);
+                    await SaveMasterData(booksMaster, fieldsMaster, codesMaster, masterDataVersionControl, oclmSettings);
                     await FinializeMessage();
                 }
             }
@@ -159,16 +161,35 @@ namespace Library_Mangement.ViewModels
 
             }
         }
-        private async Task SaveMasterData(BooksJsonMasterData booksMaster, OCLMDynamicFields fieldsMaster, LibraryCodesMaster codesMaster, OCLMMasterVeriosnControl masterVeriosnControl)
+        private async Task SaveMasterData(BooksJsonMasterData booksMaster, OCLMDynamicFields fieldsMaster, LibraryCodesMaster codesMaster, OCLMMasterVeriosnControl masterVeriosnControl, SettingsGetModel oclmSettings)
         {
             try
             {
                 int i = 1;
+                string bookThumbDirectoryPath = Common.GetBasePath(AppConfig.DirName_Books_Thumbnails);
+
+                foreach (var settingsItem in oclmSettings.data)
+                {
+                    _isProgressCountVisible = true;
+                    if (settingsItem.type == "Link" && !string.IsNullOrEmpty(settingsItem.value))
+                    {
+                       if(await RestService.DownloadUrlFiles(settingsItem.value, bookThumbDirectoryPath, $"{settingsItem.key}.zip"))
+                        {
+                            tblSettings settings = new tblSettings()
+                            {
+                                Key = settingsItem.key,
+                                Type = settingsItem.type,
+                                Value = settingsItem.value,
+                            };
+                            await App.Database.Settings.InsertAsync(settings);
+                        }
+                    }
+                }
+
                 foreach (var bookItem in booksMaster.data)
                 {
                     _isProgressCountVisible = false;
-                    string bookThumbDirectoryPath = Common.GetBasePath(AppConfig.DirName_Books_Thumbnails);
-                    string bookThumbPath = !string.IsNullOrEmpty(bookItem.pngLink) ? RestService.DownloadFile(bookItem.pngLink, bookThumbDirectoryPath, bookItem.pngName) : string.Empty;
+                    string bookThumbPath = !string.IsNullOrEmpty(bookItem.pngLink) ? await RestService.DownloadFile(bookItem.pngLink, bookThumbDirectoryPath, bookItem.pngName) : string.Empty;
                     _isProgressCountVisible = true;
 
                     tblBook bookRecord = new tblBook();

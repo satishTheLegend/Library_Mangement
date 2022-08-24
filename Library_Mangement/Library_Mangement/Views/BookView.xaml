@@ -34,7 +34,7 @@
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
                         <StackLayout x:Name="BooksData" HorizontalOptions="StartAndExpand" BackgroundColor="Red" Padding="10">
-                            <!--<Image Source="{Binding Book_ImageSource}" HeightRequest="200" WidthRequest="150" Aspect="Fill" />-->
+                            <Image Source="{Binding Book_ImageSource}" HeightRequest="200" WidthRequest="150" Aspect="Fill" />
                             <Label Text="{Binding Title}" HorizontalTextAlignment="Center" FontSize="Small" FontAttributes="Bold" LineBreakMode="TailTruncation"/>
                             <StackLayout.GestureRecognizers>
                                 <TapGestureRecognizer  Command="{Binding ParentBindingContext.OpenBookCommand, Source={x:Reference Name=BooksList}}" 

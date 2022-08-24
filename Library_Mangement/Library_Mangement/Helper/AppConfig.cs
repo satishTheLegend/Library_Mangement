@@ -60,6 +60,7 @@ namespace Library_Mangement.Helper
         public const string ApiKeypoints_OCLM_DynamicFields = "OCLMDynamicFields/GetFields";
         public const string ApiKeypoints_OCLM_GetCodes = "CodesMaster/GetCodes";
         public const string ApiKeypoints_OCLM_AddCodes = "CodesMaster/AddCodes";
+        public const string ApiKeypoints_OCLM_GetSettings = "Settings/GetSettings";
 
         //App Theme
         public const string AppTheme_Theme = "Default";
