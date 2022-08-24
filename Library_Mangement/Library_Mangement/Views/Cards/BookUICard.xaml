@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Library_Mangement.Views.Cards.BookUICard" x:Name="BooksList">
     <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-        <FlexLayout x:Name="itemData" BindableLayout.ItemsSource="{Binding Books}" AlignContent="Start" AlignItems="Start" Direction="Row" JustifyContent="Start" Wrap="Wrap">
+        <FlexLayout x:Name="itemData" BindableLayout.ItemsSource="{Binding booksView.Books}" AlignContent="Start" AlignItems="Start" Direction="Row" JustifyContent="Start" Wrap="Wrap">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
                     <Frame x:Name="BooksData" WidthRequest="180" Padding="15,10,10,10" BackgroundColor="Transparent">

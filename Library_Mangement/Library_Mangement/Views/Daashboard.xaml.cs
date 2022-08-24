@@ -42,9 +42,19 @@ namespace Library_Mangement.Views
         #endregion
 
         #region Override Methods
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
-            base.OnAppearing();
+            try
+            {
+                UserDialogs.Instance.ShowLoading();
+                base.OnAppearing();
+                await _vm.LoadBooksInfo();
+                UserDialogs.Instance.HideLoading();
+            }
+            catch (Exception ex)
+            {
+
+            }
             //await _vm.LoadBooksInfo_Updated();
         }
         #endregion
@@ -95,11 +105,12 @@ namespace Library_Mangement.Views
                     switch (menuItem.Name)
                     {
                         case "Home":
-                            _vm.dashboard.DashboardVisible = true;
+                            //_vm.VisibleCheck("dashboard");
                             _vm.profile.ProfileVisible = false;
                             break;
 
                         case "Profile":
+                            //_vm.VisibleCheck("profile");
                             if (_vm.profile.FieldItems == null || _vm.profile.FieldItems?.Count < 1)
                                 await _vm.LoadRegistrationForm(profileStack);
                             else
@@ -107,7 +118,10 @@ namespace Library_Mangement.Views
                             break;
 
                         case "Explore Books":
-                            await App.Current.MainPage.Navigation.PushAsync(new HomeView());//_vm.ExploreBooksClicked();
+                            _vm.LoaderVisible = true;
+                            await _vm.ExploreBooksClicked();
+                            _vm.LoaderVisible = false;
+                            //await App.Current.MainPage.Navigation.PushAsync(new HomeView());
                             //BooksUICards.ParentBindingContext = BindingContext;
                             break;
 

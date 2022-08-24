@@ -223,10 +223,32 @@ namespace Library_Mangement.ViewModels
         {
             UserDialogs.Instance.ShowLoading(LoaderText);
             VisibleCheck("ExploreBooks");
-            await LoadBooksInfo_Updated();
             UserDialogs.Instance.HideLoading();
         }
+        public async Task LoadBooksInfo()
+        {
+            try
+            {
+                if(booksView == null)booksView = new BooksBinding();
+                LoaderVisible = true;
+                await LoaderMessage($"Getting Books From Database", 1300);
+                var allBooks = await App.Database.Book.GetDataAsync();
+                if (allBooks?.Count > 0)
+                {
+                    await LoaderMessage($"Fetched {allBooks.Count} Books From Database", 1300);
+                    await LoaderMessage($"Arrenging Books Please Wait ....", 1300);
+                    booksView.bookList = await LoadBooksFromTable(allBooks);
+                    if (booksView.bookList?.Count > 0)
+                        booksView.Books = new ObservableCollection<BooksPropertyModel>(booksView.bookList);
+                    //await LoadFinalTextOfLoader();
+                    LoaderVisible = false;
+                }
+            }
+            catch (Exception ex)
+            {
 
+            }
+        }
         private void VisibleCheck(string item)
         {
             switch (item.ToLowerInvariant())
@@ -244,7 +266,46 @@ namespace Library_Mangement.ViewModels
         #endregion
 
         #region Public Methods
+        private async Task<List<BooksPropertyModel>> LoadBooksFromTable(List<tblBook> allBooks)
+        {
+            List<BooksPropertyModel> books = new List<BooksPropertyModel>();
+            try
+            {
+                int bookCount = 0;
+                if (booksView.Books != null) booksView.Books.Clear();
 
+                foreach (var bookItem in allBooks)
+                {
+                    if (!File.Exists(bookItem.PngFilePath))
+                    {
+                        await RestService.DownloadFileFromURIAndSaveIt(bookItem.PngLink, bookItem.PngFilePath);
+                    }
+                    BooksPropertyModel book = new BooksPropertyModel()
+                    {
+                        ISBN = bookItem.ISBN,
+                        Book_ImageSource = bookItem.IsCoverAvailable ? bookItem.PngFilePath : "PlaceHolder.png",
+                        IsCoverAvailable = bookItem.IsCoverAvailable,
+                        PageCount = bookItem.PageCount,
+                        Title = bookItem.Title,
+                    };
+                    if (bookCount == allBooks.Count - 1)
+                    {
+                        await LoaderMessage($"Loading...", 0);
+                    }
+                    else
+                    {
+                        await LoaderMessage($"Added Books To View {bookCount} out of {allBooks.Count}", 10);
+                    }
+                    bookCount++;
+                    books.Add(book);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return books;
+        }
         public async Task LoadRegistrationForm(StackLayout profileStack)
         {
             UserDialogs.Instance.ShowLoading();
@@ -371,7 +432,7 @@ namespace Library_Mangement.ViewModels
                     await LoaderMessage($"Fetched {allBooks.Count} Books From Database", 1300);
                     await LoaderMessage($"Arrenging Books Please Wait ....", 1300);
                     var booksModelList = await GetBookList(allBooks);
-                    booksView.BooksData = new ObservableCollection<BooksPropertyModel>(booksModelList);
+                    booksView.Books = new ObservableCollection<BooksPropertyModel>(booksModelList);
                     var catagorygroup = booksModelList.GroupBy(x=> x.Catagory).ToList();
                     List<BooksGroup> booksList = new List<BooksGroup>();
                     foreach (var catagoryItem in catagorygroup)
@@ -379,7 +440,7 @@ namespace Library_Mangement.ViewModels
                         ObservableCollection<BooksPropertyModel> bookCatagory = new ObservableCollection<BooksPropertyModel>(catagoryItem);
                         booksList.Add(new BooksGroup(catagoryItem.Key.ToString(), bookCatagory));
                     }
-                    booksView.Books = new ObservableCollection<BooksGroup>(booksList);
+                    booksView.BooksGroup = new ObservableCollection<BooksGroup>(booksList);
                     //await GetBookList(allBooks);
                     //Books = new ObservableCollection<tblBook>(allBooks);
                 }
@@ -585,89 +646,14 @@ namespace Library_Mangement.ViewModels
                 }
             }
         }
-
-        private async Task<List<BooksPropertyModel>> LoadBooksFromTable(List<tblBook> allBooks)
-        {
-            List<BooksPropertyModel> books = new List<BooksPropertyModel>();
-            try
-            {
-                int bookCount = 0;
-                //if (//Books != null) Books.Clear();
-
-                foreach (var bookItem in allBooks)
-                {
-                    if (!File.Exists(bookItem.PngFilePath))
-                    {
-                        bool isSaved = await RestService.DownloadFileFromURIAndSaveIt(bookItem.PngFilePath, bookItem.PngFilePath);
-                    }
-                    BooksPropertyModel book = new BooksPropertyModel()
-                    {
-                        ISBN = bookItem.ISBN,
-                        Book_ImageSource = bookItem.IsCoverAvailable ? bookItem.PngFilePath : "PlaceHolder.png",
-                        IsCoverAvailable = bookItem.IsCoverAvailable,
-                        PageCount = bookItem.PageCount,
-                        Title = bookItem.Title,
-                    };
-                    if (bookCount == allBooks.Count - 1)
-                    {
-                        await LoaderMessage($"Loading...", 0);
-                    }
-                    else
-                    {
-                        await LoaderMessage($"Added Books To View {bookCount} out of {allBooks.Count}", 300);
-                    }
-                    bookCount++;
-                    books.Add(book);
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return books;
-        }
-        private async Task LoadFinalTextOfLoader()
-        {
-            try
-            {
-                string finishingText = "Please Wait Finishing Up";
-                for (int i = 0; i < 12; i++)
-                {
-                    switch (i)
-                    {
-                        case 8:
-                            finishingText = "Finializing";
-                            break;
-
-                        case 10:
-                            finishingText = "Process Completed";
-                            break;
-                    }
-
-                    for (int j = 1; j <= 4; j++)
-                    {
-                        string progress = string.Concat(Enumerable.Repeat(".", j));
-                        await LoaderMessage($"{finishingText}{progress}", 200);
-                    }
-                }
-                await LoaderMessage($"", 400, true);
-            }
-            catch (Exception ex)
-            {
-
-            }
-
-        }
         private async Task LoaderMessage(string loaderText, int timeDeley, bool isStopLoader = false)
         {
             LoaderText = $"{loaderText}";
-            
-            //if (timeDeley > 0 && AppConfig.isAwaitTimeNeeds)
-            //{
-            //    await Task.Delay(timeDeley);
-            //}
+            if (timeDeley > 0)
+            {
+                await Task.Delay(timeDeley);
+            }
         }
-        #region Private Methods
         private void ValidateModel()
         {
             foreach (var FieldItem in profile.FieldItems)
@@ -699,7 +685,6 @@ namespace Library_Mangement.ViewModels
             }
 
         }
-        #endregion
         #endregion
 
     }

@@ -5,7 +5,8 @@
              xmlns:templates="clr-namespace:Library_Mangement.Views.Cards"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pv="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView" 
-             xmlns:UIViews="clr-namespace:Library_Mangement.Views" xmlns:dxe="http://schemas.devexpress.com/xamarin/2014/forms/editors" xmlns:sfavatar="clr-namespace:Syncfusion.XForms.AvatarView;assembly=Syncfusion.Core.XForms"
+             xmlns:UIViews="clr-namespace:Library_Mangement.Views" xmlns:dxe="http://schemas.devexpress.com/xamarin/2014/forms/editors"
+             xmlns:sfavatar="clr-namespace:Syncfusion.XForms.AvatarView;assembly=Syncfusion.Core.XForms"
              x:Class="Library_Mangement.Views.Dashboard" NavigationPage.HasNavigationBar="False"
              x:Name="DashboardView" BackgroundColor="White">
     <!--<ContentPage.Background>
@@ -184,11 +185,13 @@
                                 </Grid>
                             </ScrollView>
 
-                            <ScrollView Grid.Row="1" Grid.RowSpan="3" IsVisible="true">
+                            <ScrollView Grid.Row="1" IsVisible="{Binding booksView.IsbooksVisible}" Grid.RowSpan="3">
                                 <StackLayout>
-                                    <templates:BookUICard x:Name="BooksUICards"/>
+                                    <controls:Loader VerticalOptions="CenterAndExpand" AnimationAssetFileName="{Binding booksView.LottieAnimationName}" IsVisible="{Binding booksView.LoaderVisible}" LoaderText="{Binding booksView.LoaderText}" LoaderBackgroundOpacity="0.5" LoaderBackgroundColor="Transparent" LoaderTextColor="Black"></controls:Loader>
+                                    <ScrollView>
+                                        <templates:BookUICard IsVisible="{Binding booksView.HideCards}" BindingContext="{Binding Path=BindingContext,Source={x:Reference DashboardView}}"/>
+                                    </ScrollView>
                                 </StackLayout>
-                                
                             </ScrollView>
 
 
