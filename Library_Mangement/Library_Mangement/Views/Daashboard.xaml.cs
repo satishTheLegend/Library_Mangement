@@ -107,7 +107,7 @@ namespace Library_Mangement.Views
                             break;
 
                         case "Explore Books":
-                            await App.Current.MainPage.Navigation.PushAsync(new BookView());//_vm.ExploreBooksClicked();
+                            await App.Current.MainPage.Navigation.PushAsync(new HomeView());//_vm.ExploreBooksClicked();
                             //BooksUICards.ParentBindingContext = BindingContext;
                             break;
 

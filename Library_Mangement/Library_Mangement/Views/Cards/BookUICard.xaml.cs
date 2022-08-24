@@ -29,6 +29,12 @@ namespace Library_Mangement.Views.Cards
         public BookUICard()
         {
             InitializeComponent();
+            this.BindingContextChanged += BookUICard_BindingContextChanged;
+        }
+
+        private void BookUICard_BindingContextChanged(object sender, EventArgs e)
+        {
+
         }
 
         #endregion
