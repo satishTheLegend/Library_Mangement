@@ -231,7 +231,7 @@ namespace Library_Mangement.ViewModels
             {
 
             }
-            return books;
+            return await Task.FromResult(books);
         }
         private async Task LoadFinalTextOfLoader()
         {
@@ -268,7 +268,7 @@ namespace Library_Mangement.ViewModels
         private async Task LoaderMessage(string loaderText, int timeDeley, bool isStopLoader = false)
         {
             LoaderText = $"{loaderText}";
-            if (timeDeley > 0 && AppConfig.isAwaitTimeNeeds)
+            if (timeDeley > 0)
             {
                 await Task.Delay(timeDeley);
             }
