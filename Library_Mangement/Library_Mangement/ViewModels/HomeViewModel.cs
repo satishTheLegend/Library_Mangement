@@ -141,8 +141,8 @@ namespace Library_Mangement.ViewModels
                     await LoaderMessage($"Fetched {allBooks.Count} Books From Database", 1300);
                     await LoaderMessage($"Arrenging Books Please Wait ....", 1300);
                     bookList = await LoadBooksFromTable(allBooks);
-                    if (bookList?.Count > 0)
-                        Books = new ObservableCollection<BooksPropertyModel>(bookList);
+                    //if (bookList?.Count > 0)
+                   //    Books = new ObservableCollection<BooksPropertyModel>(bookList);
                     //await LoadFinalTextOfLoader();
                     LoaderVisible = false;
                 }
@@ -199,7 +199,7 @@ namespace Library_Mangement.ViewModels
             try
             {
                 int bookCount = 0;
-                if (Books != null) Books.Clear();
+                if (Books != null) Books.Clear(); else Books = new ObservableCollection<BooksPropertyModel>();
                                
                 foreach (var bookItem in allBooks)
                 {
@@ -224,7 +224,7 @@ namespace Library_Mangement.ViewModels
                         await LoaderMessage($"Added Books To View {bookCount} out of {allBooks.Count}", 10);
                     }
                     bookCount++;
-                    books.Add(book);
+                    Books.Add(book);
                 }
             }
             catch (Exception ex)

@@ -12,7 +12,7 @@
                                                    BindingContext="{Binding Source={x:Reference  Name=BooksData}}" CommandParameter="{x:Reference BooksData}" />
                         </Frame.GestureRecognizers>
                         <StackLayout>
-                            <Image Source="{Binding Book_ImageSource}" HeightRequest="120" BackgroundColor="Transparent"></Image>
+                            <Image Source="{Binding Book_ImageSource}" HeightRequest="110" BackgroundColor="Yellow"></Image>
                             <Label Text="{Binding Title}" FontSize="Small" LineBreakMode="TailTruncation" HorizontalTextAlignment="Center" FontAttributes="Bold"></Label>
                         </StackLayout>
                     </Frame>
