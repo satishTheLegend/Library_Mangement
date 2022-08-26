@@ -166,7 +166,7 @@ namespace Library_Mangement.ViewModels
         public ICommand SearchCommand => new Command(() => SearchClicked());
         public ICommand ChangeProfileCommand => new Command(() => ChangeProfileClicked());
         public ICommand UpdateUserCommand => new Command(async() => await UpdateUserClicked());
-        public ICommand ExploreBooksCommand => new Command(async() => await ExploreBooksClicked());
+        public ICommand ExploreBooksCommand => new Command(() => ExploreBooksClicked());
         #endregion
 
         #region Event Handlers
@@ -219,7 +219,7 @@ namespace Library_Mangement.ViewModels
             }
             UserDialogs.Instance.HideLoading();
         }
-        public async Task ExploreBooksClicked()
+        public void ExploreBooksClicked()
         {
             UserDialogs.Instance.ShowLoading(LoaderText);
             VisibleCheck("ExploreBooks");
