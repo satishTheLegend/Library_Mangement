@@ -51,6 +51,17 @@ namespace Library_Mangement.ViewModels
             }
         }
 
+        private ObservableCollection<BooksGroup> _booksGroup;
+        public ObservableCollection<BooksGroup> BooksGroup
+        {
+            get => _booksGroup;
+            set
+            {
+                _booksGroup = value;
+                OnPropertyChanged(nameof(_booksGroup));
+            }
+        }
+
         private bool _isbooksVisible = false;
         public bool IsbooksVisible
         {
@@ -109,16 +120,18 @@ namespace Library_Mangement.ViewModels
                     await LoaderMessage($"Arrenging Books Please Wait ....", 1300);
                     var booksModelList = await GetBookList(allBooks);
 
-                    //var catagorygroup = booksModelList.GroupBy(x => x.Catagory).ToList();
-                    //List<BooksGroup> booksList = new List<BooksGroup>();
-                    //foreach (var catagoryItem in catagorygroup)
-                    //{
-                    //    ObservableCollection<BooksPropertyModel> bookCatagory = new ObservableCollection<BooksPropertyModel>(catagoryItem);
-                    //    booksList.Add(new BooksGroup(catagoryItem.Key.ToString(), bookCatagory));
-                    //}
-                    //Books = new ObservableCollection<BooksGroup>(booksList);
+                    var catagorygroup = booksModelList.GroupBy(x => x.Catagory).ToList();
+                    List<BooksGroup> booksList = new List<BooksGroup>();
+                    BooksGroup = new ObservableCollection<BooksGroup>();
+                    foreach (var catagoryItem in catagorygroup)
+                    {
+                        ObservableCollection<BooksPropertyModel> bookCatagory = new ObservableCollection<BooksPropertyModel>(catagoryItem);
+                        booksList.Add(new BooksGroup(catagoryItem.Key.ToString(), bookCatagory));
+                        BooksGroup.Add(new BooksGroup(catagoryItem.Key.ToString(), bookCatagory));
+                    }
+                    
                     //await GetBookList(allBooks);
-                    //Books = new ObservableCollection<tblBook>(allBooks);
+                    //BooksGroup = new ObservableCollection<tblBook>(allBooks);
                 }
                 //LoaderVisible = false;
                 //HideCards = false;
@@ -160,7 +173,7 @@ namespace Library_Mangement.ViewModels
                     book.Catagory = bookItem.Categories;
                     book.PublishYear = bookItem.PublishedDate;
                     book.IsCoverAvailable = bookItem.IsCoverAvailable;
-                    Books.Add(book);
+                    //Books.Add(book);
                     booksList.Add(book);
                     //await LoaderMessage($"Adding Books To View Completed {i} out of {allBooks.Count} ....", 1300);
                 }

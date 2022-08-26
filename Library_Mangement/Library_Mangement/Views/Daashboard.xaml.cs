@@ -48,7 +48,7 @@ namespace Library_Mangement.Views
             {
                 UserDialogs.Instance.ShowLoading();
                 base.OnAppearing();
-                await _vm.LoadBooksInfo();
+                //await _vm.LoadBooksInfo();
                 UserDialogs.Instance.HideLoading();
             }
             catch (Exception ex)
@@ -118,10 +118,10 @@ namespace Library_Mangement.Views
                             break;
 
                         case "Explore Books":
-                            _vm.LoaderVisible = true;
-                            await _vm.ExploreBooksClicked();
-                            _vm.LoaderVisible = false;
-                            //await App.Current.MainPage.Navigation.PushAsync(new HomeView());
+                            //_vm.LoaderVisible = true;
+                            //await _vm.ExploreBooksClicked();
+                            //_vm.LoaderVisible = false;
+                            await App.Current.MainPage.Navigation.PushAsync(new HomeView());
                             //BooksUICards.ParentBindingContext = BindingContext;
                             break;
 

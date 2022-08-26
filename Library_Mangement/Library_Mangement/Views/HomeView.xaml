@@ -1,20 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-             xmlns:templates="clr-namespace:Library_Mangement.Views.Cards" xmlns:controls="clr-namespace:Library_Mangement.Controls" x:Name="homeView"
-             x:Class="Library_Mangement.Views.HomeView" BackgroundImageSource="LibraryBooks_bg_Image.jpg" NavigationPage.HasNavigationBar="False" NavigationPage.HasBackButton="True" NavigationPage.BackButtonTitle="Hello">
+             xmlns:templates="clr-namespace:Library_Mangement.Views.Cards" xmlns:controls="clr-namespace:Library_Mangement.Controls" xmlns:viewmodels="clr-namespace:Library_Mangement.ViewModels" x:DataType="viewmodels:HomeViewModel" x:Name="homeView"
+             x:Class="Library_Mangement.Views.HomeView" BackgroundImageSource="Screen_1.jpg" NavigationPage.HasNavigationBar="False" NavigationPage.HasBackButton="True" NavigationPage.BackButtonTitle="Hello">
     <ContentPage.Content>
-        <Grid RowDefinitions="0.6*,9*">
-            <Frame Grid.Row="0" CornerRadius="50" Padding="0" Margin="0,10,0,0" BorderColor="Purple" BackgroundColor="Transparent">
-                <SearchBar Text="{Binding SearchText}" SearchCommand="{Binding SearchCommand}" CancelButtonColor="Black"  TextChanged="SearchBar_TextChanged"  Keyboard="Chat"></SearchBar>
-            </Frame>
-            <Grid Grid.Row="1">
-                <controls:Loader VerticalOptions="CenterAndExpand" AnimationAssetFileName="{Binding LottieAnimationName}" IsVisible="{Binding LoaderVisible}" LoaderText="{Binding LoaderText}" LoaderBackgroundOpacity="0.5" LoaderBackgroundColor="Transparent" LoaderTextColor="Black"></controls:Loader>
-                <ScrollView>
-                    <templates:BookUICard IsVisible="{Binding HideCards}" BindingContext="{Binding Path=BindingContext,Source={x:Reference homeView}}"/>
-                </ScrollView>
+        <AbsoluteLayout>
+            <Grid RowDefinitions=".5*,9*">
+                <Frame Grid.Row="0" CornerRadius="50" Padding="0" Margin="10,10,10,0" BorderColor="White"  BackgroundColor="Transparent">
+                    <SearchBar Text="{Binding SearchText}" SearchCommand="{Binding SearchCommand}" CancelButtonColor="White"  TextChanged="SearchBar_TextChanged"  Keyboard="Chat"></SearchBar>
+                </Frame>
+                <Grid Grid.Row="1">
+                    <controls:Loader VerticalOptions="StartAndExpand" AnimationAssetFileName="{Binding LottieAnimationName}" IsVisible="{Binding LoaderVisible}" LoaderProgress="{Binding LoaderPercent}" LoaderText="{Binding LoaderText}" LoaderBackgroundOpacity="0.5" LoaderBackgroundColor="Transparent" LoaderTextColor="White"></controls:Loader>
+                    <ScrollView>
+                        <templates:BookUICard IsVisible="{Binding HideCards}" ParentBindingContext="{Binding Path=BindingContext,Source={x:Reference homeView}}"/>
+                    </ScrollView>
+                </Grid>
             </Grid>
-        </Grid>
-
+        </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

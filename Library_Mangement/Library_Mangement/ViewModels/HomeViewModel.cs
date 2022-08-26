@@ -4,6 +4,7 @@ using Library_Mangement.Model;
 using Library_Mangement.Services;
 using Library_Mangement.Validation;
 using Library_Mangement.Views;
+using Library_Mangement.Views.Cards;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,17 +33,28 @@ namespace Library_Mangement.ViewModels
             {
                 _books = value;
                 LoaderVisible = true;
-                if (Books?.Count > 0)
+                if (Books?.Count > 0 && SearchText?.Length > 0)
                 {
                     LottieAnimationName = "Downloading_Files.json";
                     LoaderVisible = false;
                 }
-                else
+                else if(SearchText?.Length > 0)
                 {
                     LottieAnimationName = "Data_NotFound.json";
                     LoaderText = "OOPS !!!! We didnt found your book, Sorry !";
                 }
                 OnPropertyChanged(nameof(Books));
+            }
+        }
+
+        private ObservableCollection<BooksGroup> _booksGroup;
+        public ObservableCollection<BooksGroup> BooksGroup
+        {
+            get => _booksGroup;
+            set
+            {
+                _booksGroup = value;
+                OnPropertyChanged(nameof(_booksGroup));
             }
         }
 
@@ -55,6 +67,17 @@ namespace Library_Mangement.ViewModels
                 _loaderVisible = value;
                 HideCards = !value;
                 OnPropertyChanged(nameof(LoaderVisible));
+            }
+        }
+
+        private double _loaderPercent;
+        public double LoaderPercent
+        {
+            get => _loaderPercent;
+            set
+            {
+                _loaderPercent = value;
+                OnPropertyChanged(nameof(_loaderPercent));
             }
         }
 
@@ -141,8 +164,17 @@ namespace Library_Mangement.ViewModels
                     await LoaderMessage($"Fetched {allBooks.Count} Books From Database", 1300);
                     await LoaderMessage($"Arrenging Books Please Wait ....", 1300);
                     bookList = await LoadBooksFromTable(allBooks);
-                    if (bookList?.Count > 0)
-                        Books = new ObservableCollection<BooksPropertyModel>(bookList);
+
+                    //var catagorygroup = bookList.GroupBy(x => x.Catagory).ToList();
+                    //List<BooksGroup> booksList = new List<BooksGroup>();
+                    //foreach (var catagoryItem in catagorygroup)
+                    //{
+                    //    ObservableCollection<BooksPropertyModel> bookCatagory = new ObservableCollection<BooksPropertyModel>(catagoryItem);
+                    //    booksList.Add(new BooksGroup(catagoryItem.Key.ToString(), bookCatagory));
+                    //}
+                    //BooksGroup = new ObservableCollection<BooksGroup>(booksList);
+                    //if (bookList?.Count > 0)
+                    //    Books = new ObservableCollection<BooksPropertyModel>(bookList);
                     //await LoadFinalTextOfLoader();
                     LoaderVisible = false;
                 }
@@ -199,32 +231,35 @@ namespace Library_Mangement.ViewModels
             try
             {
                 int bookCount = 0;
-                if (Books != null) Books.Clear();
+                if (Books != null) Books.Clear(); else Books = new ObservableCollection<BooksPropertyModel>();
                                
                 foreach (var bookItem in allBooks)
                 {
-                    if (!File.Exists(bookItem.PngFilePath))
-                    {
-                        await RestService.DownloadFileFromURIAndSaveIt(bookItem.PngFilePath, bookItem.PngFilePath);
-                    }
                     BooksPropertyModel book = new BooksPropertyModel()
                     {
                         ISBN = bookItem.ISBN,
-                        Book_ImageSource = bookItem.IsCoverAvailable ? bookItem.PngFilePath : "PlaceHolder.png",
+                        Catagory = bookItem.Categories,
+                        Auther = bookItem.Authors,
+                        PublishYear = bookItem.PublishedDate,
+                        Book_ImageSource = File.Exists(bookItem.PngFilePath) ? bookItem.PngFilePath : "No_Thumb.png",
                         IsCoverAvailable = bookItem.IsCoverAvailable,
                         PageCount = bookItem.PageCount,
                         Title = bookItem.Title,
                     };
-                    if(bookCount == allBooks.Count-1)
+                    SetProgressBarValue(bookCount, allBooks.Count);
+                    if (bookCount == allBooks.Count-1)
                     {
                         await LoaderMessage($"Loading...", 0);
+                        
                     }
                     else
                     {
                         await LoaderMessage($"Added Books To View {bookCount} out of {allBooks.Count}", 10);
                     }
                     bookCount++;
+                    Books.Add(book);
                     books.Add(book);
+                    
                 }
             }
             catch (Exception ex)
@@ -233,6 +268,18 @@ namespace Library_Mangement.ViewModels
             }
             return books;
         }
+
+        private void SetProgressBarValue(int i, int count)
+        {
+            double runtimePercent = 0.0;
+            double percentValue = count / 100;
+            if (percentValue > 0)
+            {
+                runtimePercent = i / percentValue;
+            }
+            LoaderPercent = runtimePercent;
+        }
+
         private async Task LoadFinalTextOfLoader()
         {
             try
@@ -268,7 +315,7 @@ namespace Library_Mangement.ViewModels
         private async Task LoaderMessage(string loaderText, int timeDeley, bool isStopLoader = false)
         {
             LoaderText = $"{loaderText}";
-            if (timeDeley > 0 && AppConfig.isAwaitTimeNeeds)
+            if (timeDeley > 0)
             {
                 await Task.Delay(timeDeley);
             }

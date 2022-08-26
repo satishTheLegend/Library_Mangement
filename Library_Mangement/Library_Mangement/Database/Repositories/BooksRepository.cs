@@ -50,7 +50,7 @@ namespace Library_Mangement.Database.Repositories
 
         public async Task<List<tblBook>> GetDataAsync()
         {
-            return await _conn.Table<tblBook>().Where(x=> x.Id < 100).ToListAsync();
+            return await _conn.Table<tblBook>().ToListAsync();
         }
 
         public async Task<int> InsertAsync(tblBook entity)
