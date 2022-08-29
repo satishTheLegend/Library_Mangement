@@ -45,6 +45,9 @@
                         <Image Source="explore_books.png" WidthRequest="25"/>
                         <Label Text="Explore The Books" TextColor="White" FontSize="14" 
                                            VerticalOptions="Center"/>
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="ExploreBooksCommand" NumberOfTapsRequired="1"/>
+                        </StackLayout.GestureRecognizers>
                     </StackLayout>
                 </pv:PancakeView>
                 <pv:PancakeView Padding="20,10" CornerRadius="20,0,20,0" BackgroundColor="#0055FF" HorizontalOptions="FillAndExpand" VerticalOptions="Start">

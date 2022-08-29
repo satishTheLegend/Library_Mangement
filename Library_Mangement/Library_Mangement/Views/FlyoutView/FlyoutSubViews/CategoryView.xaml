@@ -7,20 +7,24 @@
             <StackLayout>
                 <Label Text="Hello World"/>
                 <FlexLayout Padding="10" BindableLayout.ItemsSource="{Binding Catagories}" AlignContent="Start" AlignItems="Start" Direction="Column" JustifyContent="Start" Wrap="Wrap">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
                             <Frame x:Name="CatagoryFrame" BackgroundColor="LightGray" Padding="15" CornerRadius="10">
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding CatagorySelectionCommand}" NumberOfTapsRequired="1" CommandParameter="{x:Reference CatagoryFrame}" />
                                 </Frame.GestureRecognizers>
-                                <Grid ColumnDefinitions="2*,5*,3*" VerticalOptions="CenterAndExpand">
-                                    <Image Grid.Column="0" HorizontalOptions="StartAndExpand" Source="{Binding CategoryImage}" HeightRequest="40"/>
-                                    <Label Grid.Column="1" HorizontalOptions="StartAndExpand" Text="{Binding CategoryName}" FontSize="Medium" FontAttributes="Bold" VerticalOptions="CenterAndExpand" />
-                                    <Image Grid.Column="2" Margin="40,0,0,0" Source="right_arrow.png" HeightRequest="40"/>
-                                </Grid>
-                            </Frame>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
+                            <Grid ColumnDefinitions="2*,5*,3*" VerticalOptions="CenterAndExpand">
+                                <Image Grid.Column="0" HorizontalOptions="StartAndExpand" Source="{Binding CategoryImage}" HeightRequest="40"/>
+                                <Label Grid.Column="1" HorizontalOptions="StartAndExpand" Text="{Binding CategoryName}" FontSize="Medium" FontAttributes="Bold" VerticalOptions="CenterAndExpand" />
+                                <Image Grid.Column="2" Margin="40,0,0,0" Source="right_arrow.png" HeightRequest="40"/>
+                            </Grid>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer  Command="{Binding BindingContext.CatagorySelectionCommand, Source={x:Reference Name=CatView}}" 
+                                                   BindingContext="{Binding Source={x:Reference  Name=CatagoryFrame}}" CommandParameter="{x:Reference CatagoryFrame}" />
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
                 </FlexLayout>
             </StackLayout>
           

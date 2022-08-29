@@ -167,6 +167,11 @@ namespace Library_Mangement.ViewModels
                     bookList = await LoadBooksFromTable(allBooks);
                     LoaderVisible = false;
                 }
+                else
+                {
+                    LottieAnimationName = "Data_NotFound.json";
+                    LoaderText = "OOPS !!!! We didnt found your books, We are working on it !";
+                }
             }
             catch (Exception ex)
             {
