@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-             xmlns:controls="clr-namespace:Library_Mangement.Controls"
-             xmlns:templates="clr-namespace:Library_Mangement.Views.Cards"
+             xmlns:controls="clr-namespace:Library_Mangement.Controls" BackgroundImageSource="Screen_1.jpg" NavigationPage.HasNavigationBar="False"
+             xmlns:templates="clr-namespace:Library_Mangement.Views.Cards" x:Name="booksView"
              x:Class="Library_Mangement.Views.BooksView">
     <ContentPage.Content>
         <AbsoluteLayout>
-            <Grid RowDefinitions=".5*,9*">
-                <Frame Grid.Row="0" CornerRadius="50" Padding="0" Margin="10,10,10,0" BorderColor="White"  BackgroundColor="Transparent">
-                    <SearchBar Text="{Binding SearchText}" SearchCommand="{Binding SearchCommand}" CancelButtonColor="White"  TextChanged="SearchBar_TextChanged"  Keyboard="Chat"></SearchBar>
+            <Grid RowDefinitions=".4*,9*">
+                <Frame Grid.Row="0" CornerRadius="50" Padding="0" Margin="10" BorderColor="White"  BackgroundColor="Transparent">
+                    <SearchBar Text="{Binding SearchText}" SearchCommand="{Binding SearchCommand}" CancelButtonColor="White" HeightRequest="40" TextChanged="SearchBar_TextChanged"  Keyboard="Chat"></SearchBar>
                 </Frame>
                 <Grid Grid.Row="1">
                     <controls:Loader VerticalOptions="StartAndExpand" AnimationAssetFileName="{Binding LottieAnimationName}" IsVisible="{Binding LoaderVisible}" LoaderProgress="{Binding LoaderPercent}" LoaderText="{Binding LoaderText}" LoaderBackgroundOpacity="0.5" LoaderBackgroundColor="Transparent" LoaderTextColor="White"></controls:Loader>
                     <ScrollView>
-                        <templates:BookUICard IsVisible="{Binding HideCards}" ParentBindingContext="{Binding Path=BindingContext,Source={x:Reference homeView}}"/>
+                        <templates:BookUICard IsVisible="{Binding HideCards}" ParentBindingContext="{Binding Path=BindingContext,Source={x:Reference booksView}}"/>
                     </ScrollView>
                 </Grid>
             </Grid>

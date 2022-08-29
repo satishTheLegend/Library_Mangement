@@ -70,7 +70,7 @@ namespace Library_Mangement
                     }
                     else
                     {
-                        MainPage = new NavigationPage(new CategoryView());
+                        MainPage = new NavigationPage(new DashboardFlyoutView());
                     }
                 }
                 else

@@ -20,6 +20,7 @@ namespace Library_Mangement.Views.FlyoutView.FlyoutSubViews
         #region Constructor
         public CategoryView()
         {
+            InitializeComponent();
             _vm = new CategoryViewModel();
             BindingContext = _vm;
         }

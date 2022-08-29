@@ -38,20 +38,6 @@ namespace Library_Mangement.Views
                 {
                     await _vm.LoadBooksInfo(catagoryBook);
                 }
-                _vm.LoaderVisible = true;
-                if (Application.Current.MainPage.Navigation.NavigationStack != null && Application.Current.MainPage.Navigation.NavigationStack.Count > 1)
-                {
-                    var existingPages = Application.Current.MainPage.Navigation.NavigationStack.ToList();
-                    foreach (var pageItem in existingPages)
-                    {
-                        bool flag = (pageItem is BooksView);
-                        if (!flag)
-                        {
-                            Application.Current.MainPage.Navigation.RemovePage(pageItem);
-                        }
-                    }
-                }
-                _vm.LoaderVisible = false;
             }
             catch (Exception ex)
             {

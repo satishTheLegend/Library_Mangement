@@ -34,7 +34,7 @@ namespace Library_Mangement.ViewModels
         #endregion
 
         #region Commands
-        public ICommand CatagorySelectionCommand = new Command((frame) => CatagorySelectionClicked(frame as Frame));
+        public ICommand CatagorySelectionCommand => new Command((frame) => CatagorySelectionClicked(frame as Frame));
         #endregion
 
         #region Event Handlers
@@ -52,17 +52,24 @@ namespace Library_Mangement.ViewModels
         public async Task ExploreBooks()
         {
             UserDialogs.Instance.ShowLoading();
-            var catList = await App.Database.CodesMaster.GetListByGroupName("Catagory");
-            List<Catagory> catagoryList = new List<Catagory>();
-            foreach (var catItem in catList)
+            try
             {
-                Catagory catagory = new Catagory()
+                var catList = await App.Database.CodesMaster.GetListByGroupName("Catagory");
+                List<Catagory> catagoryList = new List<Catagory>();
+                foreach (var catItem in catList)
                 {
-                    CategoryName = catItem.CodeName
-                };
-                catagoryList.Add(catagory);
+                    Catagory catagory = new Catagory()
+                    {
+                        CategoryName = catItem.CodeName
+                    };
+                    catagoryList.Add(catagory);
+                }
+                Catagories = new ObservableCollection<Catagory>(catagoryList);
             }
-            Catagories = new ObservableCollection<Catagory>(catagoryList);
+            catch (Exception ex)
+            {
+
+            }
             UserDialogs.Instance.HideLoading();
         }
         #endregion

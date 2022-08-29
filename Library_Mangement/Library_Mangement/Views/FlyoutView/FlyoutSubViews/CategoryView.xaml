@@ -1,16 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" NavigationPage.HasNavigationBar="False"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" NavigationPage.HasNavigationBar="False" x:Name="CatView"
              x:Class="Library_Mangement.Views.FlyoutView.FlyoutSubViews.CategoryView" BackgroundImageSource="Screen_1.jpg">
     <ContentPage.Content>
         <ScrollView>
-            <StackLayout>
-                <Label Text="Hello World"/>
-                <FlexLayout Padding="10" BindableLayout.ItemsSource="{Binding Catagories}" AlignContent="Start" AlignItems="Start" Direction="Column" JustifyContent="Start" Wrap="Wrap">
+            <StackLayout Spacing="10" Padding="10" BindableLayout.ItemsSource="{Binding Catagories}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                            <Frame x:Name="CatagoryFrame" BackgroundColor="LightGray" Padding="15" CornerRadius="10">
-                                <Grid ColumnDefinitions="2*,5*,3*" VerticalOptions="CenterAndExpand">
+                        <Frame x:Name="CatagoryFrame" BackgroundColor="AliceBlue" Opacity=".9" Padding="5" CornerRadius="20">
+                            <Grid ColumnDefinitions="2*,5*,3*" VerticalOptions="CenterAndExpand">
                                 <Image Grid.Column="0" HorizontalOptions="StartAndExpand" Source="{Binding CategoryImage}" HeightRequest="40"/>
                                 <Label Grid.Column="1" HorizontalOptions="StartAndExpand" Text="{Binding CategoryName}" FontSize="Medium" FontAttributes="Bold" VerticalOptions="CenterAndExpand" />
                                 <Image Grid.Column="2" Margin="40,0,0,0" Source="right_arrow.png" HeightRequest="40"/>
@@ -22,9 +20,7 @@
                         </Frame>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
-                </FlexLayout>
             </StackLayout>
-          
         </ScrollView>
     </ContentPage.Content>
 </ContentPage>
