@@ -5,7 +5,10 @@ using Library_Mangement.Resx;
 using Library_Mangement.Services;
 using Library_Mangement.Services.MediaServices;
 using Library_Mangement.Themes;
+using Library_Mangement.ViewModels;
 using Library_Mangement.Views;
+using Library_Mangement.Views.FlyoutView;
+using Library_Mangement.Views.FlyoutView.FlyoutSubViews;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -67,7 +70,7 @@ namespace Library_Mangement
                     }
                     else
                     {
-                        MainPage = new NavigationPage(new Dashboard());
+                        MainPage = new NavigationPage(new CategoryView());
                     }
                 }
                 else
@@ -75,6 +78,7 @@ namespace Library_Mangement
                     
                     //MainPage = new NavigationPage(new DevelopmentView());
                     MainPage = new NavigationPage(new SpalshView());
+                    //MainPage = new NavigationPage(new DashboardFlyoutView());
                     //MainPage = new NavigationPage(new CatagoryChips());
                 }
             }

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:sfavatar="clr-namespace:Syncfusion.XForms.AvatarView;assembly=Syncfusion.Core.XForms"
+             x:Class="Library_Mangement.Views.FlyoutView.DashboardFlyoutViewFlyout" NavigationPage.HasNavigationBar="False"
+             Title="MainPage" Shell.TabBarIsVisible="False">
+    <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <Image Aspect="AspectFill" Source="Screen_1.jpg" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+        <BoxView BackgroundColor="Black" Opacity="0.5"/>
+        <ListView x:Name="MenuItemsListView"
+              SeparatorVisibility="None"
+              HasUnevenRows="true"
+              ItemsSource="{Binding MenuItems}">
+            <ListView.Header>
+                <StackLayout Orientation="Horizontal" Padding="10" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                    <sfavatar:SfAvatarView Grid.Column="2" ContentType="Default" x:Name="UserPic"
+                                                           VerticalOptions="CenterAndExpand" 
+                                                           AvatarShape="Circle"
+                                                           AvatarSize="Large"
+                                                           BackgroundColor="Transparent"
+                                                           HorizontalOptions="Center"
+                                                           WidthRequest="100"
+                                                           HeightRequest="100"
+                                                           CornerRadius="25">
+                        <sfavatar:SfAvatarView.GestureRecognizers>
+                            <TapGestureRecognizer  />
+                        </sfavatar:SfAvatarView.GestureRecognizers>
+                    </sfavatar:SfAvatarView>
+                    <StackLayout Orientation="Vertical" WidthRequest="240" VerticalOptions="CenterAndExpand">
+                        <Label x:Name="UserName" TextColor="White" Margin="0,7,0,0" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" FontSize="Medium"/>
+                        <Label x:Name="UserPhone" TextColor="White" Padding="0" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" FontSize="Medium"/>
+                    </StackLayout>
+                </StackLayout>
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Padding="20,20,0,0" Orientation="Horizontal" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
+                            <Image Source="{Binding Icon}" HeightRequest="30" />
+                            <Label VerticalOptions="FillAndExpand" Margin="10,0,0,0"
+                                   VerticalTextAlignment="Center" 
+                                   Text="{Binding Title}" TextColor="AliceBlue"
+                                   FontSize="Medium"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentPage>

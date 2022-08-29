@@ -32,7 +32,6 @@ namespace Library_Mangement.Database.Repositories
         #region Public Methods
         public async Task<List<tblCodesMaster>> GetListByGroupName(string groupName)
         {
-            var list = await _conn.Table<tblCodesMaster>().ToListAsync();
             return await _conn.Table<tblCodesMaster>().Where(x=>x.GroupName == groupName).OrderBy(x=> x.CodeSeq).ToListAsync();
         }
         #endregion

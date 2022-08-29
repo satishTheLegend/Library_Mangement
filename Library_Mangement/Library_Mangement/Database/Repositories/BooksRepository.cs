@@ -29,7 +29,10 @@ namespace Library_Mangement.Database.Repositories
         #endregion
 
         #region Public Methods
-
+        public async Task<List<tblBook>> GetBooksByCatagory(string catagory)
+        {
+            return await _conn.Table<tblBook>().Where(x=> x.Title.Contains(catagory) || x.Categories.Contains(catagory)).ToListAsync();
+        }
         #endregion
 
         #region Implemented Methods
@@ -50,7 +53,7 @@ namespace Library_Mangement.Database.Repositories
 
         public async Task<List<tblBook>> GetDataAsync()
         {
-            return await _conn.Table<tblBook>().Where(x=> x.Id < 100).ToListAsync();
+            return await _conn.Table<tblBook>().ToListAsync();
         }
 
         public async Task<int> InsertAsync(tblBook entity)

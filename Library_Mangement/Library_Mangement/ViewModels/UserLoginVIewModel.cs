@@ -6,6 +6,7 @@ using Library_Mangement.Resx;
 using Library_Mangement.Services;
 using Library_Mangement.Validation;
 using Library_Mangement.Views;
+using Library_Mangement.Views.FlyoutView;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -66,7 +67,7 @@ namespace Library_Mangement.ViewModels
                     await SaveUserLogin(loginData);
                     Preferences.Set(AppConfig.UserPref_UserToken, loginData.userToken);
                     await App.Current.MainPage.DisplayAlert("", $"Welcome Back {loginData.firstName} {loginData.lastName}", AppResources.Ok);
-                    await App.Current.MainPage.Navigation.PushAsync(new Dashboard());
+                    await App.Current.MainPage.Navigation.PushAsync(new DashboardFlyoutView());
                 }
                 else
                 {

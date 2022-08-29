@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:dxe="http://schemas.devexpress.com/xamarin/2014/forms/editors"
+             xmlns:sfavatar="clr-namespace:Syncfusion.XForms.AvatarView;assembly=Syncfusion.Core.XForms" NavigationPage.HasNavigationBar="False"
+             x:Class="Library_Mangement.Views.FlyoutView.FlyoutSubViews.ProfileView" BackgroundImageSource="Screen_1.jpg">
+    <ContentPage.Content>
+        <ScrollView>
+            <Grid RowDefinitions="1.30*, 8.70*" Padding="0,10,0,0">
+                <!--<ImageButton Grid.Row="0" BackgroundColor="Transparent" Command="{Binding ChangeProfileCommand}" VerticalOptions="Start" Source="{Binding profile.DefaultProfile}" HeightRequest="100"/>-->
+                <sfavatar:SfAvatarView Grid.Row="0" ContentType="Default"
+                                                           VerticalOptions="Start"
+                                                           AvatarShape="Circle"
+                                                           AvatarSize="ExtraLarge"
+                                                           BackgroundColor="Transparent"
+                                                           ImageSource="{Binding DefaultProfile}"
+                                                           HorizontalOptions="Center"
+                                                           WidthRequest="100"
+                                                           HeightRequest="100"
+                                                           CornerRadius="25">
+                    <sfavatar:SfAvatarView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ChangeProfileCommand}" />
+                    </sfavatar:SfAvatarView.GestureRecognizers>
+                </sfavatar:SfAvatarView>
+                <StackLayout Grid.Row="1" Margin="0,-70,0,0" Padding="0">
+                    <StackLayout x:Name="profileStack" VerticalOptions="StartAndExpand"/>
+                    <dxe:SimpleButton Text="Update" VerticalOptions="EndAndExpand" HeightRequest="40" Padding="0,-1,0,0" Command="{Binding UpdateUserCommand}" BackgroundColor="CornflowerBlue" 
+                                  CornerRadius="20" />
+                </StackLayout>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

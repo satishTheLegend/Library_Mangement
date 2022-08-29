@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:sfavatar="clr-namespace:Syncfusion.XForms.AvatarView;assembly=Syncfusion.Core.XForms" xmlns:pv="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             x:Class="Library_Mangement.Views.FlyoutView.DashboardFlyoutViewDetail" BackgroundImageSource="Screen_1.jpg" Title="Detail" BackgroundColor="Transparent" NavigationPage.HasNavigationBar="False" Shell.PresentationMode="ModalAnimated">
+    <StackLayout Padding="0">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" ColumnDefinitions="1.3*,8.8*,1.3*" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Padding="0,10,0,0" HeightRequest="40">
+                <Image Grid.Column="0" Source="logo.png" HeightRequest="100">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer /> 
+                    </Image.GestureRecognizers>
+                </Image>
+                <Frame Grid.Column="1" Padding="0" BackgroundColor="LightGray" BorderColor="White" CornerRadius="15">
+                    <!--<SearchBar CancelButtonColor="White" TextColor="Black" Focused="SearchBar_Focused" Unfocused="SearchBar_Unfocused"/>-->
+                </Frame>
+                <!--<Image Grid.Column="2" Source="{Binding dashboard.ProfileImage}" HeightRequest="36"/>-->
+                <sfavatar:SfAvatarView Grid.Column="2" ContentType="Default" x:Name="profileView"
+                                                           VerticalOptions="Start" 
+                                                           AvatarShape="Circle"
+                                                           AvatarSize="Large"
+                                                           BackgroundColor="Transparent"
+                                                           HorizontalOptions="Center"
+                                                           WidthRequest="100"
+                                                           HeightRequest="100"
+                                                           CornerRadius="25">
+                    <sfavatar:SfAvatarView.GestureRecognizers>
+                        <TapGestureRecognizer  />
+                    </sfavatar:SfAvatarView.GestureRecognizers>
+                </sfavatar:SfAvatarView>
+            </Grid>
+            <StackLayout Grid.Row="1"  Padding="50,30">
+                <Label x:Name="UserData" TextColor="White" FontSize="22" FontAttributes="Bold"/>
+                <Label Text="What would you like to do today?" TextColor="White" FontSize="20"/>
+            </StackLayout>
+            <StackLayout Grid.Row="2"  Spacing="20" Padding="50,0,0,0">
+                <pv:PancakeView Padding="20,10" CornerRadius="20,0,20,0" BackgroundColor="#0055FF" 
+                                            HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+                    <StackLayout Spacing="20" Orientation="Horizontal">
+                        <Image Source="explore_books.png" WidthRequest="25"/>
+                        <Label Text="Explore The Books" TextColor="White" FontSize="14" 
+                                           VerticalOptions="Center"/>
+                    </StackLayout>
+                </pv:PancakeView>
+                <pv:PancakeView Padding="20,10" CornerRadius="20,0,20,0" BackgroundColor="#0055FF" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+                    <StackLayout Spacing="20" Orientation="Horizontal">
+                        <Image Source="borrow_books.png" WidthRequest="25"/>
+                        <Label Text="Borrow Books" TextColor="White" FontSize="14" VerticalOptions="Center"/>
+                    </StackLayout>
+                </pv:PancakeView>
+                <pv:PancakeView Padding="20,10" CornerRadius="20,0,20,0" BackgroundColor="#0055FF" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+                    <StackLayout Spacing="20" Orientation="Horizontal">
+                        <Image Source="view_downloaded_books.png" WidthRequest="25"/>
+                        <Label Text="View Downloaded Books" TextColor="White" FontSize="14" VerticalOptions="Center"/>
+                    </StackLayout>
+                </pv:PancakeView>
+            </StackLayout>
+            <!---->
+            <StackLayout Grid.Row="3" Padding="50,0" x:Name="overviewstack">
+                <Label Text="Over View" TextColor="White" FontSize="15" FontAttributes="Bold" />
+                <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <pv:PancakeView Padding="10" BackgroundColor="#ECF2FC" CornerRadius="15" HeightRequest="90">
+                        <Grid HorizontalOptions="FillAndExpand">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackLayout Orientation="Horizontal" Spacing="10">
+                                <Image Source="checkmark.png" HeightRequest="12"/>
+                                <Label Text="Borrow Books" TextColor="#8AB0FB" FontAttributes="Bold" FontSize="14" VerticalOptions="Center"/>
+                            </StackLayout>
+                            <Label Grid.Row="1" Text="2" Margin="10,0,0,0" TextColor="Black" FontAttributes="Bold" FontSize="25" VerticalOptions="End"/>
+                        </Grid>
+                    </pv:PancakeView>
+                    <pv:PancakeView Grid.Column="1" Padding="10" BackgroundColor="#ECF2FC" CornerRadius="15" HeightRequest="90">
+                        <Grid HorizontalOptions="FillAndExpand">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackLayout Orientation="Horizontal" Spacing="10">
+                                <Image Source="timelapse.png" HeightRequest="12"/>
+                                <Label Text="WishList" TextColor="#8AB0FB" FontAttributes="Bold" FontSize="14" VerticalOptions="Center"/>
+                            </StackLayout>
+                            <Label Grid.Row="1" Text="8" Margin="10,0,0,0" TextColor="Black" FontAttributes="Bold" FontSize="25" VerticalOptions="End"/>
+                        </Grid>
+                    </pv:PancakeView>
+                </Grid>
+            </StackLayout>
+        </Grid>
+    </StackLayout>
+</ContentPage>

@@ -3,18 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Library_Mangement.Views.Cards.BookUICard" x:Name="BooksList">
     <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-        <FlexLayout x:Name="itemData" BindableLayout.ItemsSource="{Binding booksView.Books}" AlignContent="Start" AlignItems="Start" Direction="Row" JustifyContent="Start" Wrap="Wrap">
+        <FlexLayout x:Name="itemData" BindableLayout.ItemsSource="{Binding Books}" AlignContent="Start" AlignItems="Start" Direction="Row" JustifyContent="Start" Wrap="Wrap">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
-                    <Frame x:Name="BooksData" WidthRequest="180" Padding="15,10,10,10" BackgroundColor="Transparent">
+                    <Frame x:Name="BooksData" WidthRequest="110" Padding="0" Margin="12,10" BackgroundColor="Transparent">
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer  Command="{Binding ParentBindingContext.OpenBookCommand, Source={x:Reference Name=BooksList}}" 
                                                    BindingContext="{Binding Source={x:Reference  Name=BooksData}}" CommandParameter="{x:Reference BooksData}" />
                         </Frame.GestureRecognizers>
                         <StackLayout>
-                            <Image Source="{Binding Book_ImageSource}" HeightRequest="221" BackgroundColor="Transparent"></Image>
-                            <Label Text="{Binding Title}" FontSize="Large" LineBreakMode="TailTruncation" HorizontalTextAlignment="Center" FontAttributes="Bold"></Label>
-                            <Label Text="{Binding Author}" FontSize="Small" HorizontalTextAlignment="Center" FontAttributes="Bold"></Label>
+                            <Image Source="{Binding Book_ImageSource}" HeightRequest="130" BackgroundColor="Transparent"></Image>
+                            <Label Text="{Binding Title}" FontSize="Small" TextColor="AliceBlue" LineBreakMode="TailTruncation" HorizontalTextAlignment="Center" FontAttributes="Bold"></Label>
                         </StackLayout>
                     </Frame>
                 </DataTemplate>

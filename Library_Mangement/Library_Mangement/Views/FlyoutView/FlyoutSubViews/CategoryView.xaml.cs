@@ -1,6 +1,4 @@
-﻿using Library_Mangement.Database.Models;
-using Library_Mangement.Model;
-using Library_Mangement.ViewModels;
+﻿using Library_Mangement.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,38 +8,30 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Library_Mangement.Views
+namespace Library_Mangement.Views.FlyoutView.FlyoutSubViews
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class BookView : ContentPage
+    public partial class CategoryView : ContentPage
     {
         #region Properties
-        public readonly BookViewModel _vm;
+        public readonly CategoryViewModel _vm;
         #endregion
 
         #region Constructor
-        public BookView()
+        public CategoryView()
         {
+            _vm = new CategoryViewModel();
             InitializeComponent();
-            _vm = new BookViewModel();
             BindingContext = _vm;
         }
         #endregion
 
-        #region Override
+        #region Override Methods
         protected async override void OnAppearing()
         {
+            await _vm.ExploreBooks();
             base.OnAppearing();
-            try
-            {
-                await _vm.LoadBooks();
-            }
-            catch (Exception ex)
-            {
-
-            }
         }
         #endregion
-
     }
 }

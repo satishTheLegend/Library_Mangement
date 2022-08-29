@@ -22,18 +22,25 @@ namespace Library_Mangement.Droid
         
         protected override async void OnCreate(Bundle savedInstanceState)
         {
-            IMediaService mediaService = new MediaService();
-            await TryToGetPermissions();
-            UserDialogs.Init(this);
-            Popup.Init(this);
-            base.OnCreate(savedInstanceState);
-            CrossCurrentActivity.Current.Init(this, savedInstanceState);
-            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            Lottie.Forms.Droid.AnimationViewRenderer.Init();
-            LoadApplication(new App(mediaService));
-            Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
-            StartMyRequestService();
+            try
+            {
+                IMediaService mediaService = new MediaService();
+                await TryToGetPermissions();
+                UserDialogs.Init(this);
+                Popup.Init(this);
+                base.OnCreate(savedInstanceState);
+                CrossCurrentActivity.Current.Init(this, savedInstanceState);
+                Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+                global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+                Lottie.Forms.Droid.AnimationViewRenderer.Init();
+                LoadApplication(new App(mediaService));
+                Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
+                StartMyRequestService();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public void StartMyRequestService()
