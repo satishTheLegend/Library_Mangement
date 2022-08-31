@@ -66,6 +66,10 @@ namespace Library_Mangement.ViewModels
                 {
                     await SaveUserLogin(loginData);
                     Preferences.Set(AppConfig.UserPref_UserToken, loginData.userToken);
+                    if(App.CurrentLoggedInUser != null && string.IsNullOrEmpty(App.CurrentLoggedInUser.UserID))
+                    {
+                        App.CurrentLoggedInUser.UserID = Guid.NewGuid().ToString();
+                    }
                     await App.Current.MainPage.DisplayAlert("", $"Welcome Back {loginData.firstName} {loginData.lastName}", AppResources.Ok);
                     await App.Current.MainPage.Navigation.PushAsync(new DashboardFlyoutView());
                 }
@@ -104,6 +108,7 @@ namespace Library_Mangement.ViewModels
                     RollNo = loginData.rollNo,
                     UserName = loginData.userName,
                     UserToken = loginData.userToken,
+                    UserID = loginData.userID,
                     LoginTime = DateTime.Now,
                     Gender = loginData.gender,
                     ProfilePicPath = profilePath,

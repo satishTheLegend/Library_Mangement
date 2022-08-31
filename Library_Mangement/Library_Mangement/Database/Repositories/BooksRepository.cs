@@ -33,6 +33,11 @@ namespace Library_Mangement.Database.Repositories
         {
             return await _conn.Table<tblBook>().Where(x=> x.Title.Contains(catagory) || x.Categories.Contains(catagory)).ToListAsync();
         }
+        public async Task<tblBook> GetBooksByISBN(string isbn)
+        {
+            return await _conn.Table<tblBook>().FirstOrDefaultAsync(x => x.ISBN == isbn);
+        }
+
         #endregion
 
         #region Implemented Methods
@@ -74,11 +79,6 @@ namespace Library_Mangement.Database.Repositories
         public Task<int> UpdateAsync(tblBook entity)
         {
             return _conn.UpdateAsync(entity);
-        }
-
-        public async Task<tblBook> GetBookByISBNId(string iSBN)
-        {
-            return await _conn.Table<tblBook>().FirstOrDefaultAsync(x => x.ISBN == iSBN);
         }
         #endregion
     }

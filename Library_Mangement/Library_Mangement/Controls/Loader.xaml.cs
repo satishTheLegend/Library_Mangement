@@ -128,6 +128,21 @@ namespace Library_Mangement.Controls
                                 defaultValue: Color.Gray,
                                 defaultBindingMode: BindingMode.TwoWay,
                                 propertyChanged: LoaderBackgroundColorPropertyChanged);
+        public int LoaderHeight
+        {
+            get => (int)GetValue(LoaderHeightProperty);
+            set => SetValue(LoaderHeightProperty, value);
+        }
+
+        public static BindableProperty LoaderHeightProperty = BindableProperty.Create(
+                                propertyName: "LoaderHeight",
+                                returnType: typeof(int),
+                                declaringType: typeof(Loader),
+                                defaultValue: 100,
+                                defaultBindingMode: BindingMode.TwoWay,
+                                propertyChanged: LoaderHeightPropertyChanged);
+
+       
 
         #endregion
 
@@ -159,6 +174,18 @@ namespace Library_Mangement.Controls
             }
         }
 
+        private static void LoaderHeightPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            try
+            {
+                var control = (Loader)bindable;
+                control.AnimatedLoaderText.HeightRequest = (int)newValue;
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
         private static void LoaderProgressPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var control = (Loader)bindable;

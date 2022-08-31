@@ -72,6 +72,7 @@ namespace Library_Mangement.Helper
         // App userDataResp Folder Names
         public const string DirName_Profile_Pic = "UserProfile";
         public const string DirName_Books_Thumbnails = "BookThumbnails";
+        public const string DirName_Books_PDFFiles = "OCLM_PDF";
 
         public class ValidateMessageType
         {

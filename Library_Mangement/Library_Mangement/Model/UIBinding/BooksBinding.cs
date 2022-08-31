@@ -17,7 +17,7 @@ namespace Library_Mangement.Model.UIBinding
             set
             {
                 _booksGroup = value;
-                OnPropertyChanged(nameof(_booksGroup));
+                OnPropertyChanged(nameof(BooksGroup));
             }
         }
         private List<BooksPropertyModel> _bookList;
@@ -27,7 +27,7 @@ namespace Library_Mangement.Model.UIBinding
             set
             {
                 _bookList = value;
-                OnPropertyChanged(nameof(_bookList));
+                OnPropertyChanged(nameof(bookList));
             }
         }
         private ObservableCollection<BooksPropertyModel> _books;

@@ -22,6 +22,8 @@ namespace Library_Mangement.Model.ApiResponse.GETModels
         public DateTime birthDate { get; set; }
         public DateTime userTokenCreatedDate { get; set; }
         public string userToken { get; set; }
+        public string userID { get; set; }
+
     }
 
     public class Login

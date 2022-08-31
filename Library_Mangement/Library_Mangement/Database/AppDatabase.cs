@@ -15,6 +15,8 @@ namespace Library_Mangement.Database
         readonly SettingsRepository _settingsRepository;
         readonly CodesMasterRepository _codesMaster;
         readonly LibraryDynamicFieldsRepository _libraryDynamicFields;
+        readonly BorrowBookRepository _borrowBook;
+        readonly AddToCartRepository _addToCart;
         public LogRepository Logs
         {
             get { return _logRepository; }
@@ -45,6 +47,14 @@ namespace Library_Mangement.Database
         {
             get { return _libraryDynamicFields; }
         }
+        public BorrowBookRepository BorrowBook
+        {
+            get { return _borrowBook; }
+        }
+         public AddToCartRepository AddToCart
+        {
+            get { return _addToCart; }
+        }
 
 
         #endregion
@@ -61,6 +71,8 @@ namespace Library_Mangement.Database
                 _settingsRepository = new SettingsRepository(dbPath);
                 _codesMaster = new CodesMasterRepository(dbPath);
                 _libraryDynamicFields = new LibraryDynamicFieldsRepository(dbPath);
+                _borrowBook = new BorrowBookRepository(dbPath);
+                _addToCart = new AddToCartRepository(dbPath);
             }
             catch (Exception ex)
             {

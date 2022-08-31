@@ -55,6 +55,10 @@ namespace Library_Mangement
             {
                 if (CurrentLoggedInUser != null)
                 {
+                    if (string.IsNullOrEmpty(CurrentLoggedInUser.UserID))
+                    {
+                        CurrentLoggedInUser.UserID = "0179cac1-86fa-4ebf-b4ee-5b5ccab1fdaf";
+                    }
                     bool sessionExpire = false;
                     var logInTime = App.CurrentLoggedInUser.LoginTime;
 

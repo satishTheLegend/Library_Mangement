@@ -12,6 +12,8 @@ using Library_Mangement.Model.ApiResponse.PostModels;
 using Library_Mangement.Model.ApiResponse;
 using static Library_Mangement.Services.FormUpload;
 using Library_Mangement.Helper;
+using Xamarin.Forms;
+using Library_Mangement.Services.PlatformServices;
 
 namespace Library_Mangement.Services
 {
@@ -117,7 +119,7 @@ namespace Library_Mangement.Services
             return directory;
         }
 
-        public static async Task<bool> DownloadUrlFiles(string fileUrl, string directory, string newFileName = null)
+        public static async Task<bool> DownloadUrlFiles(string fileUrl, string directory, string newFileName = null, bool isPDF = false)
         {
             try
             {
@@ -139,9 +141,22 @@ namespace Library_Mangement.Services
                         //ProgressEvent?.Invoke($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
                         ProgressEvent?.Invoke(progressPercentage);
                     };
+                    if(File.Exists(newFileName))
+                    {
+                        return true;
+                    }
                     await client.StartDownload();
-                    await Common.UnzipFileAsync(directory, new FileInfo(directory).Directory.FullName);
-                    File.Delete(directory);
+                    if(File.Exists(directory))
+                    {
+                        string DownloadPath = DependencyService.Get<IFileHelper>().GetPublicFolderPath();
+                        DownloadPath = Path.Combine(DownloadPath, newFileName);
+                        File.Copy(directory, DownloadPath);
+                    }
+                    if (isPDF)
+                    {
+                        await Common.UnzipFileAsync(directory, new FileInfo(directory).Directory.FullName);
+                        File.Delete(directory); 
+                    }
                     App.IsBusy = false;
                 }
             }

@@ -105,6 +105,9 @@
     <PackageReference Include="Syncfusion.Xamarin.SfListView">
       <Version>19.4.0.54</Version>
     </PackageReference>
+    <PackageReference Include="Syncfusion.Xamarin.SfPdfViewer">
+      <Version>19.4.0.54</Version>
+    </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.SfProgressBar">
       <Version>19.4.0.54</Version>
     </PackageReference>
@@ -301,6 +304,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\no_photos.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\cross_mark.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>

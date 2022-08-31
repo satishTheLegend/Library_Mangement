@@ -24,6 +24,7 @@
     <PackageReference Include="Syncfusion.Xamarin.Cards" Version="19.4.0.56" />
     <PackageReference Include="Syncfusion.Xamarin.SfComboBox" Version="20.2.0.40" />
     <PackageReference Include="Syncfusion.Xamarin.SfListView" Version="19.4.0.54" />
+    <PackageReference Include="Syncfusion.Xamarin.SfPdfViewer" Version="19.4.0.54" />
     <PackageReference Include="Syncfusion.Xamarin.SfProgressBar" Version="19.4.0.54" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
@@ -111,6 +112,9 @@
     <EmbeddedResource Update="Themes\Default.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\BookPDFView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\BooksView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -126,10 +130,37 @@
     <EmbeddedResource Update="Views\FlyoutView\DashboardFlyoutViewFlyout.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\FlyoutView\FlyoutSubViews\AccountSettingsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\FlyoutView\FlyoutSubViews\AppSettingsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\FlyoutView\FlyoutSubViews\CategoryView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\FlyoutView\FlyoutSubViews\HelpAndSupportView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\FlyoutView\FlyoutSubViews\ProfileView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\FlyoutView\FlyoutSubViews\MyBooksView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\FlyoutView\FlyoutSubViews\MyCartView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\FlyoutView\FlyoutSubViews\MyNotificationView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\FlyoutView\FlyoutSubViews\MyReviewsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\OpenBookView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\FlyoutView\FlyoutSubViews\WhishListView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\LandingView.xaml">

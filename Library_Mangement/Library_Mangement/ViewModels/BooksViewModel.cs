@@ -1,7 +1,9 @@
 ﻿using Library_Mangement.Database.Models;
 using Library_Mangement.Model;
 using Library_Mangement.Validation;
+using Library_Mangement.Views;
 using Library_Mangement.Views.Cards;
+using Library_Mangement.Views.FlyoutView;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -137,8 +139,8 @@ namespace Library_Mangement.ViewModels
             {
                 LoaderVisible = true;
                 await LoaderMessage($"Opening {bookData.Title}", 1500);
-                tblBook book = await App.Database.Book.GetBookByISBNId(bookData.ISBN);
-                //await App.Current.MainPage.Navigation.PushAsync(new BookView(book));
+                tblBook book = await App.Database.Book.GetBooksByISBN(bookData.ISBN);
+                await App.Current.MainPage.Navigation.PushAsync(new OpenBookView(book));
                 LoaderVisible = false;
             }
         }

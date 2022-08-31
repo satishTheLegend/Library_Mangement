@@ -12,6 +12,7 @@ namespace Library_Mangement.Database.Models
         [AutoIncrement]
         public long ID { get; set; }
         public long RollNo { get; set; }
+        public string UserID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string UserName { get; set; }
