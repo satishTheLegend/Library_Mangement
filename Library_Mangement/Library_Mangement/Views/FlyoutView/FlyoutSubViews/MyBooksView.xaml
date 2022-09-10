@@ -11,6 +11,7 @@
                              LoaderProgress="{Binding LoaderPercent}"></controls:Loader>
             <StackLayout x:Name="itemData" Padding="10" BackgroundColor="Yellow" IsVisible="{Binding FlexViewIsVisible}" BindableLayout.ItemsSource="{Binding MyBooks}">
                 <BindableLayout.ItemTemplate>
+                    
                     <DataTemplate>
                         <Frame x:Name="myBook"  CornerRadius="20" Padding="10" BackgroundColor="AliceBlue">
                             <Grid ColumnDefinitions="3*,7*">
