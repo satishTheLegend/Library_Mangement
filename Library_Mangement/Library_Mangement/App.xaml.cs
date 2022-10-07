@@ -31,7 +31,7 @@ namespace Library_Mangement
         public App(IMediaService mediaService)
         {
             MediaService = mediaService;
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NjAzMjM4QDMxMzkyZTM0MmUzMEZxVkRMK3NlSk0zamgxYi9NMFdnOURXRjFrci9IVkRNTDZ1M2ljT1BvY2M9");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Licence Here");
             InitializeComponent();
             RestServiceConnection = new RestService();
             DevExpress.XamarinForms.Editors.Initializer.Init();
