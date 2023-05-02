@@ -11,7 +11,7 @@
             <Grid Grid.Row="1">
                 <controls:Loader VerticalOptions="CenterAndExpand" AnimationAssetFileName="{Binding LottieAnimationName}" IsVisible="{Binding LoaderVisible}" LoaderText="{Binding LoaderText}" LoaderBackgroundOpacity="0.5" LoaderBackgroundColor="Transparent" LoaderTextColor="Black"></controls:Loader>
                 <ScrollView>
-                    <templates:BookUICard IsVisible="{Binding HideCards}" BindingContext="{Binding Path=BindingContext,Source={x:Reference homeView}}"/>
+                    <templates:BookUICard IsVisible="{Binding HideCards}" ParentBindingContext="{Binding Path=BindingContext,Source={x:Reference homeView}}"/>
                 </ScrollView>
             </Grid>
         </Grid>

@@ -207,6 +207,10 @@ namespace Library_Mangement.ViewModels
                     {
                         await RestService.DownloadFileFromURIAndSaveIt(bookItem.PngFilePath, bookItem.PngFilePath);
                     }
+                    if(!File.Exists(bookItem.PngFilePath))
+                    {
+                        continue;
+                    }
                     BooksPropertyModel book = new BooksPropertyModel()
                     {
                         ISBN = bookItem.ISBN,
@@ -225,6 +229,8 @@ namespace Library_Mangement.ViewModels
                     }
                     bookCount++;
                     Books.Add(book);
+                    if(Books?.Count == 100)
+                        return await Task.FromResult(books);
                 }
             }
             catch (Exception ex)
