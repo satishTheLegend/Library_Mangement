@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using static Java.Util.Jar.Attributes;
 
 namespace Library_Mangement.ViewModels
 {
@@ -173,7 +174,7 @@ namespace Library_Mangement.ViewModels
                     _isProgressCountVisible = true;
                     if (settingsItem.type == "Link" && !string.IsNullOrEmpty(settingsItem.value))
                     {
-                       if(await RestService.DownloadUrlFiles(settingsItem.value, bookThumbDirectoryPath, $"{settingsItem.key}.zip"))
+                       if(await RestService.DownloadFileWithProgressUpdated(settingsItem.value, bookThumbDirectoryPath, $"{settingsItem.key}.zip"))
                         {
                             tblSettings settings = new tblSettings()
                             {
@@ -181,17 +182,42 @@ namespace Library_Mangement.ViewModels
                                 Type = settingsItem.type,
                                 Value = settingsItem.value,
                             };
+                            await LoaderMessage($"Books Image Download Started", 0);
+                            if (File.Exists(Path.Combine(bookThumbDirectoryPath, $"{settingsItem.key}.zip")))
+                            {
+                                var FilePath = Path.Combine(bookThumbDirectoryPath, $"{settingsItem.key}.zip");
+                                await LoaderMessage($"Images Downloaded Successfully", 500);
+                                await LoaderMessage($"Extracting Images", 500);
+                                string thumbnailsFilePath = Common.GetBasePath("Thumbnails");
+                                var isAllFilesSaved = Common.UnzipFileAsync(FilePath, thumbnailsFilePath);
+                                await LoaderMessage($"Images Saved", 500);
+                            }
                             await App.Database.Settings.InsertAsync(settings);
                         }
                     }
                 }
 
+                // Get files path from zip file
+                var directoryPath = Common.GetBasePath("Thumbnails");
+                var thumbnailsPath = new string[] { };
+                if (Directory.Exists(directoryPath))
+                {
+                    //DirectoryInfo dir = new DirectoryInfo(directoryPath);
+                    thumbnailsPath = Directory.GetFiles(directoryPath, "*.*", SearchOption.AllDirectories);
+                }
+                int p = 0;
                 foreach (var bookItem in booksMaster.data)
                 {
-                    _isProgressCountVisible = false;
-                    string bookThumbPath = !string.IsNullOrEmpty(bookItem.pngLink) ? await RestService.DownloadFile(bookItem.pngLink, bookThumbDirectoryPath, bookItem.pngName) : string.Empty;
+                    string bookThumbPath = getBookPath(bookItem, thumbnailsPath);
+                    if(string.IsNullOrEmpty(bookThumbPath))
+                    {
+                        p++;
+                    }
+                    _isProgressCountVisible = false;                    
+                    //string bookThumbPath = !string.IsNullOrEmpty(bookItem.pngLink) ? await RestService.DownloadFile(bookItem.pngLink, bookThumbDirectoryPath, bookItem.pngName, true) : string.Empty;
                     _isProgressCountVisible = true;
 
+                   
                     tblBook bookRecord = new tblBook();
                     bookRecord.Title = bookItem.title;
                     bookRecord.ISBN = bookItem.isbn;
@@ -206,7 +232,7 @@ namespace Library_Mangement.ViewModels
                     bookRecord.PdfFilePath = "";
                     bookRecord.Authors = bookItem.authors;
                     bookRecord.Categories = bookItem.categories;
-                    bookRecord.IsCoverAvailable = !string.IsNullOrEmpty(bookRecord.PngFilePath) ? true : false;
+                    bookRecord.IsCoverAvailable = !string.IsNullOrEmpty(bookThumbPath)? true : false;
 
                     await App.Database.Book.InsertAsync(bookRecord);
                     await LoaderMessage($"Added Book Records {i} Out Of {booksMaster.data?.Count}.", 0);
@@ -269,10 +295,69 @@ namespace Library_Mangement.ViewModels
 
             }
         }
+
+        private string getBookPath(BooksMasterList bookItem, string[] thumbnailsPath)
+        {
+            foreach (var thumb in thumbnailsPath)
+            {
+                var book1Name = Path.GetFileNameWithoutExtension(thumb);
+                book1Name = book1Name.Replace(" ", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty).Replace("—", string.Empty).Replace("png", string.Empty);
+                if (!string.IsNullOrEmpty(book1Name) && book1Name.Contains("jpg"))
+                {
+                    book1Name = book1Name.Replace("jpg", string.Empty);
+                }
+                if (!string.IsNullOrEmpty(book1Name) && book1Name.Contains("png"))
+                {
+                    book1Name = book1Name.Replace("png", string.Empty);
+                }
+                if (!string.IsNullOrEmpty(book1Name) && book1Name.Contains("jpeg"))
+                {
+                    book1Name = book1Name.Replace("jpeg", string.Empty);
+                }
+                StringBuilder sb1 = new StringBuilder();
+                foreach (char c in book1Name)
+                {
+                    if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+                    {
+                        sb1.Append(c);
+                    }
+                }
+                book1Name = sb1.ToString().ToLower();
+                //////
+                //////
+                var bookName = bookItem.pngName.Replace(" ", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty).Replace("—", string.Empty);
+                if (!string.IsNullOrEmpty(bookName) && bookName.Contains("jpg"))
+                {
+                    bookName = bookName.Replace("jpg", string.Empty);
+                }
+                if (!string.IsNullOrEmpty(bookName) && bookName.Contains("png"))
+                {
+                    bookName = bookName.Replace("png", string.Empty);
+                }
+                if (!string.IsNullOrEmpty(bookName) && bookName.Contains("jpeg"))
+                {
+                    book1Name = bookName.Replace("jpeg", string.Empty);
+                }
+                StringBuilder sb = new StringBuilder();
+                foreach (char c in bookName)
+                {
+                    if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+                    {
+                        sb.Append(c);
+                    }
+                }
+                bookName = sb.ToString().ToLower();
+                if (book1Name.Contains(bookName))
+                {
+                    return thumb;
+                }
+            }
+            return string.Empty;
+        }
         #endregion
 
         #region Private Methods
-       
+
         private void RestServiceConnection_ProgressEvent(double? value)
         {
             if(_isProgressCountVisible)

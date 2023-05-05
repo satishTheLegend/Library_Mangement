@@ -1,5 +1,7 @@
 ﻿using Library_Mangement.Database.Models;
+using Library_Mangement.Helper;
 using Library_Mangement.Model;
+using Library_Mangement.Services;
 using Library_Mangement.Validation;
 using Library_Mangement.Views;
 using Library_Mangement.Views.Cards;
@@ -65,6 +67,17 @@ namespace Library_Mangement.ViewModels
             }
         }
 
+        private string _catagoryBook;
+        public string CatagoryBook
+        {
+            get => _catagoryBook;
+            set
+            {
+                _catagoryBook = value;
+                OnPropertyChanged(nameof(CatagoryBook));
+            }
+        }
+
         private double _loaderPercent;
         public double LoaderPercent
         {
@@ -122,7 +135,7 @@ namespace Library_Mangement.ViewModels
         #region Contructor
         public BooksViewModel()
         {
-
+            CatagoryBook = "Books";
         }
         #endregion
 
@@ -151,6 +164,7 @@ namespace Library_Mangement.ViewModels
         {
             try
             {
+                CatagoryBook = catagoryBook;
                 LoaderVisible = true;
                 await LoaderMessage($"Getting Books From Database", 1300);
                 List<tblBook> allBooks = null;
@@ -228,9 +242,11 @@ namespace Library_Mangement.ViewModels
             {
                 int bookCount = 0;
                 if (Books != null) Books.Clear(); else Books = new ObservableCollection<BooksPropertyModel>();
-
+                string bookThumbDirectoryPath = Common.GetBasePath(AppConfig.DirName_Books_Thumbnails);
                 foreach (var bookItem in allBooks)
                 {
+                    //string bookThumbPath = !File.Exists(bookItem.PngFilePath) ? await RestService.DownloadFile(bookItem.PngLink, bookThumbDirectoryPath, bookItem.PngName, true, true) : string.Empty;
+
                     BooksPropertyModel book = new BooksPropertyModel()
                     {
                         ISBN = bookItem.ISBN,

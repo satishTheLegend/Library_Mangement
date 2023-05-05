@@ -14,6 +14,7 @@ using static Library_Mangement.Services.FormUpload;
 using Library_Mangement.Helper;
 using Xamarin.Forms;
 using Library_Mangement.Services.PlatformServices;
+using System.Linq;
 
 namespace Library_Mangement.Services
 {
@@ -74,7 +75,67 @@ namespace Library_Mangement.Services
         }
 
         #region Download File From URI
-        public static async Task<string> DownloadFile(string fileUrl, string directory, string newFileName = null, bool isFileDownload = false)
+
+        public static async Task<bool> DownloadFileWithProgressUpdated(string fileUrl, string directory, string newFileName = null)
+        {
+            if (!string.IsNullOrEmpty(newFileName))
+            {
+                directory = Path.Combine(directory, newFileName);
+            }
+            else
+            {
+                directory = Path.Combine(directory, Path.GetFileName(fileUrl));
+            }
+            if (Directory.Exists(directory))
+            {
+                Directory.Delete(directory, true);
+            }
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(fileUrl, HttpCompletionOption.ResponseHeadersRead))
+                {
+                    response.EnsureSuccessStatusCode();
+
+                    var totalBytes = response.Content.Headers.ContentLength.HasValue ? response.Content.Headers.ContentLength.Value : -1L;
+                    var canReportProgress = totalBytes != -1 && totalBytes != 0;
+
+                    using (var contentStream = await response.Content.ReadAsStreamAsync())
+                    {
+                        var buffer = new byte[4096];
+                        var readBytes = 0L;
+                        var readBytesThisIteration = 0L;
+
+                        using (var fileStream = new FileStream(directory, FileMode.Create, FileAccess.Write))
+                        {
+                            do
+                            {
+                                readBytesThisIteration = await contentStream.ReadAsync(buffer, 0, buffer.Length);
+
+                                await fileStream.WriteAsync(buffer, 0, (int)readBytesThisIteration);
+
+                                readBytes += readBytesThisIteration;
+
+                                if (canReportProgress)
+                                {
+                                    var progress = (int)(readBytes * 100 / totalBytes);
+                                    OnDownloadProgressChanged(progress);
+                                }
+                            } while (readBytesThisIteration != 0);
+                            fileStream.Flush();
+                            fileStream.Close();
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        private static void OnDownloadProgressChanged(int progress)
+        {
+            ProgressEvent?.Invoke(progress);
+        }
+
+        public static async Task<string> DownloadFile(string fileUrl, string directory, string newFileName = null, bool isFileDownload = false, bool isAwaitable = false)
         {
             try
             {
@@ -87,7 +148,12 @@ namespace Library_Mangement.Services
                     directory = Path.Combine(directory, Path.GetFileName(fileUrl));
                 }
                 //Task.Run(async () => await DownloadFileFromURIAndSaveIt(fileUrl, directory));
-                if (isFileDownload)
+                if (isFileDownload && !isAwaitable)
+                {
+                    Task.Run(async () => await DownloadFileFromURIAndSaveIt(fileUrl, directory));
+                    //await DownloadFileFromURIAndSaveIt(fileUrl, directory);
+                }
+                else
                 {
                     await DownloadFileFromURIAndSaveIt(fileUrl, directory);
                 }
@@ -118,7 +184,65 @@ namespace Library_Mangement.Services
             }
             return directory;
         }
+        public static async Task<bool> DownloadFileWithProgress(string fileUrl, string directory, string newFileName = null)
+        {
+            if (!string.IsNullOrEmpty(newFileName))
+            {
+                directory = Path.Combine(directory, newFileName);
+            }
+            else
+            {
+                directory = Path.Combine(directory, Path.GetFileName(fileUrl));
+            }
+            if(Directory.Exists(directory))
+            {
+                Directory.Delete(directory, true);
+            }
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    var response = await httpClient.GetAsync(fileUrl, HttpCompletionOption.ResponseHeadersRead);
+                    var contentLength = response.Content.Headers.ContentLength;
+                    var buffer = new byte[1024];
+                    var downloadedBytes = 0;
+                    long percentValue = 0;
+                    if (contentLength.HasValue)
+                    {
+                        percentValue = contentLength.Value / 100;
+                    }
+                    using (var fileStream = new FileStream(directory, FileMode.Create, FileAccess.Write, FileShare.None))
+                    using (var stream = await response.Content.ReadAsStreamAsync())
+                    {
+                        while (true)
+                        {
+                            var bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
 
+                            if (bytesRead == 0)
+                            {
+                                break;
+                            }
+
+                            downloadedBytes += bytesRead;
+                            await fileStream.WriteAsync(buffer, 0, bytesRead);
+
+                            if (contentLength.HasValue)
+                            {
+                                var progress = (double)downloadedBytes / percentValue;
+                                ProgressEvent?.Invoke(progress);
+                                // Update progress bar or display progress percentage
+                            }
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
         public static async Task<bool> DownloadUrlFiles(string fileUrl, string directory, string newFileName = null, bool isPDF = false)
         {
             try
@@ -143,7 +267,7 @@ namespace Library_Mangement.Services
                     };
                     if(File.Exists(newFileName))
                     {
-                        return true;
+                        await Task.FromResult(true);
                     }
                     await client.StartDownload();
                     if(File.Exists(directory))
@@ -162,9 +286,9 @@ namespace Library_Mangement.Services
             }
             catch (Exception ex)
             {
-                return false;
+                return await Task.FromResult(false); 
             }
-            return true;
+            return await Task.FromResult(true);
         }
 
         public static async Task<bool> DownloadFileFromURIAndSaveIt(string fileUrl, string directory)

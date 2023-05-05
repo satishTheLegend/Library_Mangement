@@ -27,7 +27,8 @@ namespace Library_Mangement.Views.FlyoutView
             {
                 UserName.Text = $"{App.CurrentLoggedInUser.FirstName} {App.CurrentLoggedInUser.LastName}";
                 UserPhone.Text = $"+91 {App.CurrentLoggedInUser.Phone}";
-                UserPic.ImageSource = App.CurrentLoggedInUser.ProfilePicPath;
+                UserPic.ImageSource = App.CurrentLoggedInUser != null ? App.CurrentLoggedInUser.ProfilePicPath : "user.png";
+
             }
             ListView = MenuItemsListView;
         }
@@ -51,7 +52,7 @@ namespace Library_Mangement.Views.FlyoutView
                     new DashboardFlyoutViewFlyoutMenuItem{  Id = 9, Title = "My Reviews", Icon = "rating.png", TargetType = typeof(MyReviewsView)},
                     new DashboardFlyoutViewFlyoutMenuItem{  Id = 10, Title = "App Settings", Icon = "AppSettings.png", TargetType = typeof(AppSettingsView)},
                     new DashboardFlyoutViewFlyoutMenuItem{  Id = 11, Title = "Help Support", Icon = "support.png", TargetType = typeof(HelpAndSupportView)},
-                    new DashboardFlyoutViewFlyoutMenuItem{  Id = 12, Title = "Logout", Icon = "logout.png"},
+                    new DashboardFlyoutViewFlyoutMenuItem{  Id = 12, Title = "Logout", Icon = "logout.png", TargetType = typeof(UserLogin)},
                 });
             }
 

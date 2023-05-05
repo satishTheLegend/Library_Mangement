@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:dxe="http://schemas.devexpress.com/xamarin/2014/forms/editors" xmlns:controls="clr-namespace:Library_Mangement.Controls" NavigationPage.HasNavigationBar="False"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:dxe="http://schemas.devexpress.com/xamarin/2014/forms/editors" 
+             xmlns:controls="clr-namespace:Library_Mangement.Controls" NavigationPage.HasNavigationBar="True"
              BackgroundImageSource="Screen_1" Opacity="0.9"
              x:Class="Library_Mangement.Views.FlyoutView.FlyoutSubViews.MyCartView">
     <ContentPage.Content>

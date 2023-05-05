@@ -86,26 +86,40 @@ namespace Library_Mangement.Database.Repositories
         public async Task<int> InsertAsync(tblUser entity)
         {
             int res = 0;
-            var previousLoggedInUser = await _conn.Table<tblUser>().Where(x => x.IsActiveUser).ToListAsync();
-            await LogoutOldUsers(previousLoggedInUser);
-            var user = await _conn.Table<tblUser>().FirstOrDefaultAsync(x => x.Email == entity.Email);
-            if(user == null)
+            try
             {
-                res = await _conn.InsertAsync(entity);
+                var previousLoggedInUser = await _conn.Table<tblUser>().Where(x => x.IsActiveUser).ToListAsync();
+                await LogoutOldUsers(previousLoggedInUser);
+                var user = await _conn.Table<tblUser>().FirstOrDefaultAsync(x => x.Email == entity.Email);
+                if (user == null)
+                {
+                    res = await _conn.InsertAsync(entity);
+                }
+                else
+                {
+                    res = await UpdateAsync(entity);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                res = await UpdateAsync(entity);
+
             }
             return res;
         }
 
         private async Task LogoutOldUsers(List<tblUser> previousLoggedInUser)
         {
-            foreach (var UserItem in previousLoggedInUser)
+            try
             {
-                UserItem.IsActiveUser = false;
-                await UpdateAsync(UserItem);
+                foreach (var UserItem in previousLoggedInUser)
+                {
+                    UserItem.IsActiveUser = false;
+                    await UpdateAsync(UserItem);
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 

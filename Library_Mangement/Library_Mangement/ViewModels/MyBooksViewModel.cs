@@ -129,20 +129,27 @@ namespace Library_Mangement.ViewModels
                 if (bookDetails != null)
                 {
                     var bookData = await App.Database.Book.GetBooksByISBN(bookDetails.BookISBN);
-                    if (bookData != null && !string.IsNullOrEmpty(bookData.PdfFilePath))
+                    if (bookData != null && !string.IsNullOrEmpty(bookData.PdfFilePath) && File.Exists(bookData.PdfFilePath))
                     {
                         await LoaderMessage($"Opening Book, Please Wait", 200);
-                        await App.Current.MainPage.Navigation.PushAsync(new BookPDFView(bookData.PdfFilePath));
+                        await App.Current.MainPage.Navigation.PushAsync(new BookPDFView(bookData.PdfLink, bookData.Title));
                     }
                     else
                     {
                         await LoaderMessage($"Downloading Your Book !!!", 200);
                         string bookpdfDirectoryPath = Common.GetBasePath(AppConfig.DirName_Books_PDFFiles);
-                        if (await RestService.DownloadUrlFiles(bookData.PdfLink, bookpdfDirectoryPath, $"{bookData.PdfName}.pdf", true))
+                        if (await RestService.DownloadFileWithProgressUpdated(bookData.PdfLink, bookpdfDirectoryPath, $"{bookData.PdfName}.pdf"))
                         {
                             bookData.PdfFilePath = Path.Combine(bookpdfDirectoryPath, $"{bookData.PdfName}.pdf");
-                            await App.Database.Book.InsertAsync(bookData);
-                            await App.Current.MainPage.Navigation.PushAsync(new BookPDFView(bookData.PdfFilePath));
+                            if(File.Exists(bookData.PdfFilePath))
+                            {
+                                await App.Database.Book.InsertAsync(bookData);
+                                await App.Current.MainPage.Navigation.PushAsync(new BookPDFView(bookData.PdfLink, bookData.Title));
+                            }
+                            else
+                            {
+                                UserDialogs.Instance.Toast($"{bookData.Title} unable to download !!! Please try again");
+                            }
                         }
                         else
                         {
@@ -182,6 +189,7 @@ namespace Library_Mangement.ViewModels
                     var bookData = await App.Database.Book.GetBooksByISBN(myBookItem.BookISBN);
                     BookActionBinding bookAction = new BookActionBinding();
                     bookAction.BookAuther = bookData != null ? bookData.Authors : "Auther: NA";
+                    bookAction.BookTitle = bookData != null ? bookData.Title : "Title: NA";
                     bookAction.BookImage = bookData != null && File.Exists(bookData.PngFilePath) ? bookData.PngFilePath : "No_Thumb.png";
                     bookAction.BookIssueDate = bookData != null ? $"Issue Date: {bookData.PublishedDate}" : "Issue Date: NA";
                     bookAction.BookReturnDate = bookData != null ? $"Return Date: {bookData.PublishedDate}" : "Return Date: NA";

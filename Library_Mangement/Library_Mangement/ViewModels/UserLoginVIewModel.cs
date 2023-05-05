@@ -62,7 +62,7 @@ namespace Library_Mangement.ViewModels
             {
                 var resp = await RestService.LoginAsync(UserName, Password);
                 var loginData = resp.Result.data;
-                if (loginData != null)
+                if (loginData != null && resp.Result.statusCode == 200)
                 {
                     await SaveUserLogin(loginData);
                     Preferences.Set(AppConfig.UserPref_UserToken, loginData.userToken);

@@ -16,17 +16,18 @@ namespace Library_Mangement.Views
     {
 
         #region Properties
-        public readonly BookPDFViewModel _vm;
+        //public readonly BookPDFViewModel _vm;
         public string _pdfFilePath = string.Empty;
         #endregion
 
         #region Constructor
-        public BookPDFView(string pdfFilePath)
+        public BookPDFView(string pdfFilePath, string bookName)
         {
-            _pdfFilePath = pdfFilePath;
             InitializeComponent();
-            _vm = new BookPDFViewModel();
-            BindingContext = _vm;
+            _pdfFilePath = pdfFilePath;
+            this.Title = bookName;
+            //_vm = new BookPDFViewModel();
+            //BindingContext = _vm;
         }
         #endregion
 
@@ -35,7 +36,10 @@ namespace Library_Mangement.Views
         {
             UserDialogs.Instance.ShowLoading("Opening File");
             base.OnAppearing();
-            await _vm.LoadPdfFromPath(_pdfFilePath);
+            _pdfFilePath = _pdfFilePath.Replace("https://drive.google.com/u/0/uc?id=", "https://drive.google.com/file/d/");
+            _pdfFilePath = _pdfFilePath.Replace("&export=download", "/view");
+            pdfWebView.Source = _pdfFilePath;
+            //await _vm.LoadPdfFromPath(_pdfFilePath);
             UserDialogs.Instance.HideLoading();
         }
         #endregion

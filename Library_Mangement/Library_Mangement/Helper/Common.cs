@@ -165,24 +165,33 @@ namespace Library_Mangement.Helper
             return isFailedValidated;
         }
 
-        public static string GetBasePath(string type)
+        public static string GetBasePath(string type = null)
         {
             string dir = "";
             try
             {
-                string basePath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Personal)}";
+                string basePath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)}";
                 //string basePath = $"{DependencyService.Get<IFileHelper>().GetPublicFolderPath()}";
                 switch (AppInfo.PackageName)
                 {
                     case AppConfig.AppPackage_Development:
+                        if(string.IsNullOrEmpty(type))
+                            dir = Path.Combine(basePath, AppConfig.AppName, "D");
+                        else
                         dir = Path.Combine(basePath, AppConfig.AppName, "D", type);
                         break;
 
                     case AppConfig.AppPackage_Staging:
-                        dir = Path.Combine(basePath, AppConfig.AppName, "S", type);
+                        if (string.IsNullOrEmpty(type))
+                            dir = Path.Combine(basePath, AppConfig.AppName, "S");
+                        else
+                            dir = Path.Combine(basePath, AppConfig.AppName, "S", type);
                         break;
 
                     case AppConfig.AppPackage_Production:
+                         if(string.IsNullOrEmpty(type))
+                            dir = Path.Combine(basePath, AppConfig.AppName, "P");
+                        else
                         dir = Path.Combine(basePath, AppConfig.AppName, "P", type);
                         break;
                 }

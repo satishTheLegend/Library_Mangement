@@ -49,10 +49,18 @@ namespace Library_Mangement.ViewModels
         #region Public Methods
         public async Task LoadPdfFromPath(string pdfFilePath)
         {
-            if(File.Exists(pdfFilePath))
-            {
-                PdfDocumentStream = File.OpenRead(pdfFilePath);
-            }
+            pdfFilePath = pdfFilePath.Replace("https://drive.google.com/u/0/uc?id=", "https://drive.google.com/file/d/");
+            pdfFilePath = pdfFilePath.Replace("&export=download", "/view");
+            PdfDocumentStream = File.OpenRead(pdfFilePath);
+            //if (File.Exists(pdfFilePath))
+            //{
+                
+            //}
+            //else
+            //{
+            //    await App.Current.MainPage.DisplayAlert("Error", "File not found", "OK");
+            //    await App.Current.MainPage.Navigation.PopAsync();
+            //}
             await Task.FromResult(Task.CompletedTask);
         }
         #endregion

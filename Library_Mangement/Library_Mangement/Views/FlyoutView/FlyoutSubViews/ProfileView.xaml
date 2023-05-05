@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:dxe="http://schemas.devexpress.com/xamarin/2014/forms/editors"
-             xmlns:sfavatar="clr-namespace:Syncfusion.XForms.AvatarView;assembly=Syncfusion.Core.XForms" NavigationPage.HasNavigationBar="False"
+             xmlns:sfavatar="clr-namespace:Syncfusion.XForms.AvatarView;assembly=Syncfusion.Core.XForms"
+             NavigationPage.HasNavigationBar="True"
              x:Class="Library_Mangement.Views.FlyoutView.FlyoutSubViews.ProfileView" BackgroundImageSource="Screen_1.jpg">
     <ContentPage.Content>
         <ScrollView>

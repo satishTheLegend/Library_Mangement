@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" BackgroundImageSource="Screen_1" NavigationPage.HasNavigationBar="False"
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" BackgroundImageSource="Screen_1" NavigationPage.HasNavigationBar="True"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:dxe="http://schemas.devexpress.com/xamarin/2014/forms/editors" xmlns:controls="clr-namespace:Library_Mangement.Controls"
              x:Class="Library_Mangement.Views.FlyoutView.FlyoutSubViews.MyBooksView" x:Name="myBookView">
     <ContentPage.Content>
-        <StackLayout BackgroundColor="Red">
+        <StackLayout BackgroundColor="Transparent">
             <controls:Loader VerticalOptions="CenterAndExpand" LoaderHeight="180" 
                              LoaderText="{Binding LoaderText}" 
                              IsVisible="{Binding LoaderVisible}" 
                              AnimationAssetFileName="{Binding LottieAnimationName}"
                              LoaderProgress="{Binding LoaderPercent}"></controls:Loader>
-            <StackLayout x:Name="itemData" Padding="10" BackgroundColor="Yellow" IsVisible="{Binding FlexViewIsVisible}" BindableLayout.ItemsSource="{Binding MyBooks}">
+            <StackLayout x:Name="itemData" Padding="10" BackgroundColor="Transparent" IsVisible="{Binding FlexViewIsVisible}" BindableLayout.ItemsSource="{Binding MyBooks}">
                 <BindableLayout.ItemTemplate>
                     
                     <DataTemplate>
@@ -18,7 +18,7 @@
                                 <ImageButton Grid.Column="0" Source="{Binding BookImage, Mode=TwoWay}" HeightRequest="140" BackgroundColor="Transparent" />
                                 <Grid Grid.Column="1" RowDefinitions="Auto">
                                     <Label Grid.Row="0" FontAttributes="Bold" Text="{Binding BookTitle, Mode=TwoWay}" FontSize="Medium" LineBreakMode="TailTruncation"/>
-                                    <Label Grid.Row="1" Text="{Binding BookAuther, Mode=TwoWay}" VerticalOptions="StartAndExpand" Margin="0,-4,0,0" FontSize="Small" LineBreakMode="TailTruncation"/>
+                                    <Label Grid.Row="1" Text="{Binding BookTitle, Mode=TwoWay}" VerticalOptions="StartAndExpand" Margin="0,-4,0,0" FontSize="Small" LineBreakMode="TailTruncation"/>
                                     <Label Grid.Row="1" Text="{Binding BookIssueDate, Mode=TwoWay}" VerticalOptions="CenterAndExpand" FontSize="Caption" LineBreakMode="TailTruncation"/>
                                     <Label Grid.Row="1" Text="{Binding BookReturnDate, Mode=TwoWay}" VerticalOptions="EndAndExpand" FontSize="Caption" LineBreakMode="TailTruncation"/>
                                     <Grid Grid.Row="2" ColumnDefinitions="3.5*,3.5*,3*">

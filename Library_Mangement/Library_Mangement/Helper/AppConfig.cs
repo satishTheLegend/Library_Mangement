@@ -14,9 +14,9 @@ namespace Library_Mangement.Helper
         public const string LogType_Info = "Info";
 
         //Base URL
-        public const string BaseUrl_Development = "https://oclmwebapis.azurewebsites.net/api/";  //Base URL.
-        public const string BaseUrl_Staging = "https://oclmwebapis.azurewebsites.net/api/";  //Base URL.
-        public const string BaseUrl_Production = "https://oclmwebapis.azurewebsites.net/api/";  //Base URL.
+        public const string BaseUrl_Development = "https://oclm.azurewebsites.net/api/";  //Base URL.
+        public const string BaseUrl_Staging = "https://oclm.azurewebsites.net/api/";  //Base URL.
+        public const string BaseUrl_Production = "https://oclm.azurewebsites.net/api/";  //Base URL.
 
         //App Packages 
         public const string AppPackage_Development = "com.companyname.library_mangement.dev";

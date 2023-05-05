@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" NavigationPage.HasNavigationBar="False" x:Name="CatView"
-             x:Class="Library_Mangement.Views.FlyoutView.FlyoutSubViews.CategoryView" BackgroundImageSource="Screen_1.jpg">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" NavigationPage.HasNavigationBar="True" x:Name="CatView"
+             x:Class="Library_Mangement.Views.FlyoutView.FlyoutSubViews.CategoryView" Title="Category" BackgroundImageSource="Screen_1.jpg">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Spacing="10" Padding="10" BindableLayout.ItemsSource="{Binding Catagories}">
